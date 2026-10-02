@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QCL-FRM-6.01 Supplier Selection Form</title>
+    <style>
+        @page {
+            size: a4 portrait;
+            margin-top: 4cm;
+            margin-bottom: 2cm;
+            margin-left: 1.5cm;
+            margin-right: 1.5cm;
+            @frame header_frame {
+                -pdf-frame-content: header_content;
+                left: 1.5cm; right: 1.5cm; top: 1cm; height: 3cm;
+            }
+            @frame footer_frame {
+                -pdf-frame-content: footer_content;
+                left: 1.5cm; right: 1.5cm; bottom: 0.5cm; height: 1cm;
+            }
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 11px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 4px;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .header-table th, .header-table td {
+            text-align: center;
+            vertical-align: middle;
+            font-size: 12px;
+        }
+        .section-title {
+            background-color: #d9d9d9;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 5px;
+            border: 1px solid #000;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Content -->
+    <div id="header_content">
+        <table class="header-table">
+            <tr>
+                <td rowspan="3" width="20%">
+                    <!-- Base64 encoded logo or static image -->
+                    <img src="/Users/fahimasghar/Documents/QC-Lab-Manager/static/images/logo1.png" style="height: 50px;" alt="Logo" />
+                </td>
+                <td rowspan="3" width="50%" style="font-size: 16px; font-weight: bold;">
+                    Supplier Selection Form
+                </td>
+                <td width="30%" style="text-align: left;"><strong>Format No.:</strong> QCL-FRM-6.01</td>
+            </tr>
+            <tr>
+                <td style="text-align: left;"><strong>Issue Date:</strong> 15-01-2024</td>
+            </tr>
+            <tr>
+                <td style="text-align: left;"><strong>Revision No.:</strong> 00</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Footer Content -->
+    <div id="footer_content" style="text-align: right; font-size: 10px;">
+        Page <pdf:pagenumber> of <pdf:pagecount>
+    </div>
+
+    <div class="section-title">Section A: Basic Information</div>
+    <table>
+        <tr>
+            <td style="width: 25%;"><strong>Date:</strong></td>
+            <td style="width: 25%;">{{ supplier.last_evaluation_date|date:"d-M-Y"|default:"___/___/_____" }}</td>
+            <td style="width: 25%;"><strong>Form No. (Filled by QM):</strong></td>
+            <td style="width: 25%;">QCL-FRM-6.01/{{ supplier.id }}</td>
+        </tr>
+        <tr>
+            <td><strong>Name of Supplier:</strong></td>
+            <td>{{ supplier.name }}</td>
+            <td><strong>Contact Person:</strong></td>
+            <td>{{ supplier.contact_person|default:"-" }}</td>
+        </tr>
+        <tr>
+            <td><strong>Phone:</strong></td>
+            <td>{{ supplier.phone|default:"-" }}</td>
+            <td><strong>Email:</strong></td>
+            <td>{{ supplier.email|default:"-" }}</td>
+        </tr>
+        <tr>
+            <td><strong>Website:</strong></td>
+            <td colspan="3">{{ supplier.website|default:"-" }}</td>
+        </tr>
+        <tr>
+            <td><strong>Requirements from Supplier:</strong></td>
+            <td colspan="3">{{ supplier.requirements_from_supplier|default:"-" }}</td>
+        </tr>
+    </table>
+
+    <div class="section-title">Section B*: Selection Criteria</div>
+    <div style="font-size: 10px; margin-bottom: 5px;">(* are compulsory requirements, without fulfilling them a supplier is not approved)</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 5%;">SN</th>
+                <th style="width: 50%;">Criteria</th>
+                <th style="width: 15%;">Status</th>
+                <th style="width: 30%;">Evidence</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="4" style="background-color: #f9f9f9; font-weight: bold;">General Criteria (Applicable on all suppliers)</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">1 *</td>
+                <td>Supplier is legally registered</td>
+                <td style="text-align: center;">{% if supplier.crit_1_registered %}Yes{% else %}No{% endif %}</td>
+                <td>{{ supplier.crit_1_evidence|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">2</td>
+                <td>Supplier is recommended to have at least 1 year of existence in the market</td>
+                <td style="text-align: center;">{% if supplier.crit_2_market_1yr %}Yes{% else %}No{% endif %}</td>
+                <td>{{ supplier.crit_2_evidence|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">3 *</td>
+                <td>Supplier offers the range of products/services required (should fulfill “Requirements from Supplier”)</td>
+                <td style="text-align: center;">{% if supplier.crit_3_offers_range %}Yes{% else %}No{% endif %}</td>
+                <td>{{ supplier.crit_3_evidence|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="background-color: #f9f9f9; font-weight: bold;">Vendor of Equipment and Accessories</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">4 *</td>
+                <td>Fulfill technical specification requirements and provide required documentation (such as equipment manual). This should also include training services against installation and operation of new equipment.</td>
+                <td style="text-align: center;">{% if supplier.crit_4_equipment_docs %}Yes{% else %}No{% endif %}</td>
+                <td>{{ supplier.crit_4_evidence|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="background-color: #f9f9f9; font-weight: bold;">Vendors for External Calibration Services</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">5 *</td>
+                <td>Calibration Service Providers have the capability to provide calibration report and calibration certificate including traceability, method reference, measurement of uncertainty, and range of calibration.</td>
+                <td style="text-align: center;">{% if supplier.crit_5_calibration_traceability %}Yes{% else %}No{% endif %}</td>
+                <td>{{ supplier.crit_5_evidence|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">6</td>
+                <td>Vendor is preferably accredited on ISO/IEC 17025. CURIUM will always prefer accredited over non-accredited calibration service provider.</td>
+                <td style="text-align: center;">{% if supplier.crit_6_iso17025 %}Yes{% else %}No{% endif %}</td>
+                <td>{{ supplier.crit_6_evidence|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="background-color: #f9f9f9; font-weight: bold;">Vendors for Proficiency Testing (PT) Services</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">7 *</td>
+                <td>Vendor must be accredited for PT services (ISO/IEC 17043). In case PT Providers are not available for a certain test, CURIUM may choose to participate in a local inter-lab comparison.</td>
+                <td style="text-align: center;">{% if supplier.crit_7_iso17043 %}Yes{% else %}No{% endif %}</td>
+                <td>{{ supplier.crit_7_evidence|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="background-color: #f9f9f9; font-weight: bold;">Vendors for Training Services (for ISO/IEC 17025 and QC Lab Activities)</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">8 *</td>
+                <td>Experience and Qualification of External Trainers, with preference given to trainers with PNAC’s training and experience of providing their services in similar lab experience</td>
+                <td style="text-align: center;">{% if supplier.crit_8_training_exp %}Yes{% else %}No{% endif %}</td>
+                <td>{{ supplier.crit_8_evidence|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="background-color: #f9f9f9; font-weight: bold;">Vendors for Chemical Supplies</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">9 *</td>
+                <td>Chemical / Solution Suppliers to provide supporting documentation and designated lab personnel needs to ensure availability of required MSDS. They must meet the required specification and quantity.</td>
+                <td style="text-align: center;">{% if supplier.crit_9_msds %}Yes{% else %}No{% endif %}</td>
+                <td>{{ supplier.crit_9_evidence|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="background-color: #f9f9f9; font-weight: bold;">Vendors for Standard References (Certified Reference Material)</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">10 *</td>
+                <td>Supplier must provide certificate of analysis with it, otherwise the product will not be accepted. In addition, preference will be given to suppliers who can provide value of uncertainty associated with the product (where applicable). The CRM manufacturer should preferably be ISO/IEC 17034 certified.</td>
+                <td style="text-align: center;">{% if supplier.crit_10_crm_coa %}Yes{% else %}No{% endif %}</td>
+                <td>{{ supplier.crit_10_evidence|default:"-" }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">Section C*: Selection Result</div>
+    <table>
+        <tr>
+            <td style="width: 25%; font-weight: bold;">Supplier Status:</td>
+            <td style="width: 25%;">{{ supplier.get_evaluation_type_display }}</td>
+            <td style="width: 25%; font-weight: bold;">Approval Status:</td>
+            <td style="width: 25%;">{% if supplier.is_approved %}Approved{% else %}Not Approved{% endif %}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Selection Evaluator(s):</td>
+            <td colspan="3">{{ supplier.selection_evaluator.get_full_name|default:"_________________________" }}</td>
+        </tr>
+    </table>
+
+</body>
+</html>

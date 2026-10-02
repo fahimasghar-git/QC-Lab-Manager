@@ -1,0 +1,656 @@
+from django.db import models
+from simple_history.models import HistoricalRecords
+
+from django.conf import settings
+from testing.models import TestMethod
+
+class Equipment(models.Model):
+    history = HistoricalRecords()
+
+    STATUS_CHOICES = [
+        ('ACTIVE', 'Active / In Use'),
+        ('MAINTENANCE', 'Under Maintenance'),
+        ('OUT_OF_SERVICE', 'Out of Service (Do Not Use)'),
+        ('DECOMMISSIONED', 'Decommissioned'),
+    ]
+
+    name = models.CharField(max_length=150, help_text="e.g., Analytical Balance, UV-Vis Spectrophotometer")
+    identification_no = models.CharField(max_length=50, blank=True, null=True, help_text="Internal ID e.g., EQ-01")
+    manufacturer = models.CharField(max_length=150, blank=True, null=True)
+    model_number = models.CharField(max_length=100, blank=True, null=True)
+    serial_number = models.CharField(max_length=100, unique=True)
+    
+    operating_range = models.CharField(max_length=100, blank=True, null=True, help_text="e.g., 0-200g, 190-1100nm")
+    location = models.CharField(max_length=100, help_text="Where is the equipment located?", blank=True, null=True)
+    
+    date_received = models.DateField(blank=True, null=True)
+    date_put_into_service = models.DateField(blank=True, null=True)
+    
+    calibration_frequency = models.CharField(max_length=50, blank=True, null=True, help_text="e.g., Annually, 6 Months")
+    maintenance_frequency = models.CharField(max_length=50, blank=True, null=True, help_text="e.g., Weekly, Monthly")
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ACTIVE')
+
+    prepared_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='prepared_equipments', on_delete=models.SET_NULL, null=True, blank=True)
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reviewed_equipments', on_delete=models.SET_NULL, null=True, blank=True)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='approved_equipments', on_delete=models.SET_NULL, null=True, blank=True)
+    prepared_at = models.DateTimeField(null=True, blank=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    approved_at = models.DateTimeField(null=True, blank=True)
+    DIGITAL_STATUS_CHOICES = [('DRAFT', 'Draft'), ('PENDING_REVIEW', 'Pending Review'), ('PENDING_APPROVAL', 'Pending Approval'), ('APPROVED', 'Approved')]
+    signature_status = models.CharField(max_length=20, choices=DIGITAL_STATUS_CHOICES, default='DRAFT')
+
+
+
+    class Meta:
+        verbose_name = 'Equipment (QCL-FRM-4.02)'
+        verbose_name_plural = 'Equipments (QCL-FRM-4.02)'
+
+    def __str__(self):
+        return f"{self.name} ({self.identification_no or self.serial_number})"
+
+class CalibrationRecord(models.Model):
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, related_name='calibrations')
+    calibration_date = models.DateField()
+    next_due_date = models.DateField(help_text="When is the next calibration due?")
+    
+    performed_by = models.CharField(max_length=150, help_text="Name of internal staff or external vendor")
+    certificate_number = models.CharField(max_length=100, blank=True, null=True)
+    
+    passed = models.BooleanField(default=True, help_text="Did the equipment pass calibration?")
+    notes = models.TextField(blank=True, null=True, help_text="Details of adjustments or maintenance performed")
+
+
+
+
+    prepared_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='prepared_calibrations', on_delete=models.SET_NULL, null=True, blank=True)
+    prepared_at = models.DateTimeField(null=True, blank=True)
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reviewed_calibrations', on_delete=models.SET_NULL, null=True, blank=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='approved_calibrations', on_delete=models.SET_NULL, null=True, blank=True)
+    approved_at = models.DateTimeField(null=True, blank=True)
+    STATUS_CHOICES = [('DRAFT', 'Draft'), ('PENDING_REVIEW', 'Pending Review'), ('PENDING_APPROVAL', 'Pending Approval'), ('APPROVED', 'Approved')]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DRAFT')
+
+    class Meta:
+        verbose_name = 'CalibrationRecord (QCL-FRM-4.04)'
+        verbose_name_plural = 'CalibrationRecords (QCL-FRM-4.04)'
+
+    def __str__(self):
+        return f"Cal: {self.equipment.name} on {self.calibration_date}"
+
+
+class EquipmentMaintenance(models.Model):
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, related_name='maintenances')
+    maintenance_date = models.DateField()
+    
+    parts_repaired_replaced = models.CharField(max_length=255, blank=True, null=True, help_text="If any")
+    maintenance_by = models.CharField(max_length=100, help_text="Who performed the maintenance?")
+    remarks = models.TextField(blank=True, null=True)
+    
+    prepared_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='prepared_maintenances', on_delete=models.SET_NULL, null=True, blank=True)
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reviewed_maintenances', on_delete=models.SET_NULL, null=True, blank=True)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='approved_maintenances', on_delete=models.SET_NULL, null=True, blank=True)
+    prepared_at = models.DateTimeField(null=True, blank=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    approved_at = models.DateTimeField(null=True, blank=True)
+    STATUS_CHOICES = [('DRAFT', 'Draft'), ('PENDING_REVIEW', 'Pending Review'), ('PENDING_APPROVAL', 'Pending Approval'), ('APPROVED', 'Approved')]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DRAFT')
+
+
+    class Meta:
+        verbose_name = 'Maintenance Record (QCL-FRM-4.03)'
+        verbose_name_plural = 'Maintenance Records (QCL-FRM-4.03)'
+
+    def __str__(self):
+        return f"Maintenance: {self.equipment.name} on {self.maintenance_date}"
+
+class CompetencyRecord(models.Model):
+    SCORE_CHOICES = [
+        (4, '4 - High Competence (Completes task independently)'),
+        (3, '3 - Partial Competence (Need occasional support)'),
+        (2, '2 - Low Competence (Needs ongoing support)'),
+        (1, '1 - No Competence (Needs Training & direction)'),
+    ]
+
+    STATUS_CHOICES = [
+        ('AUTHORIZED', 'Authorized to Perform Test'),
+        ('IN_TRAINING', 'In Training (Supervised Only)'),
+        ('SUSPENDED', 'Suspended / Revoked'),
+    ]
+
+    analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='competencies')
+    test_method = models.ForeignKey(TestMethod, on_delete=models.CASCADE, null=True, blank=True)
+    
+    training_date = models.DateField(help_text="Date the training/assessment was completed")
+    assessor = models.CharField(max_length=150, blank=True, null=True, help_text="Who conducted the assessment? (e.g., QCM or External Expert)")
+    
+    # QCL-FRM-1.04 Exact Fields
+    score_education = models.IntegerField(choices=SCORE_CHOICES, default=1)
+    score_qualification = models.IntegerField(choices=SCORE_CHOICES, default=1)
+    score_experience = models.IntegerField(choices=SCORE_CHOICES, default=1)
+    score_training = models.IntegerField(choices=SCORE_CHOICES, default=1)
+    score_technical_knowledge = models.IntegerField(choices=SCORE_CHOICES, default=1)
+    score_skills = models.IntegerField(choices=SCORE_CHOICES, default=1)
+    score_challenge_testing = models.IntegerField(choices=SCORE_CHOICES, default=1)
+    score_proficiency_testing = models.IntegerField(choices=SCORE_CHOICES, default=1)
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='IN_TRAINING')
+    comments = models.TextField(blank=True, null=True, help_text="Assessment notes or areas for improvement")
+
+    authorized_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.RESTRICT, 
+        related_name='authorizations_granted',
+        help_text="The Lab Manager or QCM who authorized this analyst",
+        null=True, blank=True
+    )
+    notes = models.TextField(blank=True, null=True, help_text="Reference to training evidence (e.g., passed blind sample)")
+
+    prepared_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='prepared_competencies', on_delete=models.SET_NULL, null=True, blank=True)
+    checked_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='checked_competencies', on_delete=models.SET_NULL, null=True, blank=True)
+    # approved_by is already authorized_by in CompetencyRecord? Wait, let's just add approved_by explicitly.
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='approved_competencies', on_delete=models.SET_NULL, null=True, blank=True)
+
+
+    @property
+    def total_score(self):
+        return sum([
+            self.score_education, self.score_qualification, self.score_experience, 
+            self.score_training, self.score_technical_knowledge, self.score_skills, 
+            self.score_challenge_testing, self.score_proficiency_testing
+        ])
+
+    @property
+    def competency_level(self):
+        avg = self.total_score / 8
+        if avg >= 3.5: return "High Competence"
+        if avg >= 2.5: return "Partial Competence"
+        if avg >= 1.5: return "Low Competence"
+        return "No Competence"
+
+
+
+    prepared_at = models.DateTimeField(null=True, blank=True)
+    checked_at = models.DateTimeField(null=True, blank=True)
+    approved_at = models.DateTimeField(null=True, blank=True)
+    STATUS_CHOICES = [('DRAFT', 'Draft'), ('PENDING_REVIEW', 'Pending Review'), ('PENDING_APPROVAL', 'Pending Approval'), ('APPROVED', 'Approved')]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DRAFT')
+
+    class Meta:
+        verbose_name = 'Competency Monitoring (QCL-FRM-1.04)'
+        verbose_name_plural = 'Competency Monitoring (QCL-FRM-1.04)'
+
+    def __str__(self):
+        return f"{self.analyst.username} - Score: {self.total_score}/32 ({self.get_status_display()})"
+
+
+class CompetencyEvaluation(models.Model):
+    SCALE_CHOICES = [
+        ('E', 'Exceptional (Hold Full Command, Can Supervise)'),
+        ('HC', 'Highly Competent (Can Supervise Lab Activities)'),
+        ('C', 'Competent (Can Work Independently)'),
+        ('AC', 'Approaching Competence (Can Work Under Supervision)'),
+        ('ND', 'Needs Development (Lacks Basics, Needs Training)'),
+    ]
+
+    analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='evaluations')
+    supervisor = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.RESTRICT, 
+        related_name='evaluations_conducted',
+        help_text="Supervisor / Evaluator"
+    )
+    evaluation_date = models.DateField(help_text="Date of Supervision")
+
+    score_analysis_skills = models.CharField(max_length=2, choices=SCALE_CHOICES, default='ND', verbose_name="Analysis Skills")
+    score_equipment_handling = models.CharField(max_length=2, choices=SCALE_CHOICES, default='ND', verbose_name="Lab Equipment Handling")
+    score_iso_awareness = models.CharField(max_length=2, choices=SCALE_CHOICES, default='ND', verbose_name="Awareness ISO 17025: 2023")
+    score_testing_skills = models.CharField(max_length=2, choices=SCALE_CHOICES, default='ND', verbose_name="Testing Skills")
+    score_sample_prep = models.CharField(max_length=2, choices=SCALE_CHOICES, default='ND', verbose_name="Sample Preparation Skills")
+
+    remarks = models.TextField(blank=True, null=True, help_text="Remarks / Comments")
+    
+    manager_qc = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='manager_evaluations', on_delete=models.SET_NULL, null=True, blank=True)
+
+
+
+    prepared_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='prepared_evaluations', on_delete=models.SET_NULL, null=True, blank=True)
+    prepared_at = models.DateTimeField(null=True, blank=True)
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reviewed_evaluations', on_delete=models.SET_NULL, null=True, blank=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    approved_at = models.DateTimeField(null=True, blank=True)
+    STATUS_CHOICES = [('DRAFT', 'Draft'), ('PENDING_REVIEW', 'Pending Review'), ('PENDING_APPROVAL', 'Pending Approval'), ('APPROVED', 'Approved')]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DRAFT')
+
+    class Meta:
+        verbose_name = 'Competency Evaluation (QCL-FRM-2.09)'
+        verbose_name_plural = 'Competency Evaluations (QCL-FRM-2.09)'
+
+    def __str__(self):
+        return f"Evaluation: {self.analyst.username} on {self.evaluation_date}"
+
+# --- NEW ISO 17025 CLAUSE 6.5 METROLOGICAL TRACEABILITY ---
+
+class ReagentStandard(models.Model):
+    history = HistoricalRecords()
+
+    STATUS_CHOICES = [
+        ('QUARANTINED', 'Quarantined (Pending QC Verification)'),
+        ('APPROVED', 'Approved for Use'),
+        ('EXPIRED', 'Expired (Do Not Use)'),
+        ('DEPLETED', 'Depleted / Discarded'),
+    ]
+
+    name = models.CharField(max_length=150, help_text="e.g., 0.1N Sulfuric Acid, Certified Reference Material (CRM)")
+    lot_number = models.CharField(max_length=100)
+    supplier = models.CharField(max_length=150)
+    
+    receipt_date = models.DateField(auto_now_add=True)
+    expiry_date = models.DateField()
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='QUARANTINED')
+    
+    certificate_reference = models.CharField(max_length=150, blank=True, null=True, help_text="CoA number provided by the manufacturer")
+    
+    # Fields for QCL-FRM-5.01 (CRM List)
+    is_crm = models.BooleanField(default=False, verbose_name="Is Certified Reference Material (CRM)")
+    catalog_no = models.CharField(max_length=100, blank=True, null=True, verbose_name="Cat No.")
+    traceability = models.CharField(max_length=150, blank=True, null=True, verbose_name="Traceability (e.g., NIST)")
+    quantity = models.CharField(max_length=50, blank=True, null=True, verbose_name="Quantity")
+
+    
+    def __str__(self):
+        return f"{self.name} (Lot: {self.lot_number})"
+
+
+
+    prepared_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='prepared_reagents', on_delete=models.SET_NULL, null=True, blank=True)
+    prepared_at = models.DateTimeField(null=True, blank=True)
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reviewed_reagents', on_delete=models.SET_NULL, null=True, blank=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='approved_reagents', on_delete=models.SET_NULL, null=True, blank=True)
+    approved_at = models.DateTimeField(null=True, blank=True)
+    STATUS_CHOICES = [('DRAFT', 'Draft'), ('PENDING_REVIEW', 'Pending Review'), ('PENDING_APPROVAL', 'Pending Approval'), ('APPROVED', 'Approved')]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DRAFT')
+
+    class Meta:
+        unique_together = ('name', 'lot_number')
+
+        verbose_name = 'CRM / Reagent List (QCL-FRM-5.01)'
+        verbose_name_plural = 'CRM / Reagent Lists (QCL-FRM-5.01)'
+
+class Supplier(models.Model):
+    name = models.CharField(max_length=200)
+    contact_person = models.CharField(max_length=100, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    website = models.URLField(blank=True, null=True)
+    requirements_from_supplier = models.TextField(blank=True, null=True, help_text="Range of products/services required")
+    
+    # --- QCL-FRM-6.01 Selection Criteria ---
+    # General
+    crit_1_registered = models.BooleanField(default=False, verbose_name="Supplier is legally registered")
+    crit_1_evidence = models.CharField(max_length=255, blank=True, null=True)
+    
+    crit_2_market_1yr = models.BooleanField(default=False, verbose_name="At least 1 year in market")
+    crit_2_evidence = models.CharField(max_length=255, blank=True, null=True)
+    
+    crit_3_offers_range = models.BooleanField(default=False, verbose_name="Offers required range of products/services")
+    crit_3_evidence = models.CharField(max_length=255, blank=True, null=True)
+    
+    # Equipment
+    crit_4_equipment_docs = models.BooleanField(default=False, verbose_name="Fulfills tech specs & provides docs (manuals/training)")
+    crit_4_evidence = models.CharField(max_length=255, blank=True, null=True)
+    
+    # Calibration
+    crit_5_calibration_traceability = models.BooleanField(default=False, verbose_name="Capability for traceability, uncertainty, range")
+    crit_5_evidence = models.CharField(max_length=255, blank=True, null=True)
+    
+    crit_6_iso17025 = models.BooleanField(default=False, verbose_name="Accredited on ISO/IEC 17025")
+    crit_6_evidence = models.CharField(max_length=255, blank=True, null=True)
+    
+    # PT Services
+    crit_7_iso17043 = models.BooleanField(default=False, verbose_name="Accredited for PT services (ISO/IEC 17043)")
+    crit_7_evidence = models.CharField(max_length=255, blank=True, null=True)
+    
+    # Training
+    crit_8_training_exp = models.BooleanField(default=False, verbose_name="Experience & Qualification of Trainers (PNAC preferred)")
+    crit_8_evidence = models.CharField(max_length=255, blank=True, null=True)
+    
+    # Chemicals
+    crit_9_msds = models.BooleanField(default=False, verbose_name="Provides supporting docs / MSDS")
+    crit_9_evidence = models.CharField(max_length=255, blank=True, null=True)
+    
+    # CRM
+    crit_10_crm_coa = models.BooleanField(default=False, verbose_name="Provides CoA & uncertainty (ISO/IEC 17034 certified)")
+    crit_10_evidence = models.CharField(max_length=255, blank=True, null=True)
+    
+    # 6.01 Approval
+    selection_evaluator = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="supplier_selections_evaluated", verbose_name="Selection Evaluator"
+    )
+
+    # --- QCL-FRM-6.03 Fields ---
+    evaluation_type = models.CharField(max_length=50, choices=[('NEW', 'New Supplier'), ('EXISTING', 'Existing Supplier Re-evaluation')], default='NEW')
+    
+    # Rating 0-3
+    score_market_image = models.IntegerField(default=0, help_text="Market Image and Reputation (0-3)")
+    score_market_share = models.IntegerField(default=0, help_text="Market Share (0-3)")
+    score_technical_capacity = models.IntegerField(default=0, help_text="Technical Capacity (0-3)")
+    score_lead_time = models.IntegerField(default=0, help_text="Lead Time (0-3)")
+    score_product_quality = models.IntegerField(default=0, help_text="Product Quality/Services (0-3)")
+    score_order_processing = models.IntegerField(default=0, help_text="Order Processing (0-3)")
+    score_fulfill_requirements = models.IntegerField(default=0, help_text="Fulfill Technical Requirement (0-3)")
+    
+    sample_approved_by_qc = models.CharField(max_length=10, choices=[('YES', 'Yes'), ('NO', 'No'), ('NA', 'N/A')], default='NA')
+    
+    decision = models.CharField(max_length=20, choices=[('APPROVED', 'Approved'), ('REJECTED', 'Rejected'), ('CONTINUE', 'Continue (Existing)')], default='APPROVED')
+    
+    remarks = models.TextField(blank=True, null=True)
+
+    @property
+    def total_score(self):
+        return sum([self.score_market_image, self.score_market_share, self.score_technical_capacity, self.score_lead_time, self.score_product_quality, self.score_order_processing, self.score_fulfill_requirements])
+        
+    @property
+    def grading(self):
+        total = self.total_score
+        if total <= 6: return "Poor"
+        if total <= 12: return "Fair"
+        if total <= 18: return "Good"
+        return "Excellence"
+
+
+    
+    # ISO 17025 Clause 6.6 requires evaluating suppliers
+    is_approved = models.BooleanField(default=False)
+    last_evaluation_date = models.DateField(blank=True, null=True)
+    next_evaluation_date = models.DateField(blank=True, null=True)
+    evaluation_notes = models.TextField(blank=True, null=True, help_text="Notes on supplier quality and performance.")
+    
+    evaluated_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='evaluated_suppliers', on_delete=models.SET_NULL, null=True, blank=True)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='approved_suppliers', on_delete=models.SET_NULL, null=True, blank=True)
+    prepared_at = models.DateTimeField(null=True, blank=True)
+    approved_at = models.DateTimeField(null=True, blank=True)
+    STATUS_CHOICES = [('DRAFT', 'Draft'), ('PENDING_APPROVAL', 'Pending Approval'), ('APPROVED', 'Approved')]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DRAFT')
+
+    history = HistoricalRecords()
+
+
+
+    class Meta:
+        verbose_name = 'Supplier (QCL-FRM-6.03)'
+        verbose_name_plural = 'Suppliers (QCL-FRM-6.03)'
+
+    def __str__(self):
+        status = "✅ Approved" if self.is_approved else "❌ Not Approved"
+        return f"{self.name} ({status})"
+
+class PurchaseRequest(models.Model):
+    STATUS_CHOICES = (
+        ('REQUESTED', 'Requested'),
+        ('APPROVED', 'Approved by QCM'),
+        ('ORDERED', 'Ordered'),
+        ('RECEIVED', 'Received'),
+        ('REJECTED', 'Rejected'),
+    )
+    
+    item_description = models.CharField(max_length=255, verbose_name="Item Name")
+    specification = models.CharField(max_length=255, blank=True, null=True, help_text="Model, Brand, Quality, Capacity")
+    purpose = models.CharField(max_length=255, blank=True, null=True, help_text="Purpose of Purchase")
+    
+    quantity_required = models.PositiveIntegerField(default=1)
+    stock_in_hand = models.PositiveIntegerField(default=0)
+    
+    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='REQUESTED')
+    
+    spd_no = models.CharField(max_length=50, blank=True, null=True, verbose_name="SPD No")
+    insp_mints_no = models.CharField(max_length=50, blank=True, null=True, verbose_name="Insp Mints NO & Date")
+    service_call_no = models.CharField(max_length=50, blank=True, null=True, verbose_name="Service Call No & Date")
+    store_keeper = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='store_keeper_purchases', on_delete=models.SET_NULL, null=True, blank=True)
+    
+    requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='purchase_requests', on_delete=models.RESTRICT)
+    requested_date = models.DateField(auto_now_add=True)
+    
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='approved_purchases', on_delete=models.SET_NULL, null=True, blank=True)
+    
+    history = HistoricalRecords()
+
+    @property
+    def net_purchase_required(self):
+        return max(0, self.quantity_required - self.stock_in_hand)
+
+
+
+    prepared_at = models.DateTimeField(null=True, blank=True)
+    approved_at = models.DateTimeField(null=True, blank=True)
+    STATUS_CHOICES = [('DRAFT', 'Draft'), ('PENDING_APPROVAL', 'Pending Approval'), ('APPROVED', 'Approved')]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DRAFT')
+
+    class Meta:
+        verbose_name = 'Purchase Request (QCL-FRM-6.07)'
+        verbose_name_plural = 'Purchase Requests (QCL-FRM-6.07)'
+
+    def __str__(self):
+        return f"PR-{self.id}: {self.item_description} ({self.status})"
+
+class ProductServiceInspection(models.Model):
+    INSPECTION_TYPE_CHOICES = [('PRODUCT', 'Products'), ('SERVICE', 'Services')]
+    PROVIDER_STATUS_CHOICES = [('NEW', 'Newly engaged'), ('EXISTING', 'Pre-existing')]
+    STATUS_CHOICES = [('ACCEPTED', 'Accepted'), ('REJECTED', 'Rejected')]
+
+    inspection_type = models.CharField(max_length=20, choices=INSPECTION_TYPE_CHOICES)
+    description = models.CharField(max_length=200, verbose_name="Products/Services")
+    external_provider = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='inspections')
+    provider_status = models.CharField(max_length=20, choices=PROVIDER_STATUS_CHOICES)
+    
+    gate_pass_no = models.CharField(max_length=50, blank=True, null=True)
+    pr_po_no = models.CharField(max_length=50, blank=True, null=True, verbose_name="PR No./PO No.")
+    invoice_no = models.CharField(max_length=50, blank=True, null=True)
+    date_of_receipt = models.DateField()
+    
+    # Checkboxes/Remarks - Products
+    prod_coa_remarks = models.CharField(max_length=200, blank=True, null=True, verbose_name="Product COA Remarks")
+    prod_spec_remarks = models.CharField(max_length=200, blank=True, null=True, verbose_name="Specification Remarks")
+    prod_qty_remarks = models.CharField(max_length=200, blank=True, null=True, verbose_name="Quantity Remarks")
+    prod_lot_remarks = models.CharField(max_length=200, blank=True, null=True, verbose_name="Verification of Lot No. Remarks")
+    prod_mfg_remarks = models.CharField(max_length=200, blank=True, null=True, verbose_name="MFG Date Remarks")
+    prod_exp_remarks = models.CharField(max_length=200, blank=True, null=True, verbose_name="EXP Date Remarks")
+    prod_model_remarks = models.CharField(max_length=200, blank=True, null=True, verbose_name="Model/Make Remarks")
+    
+    # Checkboxes/Remarks - Services
+    srv_traceability_remarks = models.CharField(max_length=200, blank=True, null=True, verbose_name="Traceability of accreditation Remarks")
+    srv_scope_remarks = models.CharField(max_length=200, blank=True, null=True, verbose_name="Scope of Accreditation Remarks")
+    srv_training_remarks = models.CharField(max_length=200, blank=True, null=True, verbose_name="Traceability of Training Remarks")
+    srv_response_remarks = models.CharField(max_length=200, blank=True, null=True, verbose_name="Response to queries Remarks")
+    srv_skills_remarks = models.CharField(max_length=200, blank=True, null=True, verbose_name="Trainer/engineer skills Remarks")
+    srv_validity_remarks = models.CharField(max_length=200, blank=True, null=True, verbose_name="Validity of certificate Remarks")
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    
+    received_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='received_inspections', on_delete=models.RESTRICT, null=True, blank=True)
+
+
+    prepared_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='prepared_inspections', on_delete=models.SET_NULL, null=True, blank=True)
+    prepared_at = models.DateTimeField(null=True, blank=True)
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reviewed_inspections', on_delete=models.SET_NULL, null=True, blank=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='approved_inspections', on_delete=models.SET_NULL, null=True, blank=True)
+    approved_at = models.DateTimeField(null=True, blank=True)
+    STATUS_CHOICES = [('DRAFT', 'Draft'), ('PENDING_REVIEW', 'Pending Review'), ('PENDING_APPROVAL', 'Pending Approval'), ('APPROVED', 'Approved')]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DRAFT')
+
+    class Meta:
+        verbose_name = 'Inspection (QCL-FRM-6.08)'
+        verbose_name_plural = 'Inspections (QCL-FRM-6.08)'
+
+    def __str__(self):
+        return f"Inspection: {self.description} ({self.get_status_display()})"
+
+
+class PersonnelAuthorization(models.Model):
+    history = HistoricalRecords()
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='authorization_permit')
+    employee_code = models.CharField(max_length=50, blank=True, null=True)
+    designation = models.CharField(max_length=100, blank=True, null=True)
+    
+    # 1.01 Instrument Operation
+    op_flame_photometer = models.BooleanField(default=False, verbose_name="Operation of Flame Photometer")
+    op_uv_vis = models.BooleanField(default=False, verbose_name="Operation of UV-Visible Spectrophotometer")
+    op_karl_fischer = models.BooleanField(default=False, verbose_name="Operation of Karl Fischer")
+    op_kjeldhals = models.BooleanField(default=False, verbose_name="Operation of Kjeldhal’s Apparatus")
+    op_furnace = models.BooleanField(default=False, verbose_name="Operation of Furnace")
+    op_ph_meter = models.BooleanField(default=False, verbose_name="Operation of pH Meter")
+    op_tds_meter = models.BooleanField(default=False, verbose_name="Operation of TDS Meter")
+    op_analytical_balance = models.BooleanField(default=False, verbose_name="Operation of Analytical Balance")
+    
+    # 1.01 Tests & Parameters
+    test_loi = models.BooleanField(default=False, verbose_name="Loss on Ignition")
+    test_density = models.BooleanField(default=False, verbose_name="Density Test")
+    test_ph = models.BooleanField(default=False, verbose_name="pH Test")
+    test_conductivity = models.BooleanField(default=False, verbose_name="Conductivity Test")
+    test_tds = models.BooleanField(default=False, verbose_name="TDS Test")
+    test_lod = models.BooleanField(default=False, verbose_name="Loss on Drying")
+    test_weighing = models.BooleanField(default=False, verbose_name="Weighing")
+    test_sieve = models.BooleanField(default=False, verbose_name="Sieve Test")
+    test_calcium = models.BooleanField(default=False, verbose_name="Calcium test")
+    test_sulfur = models.BooleanField(default=False, verbose_name="Sulfur/Sulfate Test")
+    test_nitrogen = models.BooleanField(default=False, verbose_name="Nitrogen Test")
+    test_titrations = models.BooleanField(default=False, verbose_name="Manual Titrations")
+    test_humic_acid = models.BooleanField(default=False, verbose_name="Humic Acid Test")
+    test_phosphorus = models.BooleanField(default=False, verbose_name="Phosphorus Testing")
+    test_toc = models.BooleanField(default=False, verbose_name="Total Organic Carbon")
+    test_cn_ratio = models.BooleanField(default=False, verbose_name="C/N Ratio Calculation")
+    test_organic_matter = models.BooleanField(default=False, verbose_name="Organic Matter")
+    test_cec = models.BooleanField(default=False, verbose_name="CEC")
+    test_sodium = models.BooleanField(default=False, verbose_name="Sodium Test")
+    test_zinc = models.BooleanField(default=False, verbose_name="Zinc Test")
+    test_boron = models.BooleanField(default=False, verbose_name="Boron Analysis")
+    test_copper = models.BooleanField(default=False, verbose_name="Copper Test")
+    test_moisture = models.BooleanField(default=False, verbose_name="Moisture Test")
+    
+    # 1.01 Quality & Lab Activities
+    act_environmental = models.BooleanField(default=False, verbose_name="Monitoring Environmental Conditions")
+    act_intermediate_checks = models.BooleanField(default=False, verbose_name="Perform the Intermediate Checks")
+    act_control_chart = models.BooleanField(default=False, verbose_name="Prepare Control Chart")
+    act_sample_receiving = models.BooleanField(default=False, verbose_name="Sample Receiving")
+    act_method_validation = models.BooleanField(default=False, verbose_name="Method Validation/Verification")
+    act_sample_handling = models.BooleanField(default=False, verbose_name="Sample Handling")
+    act_report_prep = models.BooleanField(default=False, verbose_name="Report Preparation")
+    act_review_reports = models.BooleanField(default=False, verbose_name="Preparing/Review the Analysis Reports")
+    act_measurement_uncertainty = models.BooleanField(default=False, verbose_name="Measurements of Uncertainty")
+    act_internal_auditing = models.BooleanField(default=False, verbose_name="Internal Auditing")
+    act_training_lms = models.BooleanField(default=False, verbose_name="Training of Lab Staff on LMS 17025:2017")
+    act_prep_procedures = models.BooleanField(default=False, verbose_name="Preparation and Reviewing of Procedures/Other Documents")
+    act_approve_reports = models.BooleanField(default=False, verbose_name="Preparation, Reviewing and Approved of Reports/Other Documents")
+    act_prep_release_slip = models.BooleanField(default=False, verbose_name="Preparation and Review/Verify the Release slip")
+    act_practical_demo = models.BooleanField(default=False, verbose_name="Practical Demonstration of Testing Parameters")
+    act_assign_samples = models.BooleanField(default=False, verbose_name="Assigned the samples for testing to analysts/assistant analyst")
+    act_analyze_samples = models.BooleanField(default=False, verbose_name="Analyzed the samples")
+    act_housekeeping = models.BooleanField(default=False, verbose_name="House Keeping")
+    act_solution_prep = models.BooleanField(default=False, verbose_name="Solution Preparation")
+    act_sample_retaining = models.BooleanField(default=False, verbose_name="Sample Retaining")
+    act_sample_discard = models.BooleanField(default=False, verbose_name="Sample Discard/Dispose")
+    act_stock_management = models.BooleanField(default=False, verbose_name="Stock Management")
+    act_id_non_conformity = models.BooleanField(default=False, verbose_name="Identification of Non-Conformity")
+    act_id_improvement = models.BooleanField(default=False, verbose_name="Identification of Need for improvement or Deviation")
+    act_temp_humidity = models.BooleanField(default=False, verbose_name="Prepare the temperature/humidity charts")
+    act_cleaning_inspections = models.BooleanField(default=False, verbose_name="Perform the Cleaning Inspections")
+    act_standardization = models.BooleanField(default=False, verbose_name="Standardization")
+    act_pt_samples = models.BooleanField(default=False, verbose_name="PT Samples/Blind Samples")
+    
+    # 1.02 Master List Authorizations
+    auth_dev_mod = models.BooleanField(default=False, verbose_name="Development & Modification")
+    auth_perform = models.BooleanField(default=False, verbose_name="Perform")
+    auth_validation = models.BooleanField(default=False, verbose_name="Validation / Verification")
+    auth_supervision = models.BooleanField(default=False, verbose_name="Supervision")
+    auth_report_review = models.BooleanField(default=False, verbose_name="Report and Review of Results")
+    auth_analysis_results = models.BooleanField(default=False, verbose_name="Analysis of results (Conformity/Opinions)")
+    auth_auth_results = models.BooleanField(default=False, verbose_name="Authorization of Results")
+    auth_uncertainty = models.BooleanField(default=False, verbose_name="Uncertainty Measurement of Assay")
+    
+    authorization_date = models.DateField(auto_now_add=True)
+    
+    prepared_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='prepared_authorizations', on_delete=models.RESTRICT, null=True, blank=True)
+    authorized_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='authorized_authorizations', on_delete=models.RESTRICT, null=True, blank=True)
+    prepared_at = models.DateTimeField(null=True, blank=True)
+    authorized_at = models.DateTimeField(null=True, blank=True)
+    STATUS_CHOICES = [('DRAFT', 'Draft'), ('PENDING_APPROVAL', 'Pending Approval'), ('APPROVED', 'Approved')]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DRAFT')
+
+
+    class Meta:
+        verbose_name = 'Personnel Authorization (1.01 & 1.02)'
+        verbose_name_plural = 'Personnel Authorizations (1.01 & 1.02)'
+
+    def __str__(self):
+        return f"Authorization Permit - {self.user.get_full_name() or self.user.username}"
+
+
+
+
+# QCL-FRM-6.05 Comparative Statement
+class ComparativeStatement(models.Model):
+    history = HistoricalRecords()
+    
+    item_name = models.CharField(max_length=200, help_text="Item or Service Name")
+    date = models.DateField(auto_now_add=True)
+    purchase_demand = models.ForeignKey('PurchaseRequest', on_delete=models.SET_NULL, null=True, blank=True)
+    
+    prepared_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='prepared_statements', on_delete=models.RESTRICT, null=True, blank=True)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='approved_statements', on_delete=models.RESTRICT, null=True, blank=True)
+    prepared_at = models.DateTimeField(null=True, blank=True)
+    approved_at = models.DateTimeField(null=True, blank=True)
+    STATUS_CHOICES = [('DRAFT', 'Draft'), ('PENDING_APPROVAL', 'Pending Approval'), ('APPROVED', 'Approved')]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DRAFT')
+
+    
+    def __str__(self):
+        return f"CS - {self.item_name} ({self.date})"
+
+    class Meta:
+        verbose_name = 'Comparative Statement (QCL-FRM-6.05)'
+        verbose_name_plural = 'Comparative Statement (QCL-FRM-6.05)s'
+
+class ComparativeStatementSupplier(models.Model):
+    statement = models.ForeignKey(ComparativeStatement, on_delete=models.CASCADE, related_name='suppliers')
+    supplier_name = models.CharField(max_length=150)
+    rate = models.CharField(max_length=100, verbose_name="Rate (RS)")
+    quantity = models.CharField(max_length=100)
+    delivery_time = models.CharField(max_length=100)
+    quality = models.CharField(max_length=150, blank=True, null=True)
+    remarks = models.TextField(blank=True, null=True)
+    is_selected = models.BooleanField(default=False, verbose_name="Selected Supplier")
+
+# QCL-FRM-6.06 Supplier Evaluation Plan
+class SupplierEvaluationPlan(models.Model):
+    history = HistoricalRecords()
+    
+    year = models.CharField(max_length=4, help_text="e.g. 2024")
+    prepared_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='prepared_evaluation_plans', on_delete=models.RESTRICT, null=True, blank=True)
+    prepared_at = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='approved_evaluation_plans', on_delete=models.RESTRICT, null=True, blank=True)
+    approved_at = models.DateTimeField(null=True, blank=True)
+    STATUS_CHOICES = [('DRAFT', 'Draft'), ('PENDING_APPROVAL', 'Pending Approval'), ('APPROVED', 'Approved')]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='DRAFT')
+    
+    def __str__(self):
+        return f"Supplier Evaluation Plan - {self.year}"
+
+    class Meta:
+        verbose_name = 'Supplier Evaluation Plan (QCL-FRM-6.06)'
+        verbose_name_plural = 'Supplier Evaluation Plan (QCL-FRM-6.06)s'
+
+class SupplierEvaluationPlanItem(models.Model):
+    plan = models.ForeignKey(SupplierEvaluationPlan, on_delete=models.CASCADE, related_name='items')
+    supplier = models.ForeignKey('Supplier', on_delete=models.CASCADE)
+    frequency = models.CharField(max_length=50, default="Annually")
+    evaluation_date = models.DateField()
+    next_evaluation_date = models.DateField()
+    responsibility = models.CharField(max_length=100, default="QCM / Lab Incharge")
+    records = models.CharField(max_length=100, default="QCL-FRM-6.03")

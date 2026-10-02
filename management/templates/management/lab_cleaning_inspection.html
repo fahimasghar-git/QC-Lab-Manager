@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QCL-FRM-17.14 Lab Cleaning Inspection Sheet</title>
+    <style>
+        @page {
+            size: a4 portrait;
+            margin-top: 4cm;
+            margin-bottom: 2cm;
+            margin-left: 1.5cm;
+            margin-right: 1.5cm;
+            @frame header_frame {
+                -pdf-frame-content: header_content;
+                left: 1.5cm; right: 1.5cm; top: 1cm; height: 3cm;
+            }
+            @frame footer_frame {
+                -pdf-frame-content: footer_content;
+                left: 1.5cm; right: 1.5cm; bottom: 0.5cm; height: 1cm;
+            }
+        }
+        body { font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        th, td { border: 1px solid #000; padding: 5px; vertical-align: middle; }
+        th { background-color: #d9d9d9; font-weight: bold; text-align: center; }
+        .header-table th, .header-table td { text-align: center; vertical-align: middle; font-size: 12px; background-color: #fff; }
+        .noborder { border: none; }
+        .noborder td { border: none; }
+    </style>
+</head>
+<body>
+    <div id="header_content">
+        <table class="header-table">
+            <tr>
+                <td rowspan="3" width="20%">
+                    <img src="/Users/fahimasghar/Documents/QC-Lab-Manager/static/images/logo1.png" style="height: 50px;" alt="Logo" />
+                </td>
+                <td rowspan="3" width="50%" style="font-size: 16px; font-weight: bold;">
+                    LAB CLEANING INSPECTION SHEET
+                </td>
+                <td width="30%" style="text-align: left;"><strong>Format No.:</strong> QCL-FRM-17.14</td>
+            </tr>
+            <tr><td style="text-align: left;"><strong>Issue Date:</strong> 15-01-2024</td></tr>
+            <tr><td style="text-align: left;"><strong>Revision No.:</strong> 01</td></tr>
+        </table>
+    </div>
+    <div id="footer_content" style="text-align: right; font-size: 10px;">
+        Page <pdf:pagenumber> of <pdf:pagecount>
+    </div>
+    
+    {% for ins in inspections %}
+    <table class="noborder">
+        <tr>
+            <td style="font-weight: bold; width: 15%;">Section/Area:</td>
+            <td style="text-decoration: underline; width: 35%;">{{ ins.section_area }}</td>
+            <td style="font-weight: bold; width: 15%;">Month:</td>
+            <td style="text-decoration: underline; width: 35%;">{{ ins.month_year }}</td>
+        </tr>
+    </table>
+    
+    <table>
+        <thead>
+            <tr>
+                <th rowspan="2" style="width: 10%;">Date</th>
+                <th colspan="3">Daily Tasks</th>
+                <th rowspan="2" style="width: 15%;">Checked By</th>
+                <th rowspan="2" style="width: 15%;">Verified By</th>
+            </tr>
+            <tr>
+                <th style="font-size: 9px;">Floor, Sanitary Sinks, Taps</th>
+                <th style="font-size: 9px;">Bench Top / Shelves</th>
+                <th style="font-size: 9px;">Equipment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for daily in ins.daily_records.all %}
+            <tr>
+                <td style="text-align: center;">{{ daily.date|date:"d" }}</td>
+                <td style="text-align: center;">{% if daily.floor_sinks_taps %}Yes{% else %}No{% endif %}</td>
+                <td style="text-align: center;">{% if daily.bench_top_shelves %}Yes{% else %}No{% endif %}</td>
+                <td style="text-align: center;">{% if daily.equipment %}Yes{% else %}No{% endif %}</td>
+                <td style="text-align: center;">{{ daily.checked_by|default:"" }}</td>
+                <td style="text-align: center;">{{ daily.verified_by|default:"" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" style="text-align: center;">No daily records created yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <table style="margin-top: 20px;">
+        <tr><td class="section-header" colspan="2" style="background-color: #d9d9d9; font-weight: bold;">Weekly & Monthly Tasks</td></tr>
+        <tr>
+            <td style="width: 80%;">Cleaning Of Lights and AC's (Monthly)</td>
+            <td style="width: 20%; text-align: center;">{% if ins.lights_acs_cleaned %}Done{% else %}Pending{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Overall Cleaning and Spray in Lab (Monthly)</td>
+            <td style="text-align: center;">{% if ins.overall_spray %}Done{% else %}Pending{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Cleaning of Racks, Cabinets and Fumehood (Weekly)</td>
+            <td style="text-align: center;">{% if ins.racks_cabinets %}Done{% else %}Pending{% endif %}</td>
+        </tr>
+    </table>
+    
+    {% if not forloop.last %}<pdf:nextpage>{% endif %}
+    {% endfor %}
+    
+</body>
+</html>

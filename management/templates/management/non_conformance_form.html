@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QCL-FRM-14.01 Non-Conformance Form</title>
+    <style>
+        @page {
+            size: a4 portrait;
+            margin-top: 4cm;
+            margin-bottom: 2cm;
+            margin-left: 1.5cm;
+            margin-right: 1.5cm;
+            @frame header_frame {
+                -pdf-frame-content: header_content;
+                left: 1.5cm; right: 1.5cm; top: 1cm; height: 3cm;
+            }
+            @frame footer_frame {
+                -pdf-frame-content: footer_content;
+                left: 1.5cm; right: 1.5cm; bottom: 0.5cm; height: 1cm;
+            }
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 11px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 5px;
+            vertical-align: top;
+        }
+        .header-table th, .header-table td {
+            text-align: center;
+            vertical-align: middle;
+            font-size: 12px;
+            background-color: #fff;
+        }
+        .section-header { 
+            background-color: #d9d9d9; 
+            font-weight: bold; 
+            text-align: center; 
+        }
+        .checkbox { font-family: monospace; font-size: 14px; }
+    </style>
+</head>
+<body>
+    {% for nc in ncs %}
+    
+    <!-- Header Content -->
+    <div id="header_content">
+        <table class="header-table">
+            <tr>
+                <td rowspan="3" width="20%">
+                    <!-- Base64 encoded logo -->
+                    <img src="/Users/fahimasghar/Documents/QC-Lab-Manager/static/images/logo1.png" style="height: 50px;" alt="Logo" />
+                </td>
+                <td rowspan="3" width="50%" style="font-size: 16px; font-weight: bold;">
+                    Non-Conformance Form
+                </td>
+                <td width="30%" style="text-align: left;"><strong>Format No.:</strong> QCL-FRM-14.01</td>
+            </tr>
+            <tr>
+                <td style="text-align: left;"><strong>Issue Date:</strong> 15-01-2024</td>
+            </tr>
+            <tr>
+                <td style="text-align: left;"><strong>Revision No.:</strong> 00</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Footer Content -->
+    <div id="footer_content" style="text-align: right; font-size: 10px;">
+        Page <pdf:pagenumber> of <pdf:pagecount>
+    </div>
+    
+    <table>
+        <tr>
+            <td style="width: 25%; font-weight: bold;">Date / NC#</td>
+            <td style="width: 25%;">{{ nc.date_identified|date:"d-m-Y" }} / {{ nc.nc_id }}</td>
+            <td style="width: 25%; font-weight: bold;">Identified by</td>
+            <td style="width: 25%;">{{ nc.identified_by.get_full_name }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Any Impact on previous Result</td>
+            <td>{% if nc.impact_on_previous_result %}Yes{% else %}No{% endif %}</td>
+            <td style="font-weight: bold;">Related Test</td>
+            <td>{{ nc.related_test|default:"N/A" }}</td>
+        </tr>
+        <tr>
+            <td colspan="4" class="section-header">SOURCE OF NON-CONFORMANCE</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="line-height: 1.5;">
+                <span class="checkbox">{% if nc.source == 'AUDIT' %}☑{% else %}☐{% endif %}</span> Audit NC &nbsp;&nbsp;&nbsp;
+                <span class="checkbox">{% if nc.source == 'LAB' %}☑{% else %}☐{% endif %}</span> Laboratory Activities &nbsp;&nbsp;&nbsp;
+                <span class="checkbox">{% if nc.source == 'SUGGESTION' %}☑{% else %}☐{% endif %}</span> Suggestion &nbsp;&nbsp;&nbsp;
+                <span class="checkbox">{% if nc.source == 'PT_ILC' %}☑{% else %}☐{% endif %}</span> PT/ILC &nbsp;&nbsp;&nbsp;
+                <span class="checkbox">{% if nc.source == 'COMPLAINT' %}☑{% else %}☐{% endif %}</span> Complaint &nbsp;&nbsp;&nbsp;
+                <span class="checkbox">{% if nc.source == 'FEEDBACK' %}☑{% else %}☐{% endif %}</span> Customer Feedback<br/>
+                <span class="checkbox">{% if nc.source == 'RISK' %}☑{% else %}☐{% endif %}</span> Risk Assessment &nbsp;&nbsp;&nbsp;
+                <span class="checkbox">{% if nc.source == 'OTHER' %}☑{% else %}☐{% endif %}</span> Any Other: __________________
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" class="section-header">DESCRIPTION OF NON-CONFORMANCE</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="height: 60px;">{{ nc.description|linebreaksbr }}</td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td colspan="4" class="section-header">REVIEW / RISK ASSESSMENT</td>
+        </tr>
+        <tr>
+            <td style="width: 25%;">Level of Risk:</td>
+            <td style="width: 25%;">
+                <span class="checkbox">{% if nc.level_of_risk == 'VERY_LOW' %}☑{% else %}☐{% endif %}</span> Very Low
+                <span class="checkbox">{% if nc.level_of_risk == 'LOW' %}☑{% else %}☐{% endif %}</span> Low
+                <span class="checkbox">{% if nc.level_of_risk == 'MODERATE' %}☑{% else %}☐{% endif %}</span> Moderate<br/>
+                <span class="checkbox">{% if nc.level_of_risk == 'HIGH' %}☑{% else %}☐{% endif %}</span> High
+                <span class="checkbox">{% if nc.level_of_risk == 'VERY_HIGH' %}☑{% else %}☐{% endif %}</span> Very High
+            </td>
+            <td style="width: 25%;">Acceptance criteria</td>
+            <td style="width: 25%;">
+                <span class="checkbox">{% if nc.acceptance_status == 'ACCEPTABLE' %}☑{% else %}☐{% endif %}</span> Acceptable <br/>
+                <span class="checkbox">{% if nc.acceptance_status == 'NOT_ACCEPTABLE' %}☑{% else %}☐{% endif %}</span> Not Acceptable
+            </td>
+        </tr>
+        <tr>
+            <td>Type of Non-Conformance:</td>
+            <td>
+                <span class="checkbox">{% if nc.nc_type == 'MAJOR' %}☑{% else %}☐{% endif %}</span> Major <br/>
+                <span class="checkbox">{% if nc.nc_type == 'MINOR' %}☑{% else %}☐{% endif %}</span> Minor
+            </td>
+            <td>Actions Required:</td>
+            <td>
+                <span class="checkbox">{% if nc.withhold_reports %}☑{% else %}☐{% endif %}</span> Withhold Reports <br/>
+                <span class="checkbox">{% if nc.halt_work %}☑{% else %}☐{% endif %}</span> Halt Work <br/>
+                <span class="checkbox">{% if nc.recall_work %}☑{% else %}☐{% endif %}</span> Recall Work
+            </td>
+        </tr>
+    </table>
+
+    <table style="border: none; margin-bottom: 10px;">
+        <tr>
+            <td style="border: none; width: 50%; text-align: center;">
+                <br/>{{ nc.reviewed_by.get_full_name|default:"________________________" }}<br/>
+                <strong>Reviewed By (Section Incharge)</strong>
+            </td>
+            <td style="border: none; width: 50%; text-align: center;">
+                <br/>{{ nc.evaluated_by.get_full_name|default:"________________________" }}<br/>
+                <strong>Evaluated By (QCM)</strong>
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td class="section-header">ROOT CAUSE ANALYSIS</td>
+        </tr>
+        <tr>
+            <td style="height: 60px;">{{ nc.root_cause_analysis|linebreaksbr }}</td>
+        </tr>
+        <tr>
+            <td class="section-header">CORRECTIVE ACTION</td>
+        </tr>
+        <tr>
+            <td style="height: 60px;">{{ nc.corrective_action|linebreaksbr }}</td>
+        </tr>
+        <tr>
+            <td class="section-header">PREVENTIVE ACTION</td>
+        </tr>
+        <tr>
+            <td style="height: 60px;">{{ nc.preventive_action|linebreaksbr }}</td>
+        </tr>
+    </table>
+    
+    <table style="border: none; margin-top: 10px;">
+        <tr>
+            <td style="border: none; width: 33%; text-align: center;">
+                <br/>{{ nc.date_identified|date:"d-M-Y"|default:"__________________" }}<br/>
+                <strong>Target Date</strong>
+            </td>
+            <td style="border: none; width: 33%; text-align: center;">
+                <br/>{{ nc.closed_date|date:"d-M-Y"|default:"__________________" }}<br/>
+                <strong>Closing Date</strong>
+            </td>
+            <td style="border: none; width: 33%; text-align: center;">
+                <br/>{{ nc.closed_by.get_full_name|default:"__________________" }}<br/>
+                <strong>Signature (QCM)</strong>
+            </td>
+        </tr>
+    </table>
+    
+    {% if not forloop.last %}
+    <pdf:nextpage>
+    {% endif %}
+    {% endfor %}
+</body>
+</html>

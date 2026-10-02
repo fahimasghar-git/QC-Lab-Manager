@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QCL-FRM-1.01 Personnel Authorization Permit</title>
+    <style>
+        @page {
+            size: a4 portrait;
+            margin-top: 4cm;
+            margin-bottom: 2cm;
+            margin-left: 1.5cm;
+            margin-right: 1.5cm;
+            @frame header_frame {
+                -pdf-frame-content: header_content;
+                left: 1.5cm; right: 1.5cm; top: 1cm; height: 3cm;
+            }
+            @frame footer_frame {
+                -pdf-frame-content: footer_content;
+                left: 1.5cm; right: 1.5cm; bottom: 0.5cm; height: 1cm;
+            }
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 11px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 4px;
+            vertical-align: middle;
+        }
+        .header-table th, .header-table td {
+            text-align: center;
+            vertical-align: middle;
+            font-size: 12px;
+            background-color: #fff;
+        }
+        .section-header { background-color: #d9d9d9; font-weight: bold; }
+        .checkbox { font-family: monospace; font-size: 14px; }
+        .no-border td { border: none; padding: 2px 5px; }
+    </style>
+</head>
+<body>
+    <!-- Header Content -->
+    <div id="header_content">
+        <table class="header-table">
+            <tr>
+                <td rowspan="3" width="20%">
+                    <!-- Base64 encoded logo -->
+                    <img src="/Users/fahimasghar/Documents/QC-Lab-Manager/static/images/logo1.png" style="height: 50px;" alt="Logo" />
+                </td>
+                <td rowspan="3" width="50%" style="font-size: 16px; font-weight: bold;">
+                    Personnel Authorization Permit
+                </td>
+                <td width="30%" style="text-align: left;"><strong>Format No.:</strong> QCL-FRM-1.01</td>
+            </tr>
+            <tr>
+                <td style="text-align: left;"><strong>Issue Date:</strong> 15-01-2024</td>
+            </tr>
+            <tr>
+                <td style="text-align: left;"><strong>Revision No.:</strong> 00</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Footer Content -->
+    <div id="footer_content" style="text-align: right; font-size: 10px;">
+        Page <pdf:pagenumber> of <pdf:pagecount>
+    </div>
+
+    <table>
+        <tr>
+            <td style="width: 20%; font-weight: bold;">Employee Name:</td>
+            <td style="width: 30%;">{{ permit.user.get_full_name|default:permit.user.username }}</td>
+            <td style="width: 20%; font-weight: bold;">Employee Code:</td>
+            <td style="width: 30%;">{{ permit.employee_code|default:"-" }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Designation:</td>
+            <td colspan="3">{{ permit.designation|default:"-" }}</td>
+        </tr>
+    </table>
+
+    <p style="text-align: justify; font-size: 12px; margin-bottom: 10px;">
+        On the basis of experience, training performance & evaluation and competence, Analyst is authorized for performance of analytical activities on following instrument/techniques/parameter testing.
+    </p>
+
+    <!-- Instruments -->
+    <table>
+        <tr><td colspan="2" class="section-header">Instrument Operation</td></tr>
+        <tr class="no-border">
+            <td style="width: 50%;"><span class="checkbox">{% if permit.op_flame_photometer %}☑{% else %}☐{% endif %}</span> Operation of Flame Photometer</td>
+            <td style="width: 50%;"><span class="checkbox">{% if permit.op_furnace %}☑{% else %}☐{% endif %}</span> Operation of Furnace</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.op_uv_vis %}☑{% else %}☐{% endif %}</span> Operation of UV-Visible Spectrophotometer</td>
+            <td><span class="checkbox">{% if permit.op_ph_meter %}☑{% else %}☐{% endif %}</span> Operation of pH Meter</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.op_karl_fischer %}☑{% else %}☐{% endif %}</span> Operation of Karl Fischer</td>
+            <td><span class="checkbox">{% if permit.op_tds_meter %}☑{% else %}☐{% endif %}</span> Operation of TDS Meter</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.op_kjeldhals %}☑{% else %}☐{% endif %}</span> Operation of Kjeldhal’s Apparatus</td>
+            <td><span class="checkbox">{% if permit.op_analytical_balance %}☑{% else %}☐{% endif %}</span> Operation of Analytical Balance</td>
+        </tr>
+    </table>
+
+    <!-- Tests & Parameters -->
+    <table>
+        <tr><td colspan="2" class="section-header">Testing Parameters</td></tr>
+        <tr class="no-border">
+            <td style="width: 50%;"><span class="checkbox">{% if permit.test_loi %}☑{% else %}☐{% endif %}</span> Loss on Ignition</td>
+            <td style="width: 50%;"><span class="checkbox">{% if permit.test_humic_acid %}☑{% else %}☐{% endif %}</span> Humic Acid Test</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.test_density %}☑{% else %}☐{% endif %}</span> Density Test</td>
+            <td><span class="checkbox">{% if permit.test_phosphorus %}☑{% else %}☐{% endif %}</span> Phosphorus Testing</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.test_ph %}☑{% else %}☐{% endif %}</span> pH Test</td>
+            <td><span class="checkbox">{% if permit.test_toc %}☑{% else %}☐{% endif %}</span> Total Organic Carbon</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.test_conductivity %}☑{% else %}☐{% endif %}</span> Conductivity Test</td>
+            <td><span class="checkbox">{% if permit.test_cn_ratio %}☑{% else %}☐{% endif %}</span> C/N Ratio Calculation</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.test_tds %}☑{% else %}☐{% endif %}</span> TDS Test</td>
+            <td><span class="checkbox">{% if permit.test_organic_matter %}☑{% else %}☐{% endif %}</span> Organic Matter</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.test_lod %}☑{% else %}☐{% endif %}</span> Loss on Drying</td>
+            <td><span class="checkbox">{% if permit.test_cec %}☑{% else %}☐{% endif %}</span> CEC</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.test_weighing %}☑{% else %}☐{% endif %}</span> Weighing</td>
+            <td><span class="checkbox">{% if permit.test_sodium %}☑{% else %}☐{% endif %}</span> Sodium Test</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.test_sieve %}☑{% else %}☐{% endif %}</span> Sieve Test</td>
+            <td><span class="checkbox">{% if permit.test_zinc %}☑{% else %}☐{% endif %}</span> Zinc Test</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.test_calcium %}☑{% else %}☐{% endif %}</span> Calcium test</td>
+            <td><span class="checkbox">{% if permit.test_boron %}☑{% else %}☐{% endif %}</span> Boron Analysis</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.test_sulfur %}☑{% else %}☐{% endif %}</span> Sulfur/Sulfate Test</td>
+            <td><span class="checkbox">{% if permit.test_copper %}☑{% else %}☐{% endif %}</span> Copper Test</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.test_nitrogen %}☑{% else %}☐{% endif %}</span> Nitrogen Test</td>
+            <td><span class="checkbox">{% if permit.test_moisture %}☑{% else %}☐{% endif %}</span> Moisture Test</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.test_titrations %}☑{% else %}☐{% endif %}</span> Manual Titrations</td>
+            <td></td>
+        </tr>
+    </table>
+
+    <!-- Quality & Lab Activities -->
+    <table>
+        <tr><td colspan="2" class="section-header">Quality & Lab Activities</td></tr>
+        <tr class="no-border">
+            <td style="width: 50%;"><span class="checkbox">{% if permit.act_environmental %}☑{% else %}☐{% endif %}</span> Monitoring Environmental Conditions</td>
+            <td style="width: 50%;"><span class="checkbox">{% if permit.act_practical_demo %}☑{% else %}☐{% endif %}</span> Practical Demonstration of Testing Parameters</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.act_intermediate_checks %}☑{% else %}☐{% endif %}</span> Perform the Intermediate Checks</td>
+            <td><span class="checkbox">{% if permit.act_assign_samples %}☑{% else %}☐{% endif %}</span> Assigned the samples for testing to analysts/assistant analyst</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.act_control_chart %}☑{% else %}☐{% endif %}</span> Prepare Control Chart</td>
+            <td><span class="checkbox">{% if permit.act_analyze_samples %}☑{% else %}☐{% endif %}</span> Analyzed the samples</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.act_sample_receiving %}☑{% else %}☐{% endif %}</span> Sample Receiving</td>
+            <td><span class="checkbox">{% if permit.act_housekeeping %}☑{% else %}☐{% endif %}</span> House Keeping</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.act_method_validation %}☑{% else %}☐{% endif %}</span> Method Validation/Verification</td>
+            <td><span class="checkbox">{% if permit.act_solution_prep %}☑{% else %}☐{% endif %}</span> Solution Preparation</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.act_sample_handling %}☑{% else %}☐{% endif %}</span> Sample Handling</td>
+            <td><span class="checkbox">{% if permit.act_sample_retaining %}☑{% else %}☐{% endif %}</span> Sample Retaining</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.act_report_prep %}☑{% else %}☐{% endif %}</span> Report Preparation</td>
+            <td><span class="checkbox">{% if permit.act_sample_discard %}☑{% else %}☐{% endif %}</span> Sample Discard/Dispose</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.act_review_reports %}☑{% else %}☐{% endif %}</span> Preparing/Review the Analysis Reports</td>
+            <td><span class="checkbox">{% if permit.act_stock_management %}☑{% else %}☐{% endif %}</span> Stock Management</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.act_measurement_uncertainty %}☑{% else %}☐{% endif %}</span> Measurements of Uncertainty</td>
+            <td><span class="checkbox">{% if permit.act_id_non_conformity %}☑{% else %}☐{% endif %}</span> Identification of Non-Conformity</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.act_internal_auditing %}☑{% else %}☐{% endif %}</span> Internal Auditing</td>
+            <td><span class="checkbox">{% if permit.act_id_improvement %}☑{% else %}☐{% endif %}</span> Identification of Need for improvement or Deviation</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.act_training_lms %}☑{% else %}☐{% endif %}</span> Training of Lab Staff on LMS 17025:2017</td>
+            <td><span class="checkbox">{% if permit.act_temp_humidity %}☑{% else %}☐{% endif %}</span> Prepare the temperature/humidity charts</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.act_prep_procedures %}☑{% else %}☐{% endif %}</span> Preparation and Reviewing of Procedures/Other Documents</td>
+            <td><span class="checkbox">{% if permit.act_cleaning_inspections %}☑{% else %}☐{% endif %}</span> Perform the Cleaning Inspections</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.act_approve_reports %}☑{% else %}☐{% endif %}</span> Preparation, Reviewing and Approved of Reports</td>
+            <td><span class="checkbox">{% if permit.act_standardization %}☑{% else %}☐{% endif %}</span> Standardization</td>
+        </tr>
+        <tr class="no-border">
+            <td><span class="checkbox">{% if permit.act_prep_release_slip %}☑{% else %}☐{% endif %}</span> Preparation and Review/Verify the Release slip</td>
+            <td><span class="checkbox">{% if permit.act_pt_samples %}☑{% else %}☐{% endif %}</span> PT Samples/Blind Samples</td>
+        </tr>
+    </table>
+
+    <table style="border: none; margin-top: 30px;">
+        <tr>
+            <td style="border: none; width: 50%; text-align: center;">
+                <br/><br/>
+                {{ permit.prepared_by.get_full_name|default:"_________________________" }}<br/>
+                <strong>Prepared By (AQCM)</strong><br/>
+                Date: {% now "d-m-Y" %}
+            </td>
+            <td style="border: none; width: 50%; text-align: center;">
+                <br/><br/>
+                {{ permit.authorized_by.get_full_name|default:"_________________________" }}<br/>
+                <strong>Authorized By (QCM)</strong><br/>
+                Date: {% now "d-m-Y" %}
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

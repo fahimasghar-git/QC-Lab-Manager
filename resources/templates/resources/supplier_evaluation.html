@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QCL-FRM-6.03 Supplier Evaluation</title>
+    <style>
+        @page {
+            size: a4 portrait;
+            margin-top: 4cm;
+            margin-bottom: 2cm;
+            margin-left: 1.5cm;
+            margin-right: 1.5cm;
+            @frame header_frame {
+                -pdf-frame-content: header_content;
+                left: 1.5cm; right: 1.5cm; top: 1cm; height: 3cm;
+            }
+            @frame footer_frame {
+                -pdf-frame-content: footer_content;
+                left: 1.5cm; right: 1.5cm; bottom: 0.5cm; height: 1cm;
+            }
+        }
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 11px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 5px;
+            vertical-align: middle;
+        }
+        .header-table th, .header-table td {
+            text-align: center;
+            vertical-align: middle;
+            font-size: 12px;
+            background-color: #fff;
+        }
+        .checkbox {
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    {% for s in suppliers %}
+    <!-- Header Content -->
+    <div id="header_content">
+        <table class="header-table">
+            <tr>
+                <td rowspan="3" width="20%">
+                    <!-- Base64 encoded logo -->
+                    <img src="/Users/fahimasghar/Documents/QC-Lab-Manager/static/images/logo1.png" style="height: 50px;" alt="Logo" />
+                </td>
+                <td rowspan="3" width="50%" style="font-size: 16px; font-weight: bold;">
+                    External Provider Evaluation & Re-evaluation Form
+                </td>
+                <td width="30%" style="text-align: left;"><strong>Format No.:</strong> QCL-FRM-6.03</td>
+            </tr>
+            <tr>
+                <td style="text-align: left;"><strong>Issue Date:</strong> 15-01-2024</td>
+            </tr>
+            <tr>
+                <td style="text-align: left;"><strong>Revision No.:</strong> 00</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Footer Content -->
+    <div id="footer_content" style="text-align: right; font-size: 10px;">
+        Page <pdf:pagenumber> of <pdf:pagecount>
+    </div>
+
+    <table style="margin-top: 10px;">
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Supplier's Name</td>
+            <td style="width: 70%;">{{ s.name }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Product/Service</td>
+            <td>{{ s.requirements_from_supplier|default:"-" }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Postal Address</td>
+            <td>{{ s.postal_address|default:"-" }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Telephone #</td>
+            <td>{{ s.phone }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Email</td>
+            <td>{{ s.email }}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Website</td>
+            <td>{{ s.website|default:"-" }}</td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td colspan="6" style="background-color: #d9d9d9; font-weight: bold;">Section-A: Preliminary Status</td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <span class="checkbox">☐</span> New Supplier &nbsp;&nbsp;&nbsp;&nbsp; 
+                <span class="checkbox">☑</span> Existing Supplier
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6" style="background-color: #d9d9d9; font-weight: bold;">Section-B: Performance History</td>
+        </tr>
+        <tr>
+            <th style="width: 30%;">Market Feedback</th>
+            <th style="width: 15%;">Rating</th>
+            <th style="width: 10%;">Poor</th>
+            <th style="width: 15%;">Fair</th>
+            <th style="width: 15%;">Good</th>
+            <th style="width: 15%;">Excellence</th>
+        </tr>
+        <tr>
+            <td>Image and reputation</td>
+            <td style="text-align: center;">{{ s.score_market_image }}</td>
+            <td style="text-align: center;">{% if s.score_market_image == 0 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_market_image == 1 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_market_image == 2 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_market_image == 3 %}☑{% else %}☐{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Market share</td>
+            <td style="text-align: center;">{{ s.score_market_share }}</td>
+            <td style="text-align: center;">{% if s.score_market_share == 0 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_market_share == 1 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_market_share == 2 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_market_share == 3 %}☑{% else %}☐{% endif %}</td>
+        </tr>
+        <tr>
+            <th colspan="6" style="text-align: left;">Operational Performance</th>
+        </tr>
+        <tr>
+            <td>Technical Capacity*</td>
+            <td style="text-align: center;">{{ s.score_tech_capacity }}</td>
+            <td style="text-align: center;">{% if s.score_tech_capacity == 0 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_tech_capacity == 1 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_tech_capacity == 2 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_tech_capacity == 3 %}☑{% else %}☐{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Product Quality/Services</td>
+            <td style="text-align: center;">{{ s.score_product_quality }}</td>
+            <td style="text-align: center;">{% if s.score_product_quality == 0 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_product_quality == 1 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_product_quality == 2 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_product_quality == 3 %}☑{% else %}☐{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Lead Time</td>
+            <td style="text-align: center;">{{ s.score_lead_time }}</td>
+            <td style="text-align: center;">{% if s.score_lead_time == 0 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_lead_time == 1 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_lead_time == 2 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_lead_time == 3 %}☑{% else %}☐{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Order Processing</td>
+            <td style="text-align: center;">{{ s.score_order_processing }}</td>
+            <td style="text-align: center;">{% if s.score_order_processing == 0 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_order_processing == 1 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_order_processing == 2 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_order_processing == 3 %}☑{% else %}☐{% endif %}</td>
+        </tr>
+        <tr>
+            <td>Has the supplier regularly met the commitment with respect to Quantity requirement?</td>
+            <td style="text-align: center;">{{ s.score_fulfill_req }}</td>
+            <td style="text-align: center;">{% if s.score_fulfill_req == 0 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_fulfill_req == 1 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_fulfill_req == 2 %}☑{% else %}☐{% endif %}</td>
+            <td style="text-align: center;">{% if s.score_fulfill_req == 3 %}☑{% else %}☐{% endif %}</td>
+        </tr>
+    </table>
+
+    <table style="margin-bottom: 20px;">
+        <tr>
+            <td style="width: 70%; font-weight: bold; font-size: 14px; text-align: right;">Total Score Achieved</td>
+            <td style="width: 30%; text-align: center; font-size: 14px; font-weight: bold;">{{ s.total_score }} / 21</td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td colspan="2" style="background-color: #d9d9d9; font-weight: bold;">Grading</td>
+        </tr>
+        <tr>
+            <td style="width: 50%;">Poor: 0-6</td>
+            <td style="width: 50%;">Good: 13-17</td>
+        </tr>
+        <tr>
+            <td>Fair: 7-12</td>
+            <td>Excellence: 18-21</td>
+        </tr>
+        <tr>
+            <td colspan="2" style="font-weight: bold; text-align: center; font-size: 14px;">Calculated Grade: {{ s.grading }}</td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td colspan="2" style="background-color: #d9d9d9; font-weight: bold;">Section-C: Approval</td>
+        </tr>
+        <tr>
+            <td style="width: 30%; font-weight: bold;">Decision</td>
+            <td style="width: 70%;">
+                <span class="checkbox">{% if s.is_approved %}☑{% else %}☐{% endif %}</span> Approved &nbsp;&nbsp;&nbsp;&nbsp; 
+                <span class="checkbox">{% if not s.is_approved %}☑{% else %}☐{% endif %}</span> Rejected
+            </td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">Remarks (If any)</td>
+            <td>{{ s.is_approved|yesno:"Supplier meets criteria.,Supplier does not meet minimum criteria." }}</td>
+        </tr>
+    </table>
+
+    <table style="border: none; margin-top: 30px;">
+        <tr>
+            <td style="border: none; width: 33%; text-align: center;">
+                <br/><br/>
+                {{ s.evaluated_by.get_full_name|default:"___________________" }}<br/>
+                <strong>Evaluated By</strong>
+            </td>
+            <td style="border: none; width: 33%; text-align: center;">
+                <br/><br/>
+                {{ s.approved_by.get_full_name|default:"___________________" }}<br/>
+                <strong>Approved By</strong>
+            </td>
+            <td style="border: none; width: 33%; text-align: center;">
+                <br/><br/>
+                {{ s.last_evaluation_date|date:"d-m-Y"|default:"___________________" }}<br/>
+                <strong>Date</strong>
+            </td>
+        </tr>
+    </table>
+    
+    {% if not forloop.last %}
+    <pdf:nextpage>
+    {% endif %}
+    {% endfor %}
+</body>
+</html>
