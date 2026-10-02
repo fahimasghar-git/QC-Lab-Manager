@@ -110,7 +110,7 @@ def generate_coa(modeladmin, request, queryset):
 
 @admin.register(Sample)
 class SampleAdmin(ModelAdmin, SimpleHistoryAdmin):
-    list_display = ('category', 'sample_id', 'product_name', 'client', 'status', 'received_date')
+    list_display = ('sample_id', 'serial_number', 'category', 'product_name', 'client', 'status', 'received_date')
     list_filter = ('status', 'received_date', 'product_name')
     search_fields = ('category', 'sample_id', 'product_name', 'batch_number', 'client__name')
     readonly_fields = ('sample_id', 'serial_number', 'received_date', 'verified_by', 'verified_at', 'approved_by', 'approved_at')

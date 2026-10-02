@@ -36,7 +36,7 @@ class Sample(models.Model):
         ('Third Party', 'Third Party'),
     ]
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='Raw Material', help_text="Select sample category for serial numbering")
-    sample_id = models.CharField(max_length=50, unique=True, editable=False, help_text="Auto-generated unique ID")
+    sample_id = models.CharField(max_length=50, unique=True, editable=False, verbose_name="AR Serial Number", help_text="Auto-generated Analysis Request Number")
     
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='samples')
     product_name = models.CharField(max_length=150, help_text="e.g., Urea, DAP, NPK 15-15-15")
@@ -44,7 +44,7 @@ class Sample(models.Model):
     
     sample_quantity = models.CharField(max_length=50, blank=True, null=True, help_text="e.g., 500g, 1L")
     assay = models.CharField(max_length=100, blank=True, null=True, help_text="Assay value for CoA")
-    serial_number = models.CharField(max_length=50, blank=True, null=True, help_text="Serial # for Analysis Request")
+    serial_number = models.CharField(max_length=50, blank=True, null=True, verbose_name="Category Serial", help_text="Category Serial #")
     
     description = models.TextField(help_text="Physical appearance/condition of the sample upon receipt")
     storage_condition = models.CharField(max_length=100, default="Room Temperature", help_text="e.g., Room Temp, Refrigerated")
@@ -73,14 +73,21 @@ class Sample(models.Model):
     notes = models.TextField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        # 1. Generate Master QC ID (e.g. QC0001)
-        if not self.sample_id or not self.sample_id.startswith('QC'):
-            last_qc = Sample.objects.filter(sample_id__startswith='QC').order_by('-id').first()
-            if last_qc and last_qc.sample_id[2:].isdigit():
-                new_qc_num = int(last_qc.sample_id[2:]) + 1
+        # 1. Generate Main AR Serial Number (e.g. 1, 2, 3... 10)
+        if not self.sample_id or self.sample_id.startswith('QC') or self.sample_id.startswith('FERT'):
+            # Find the last sample that has a pure digit sample_id
+            last_sample = Sample.objects.order_by('-id').first()
+            
+            # Since we might have old FERT- or QC records, let's safely get the highest integer
+            all_ids = Sample.objects.values_list('sample_id', flat=True)
+            valid_nums = [int(i) for i in all_ids if str(i).isdigit()]
+            
+            if valid_nums:
+                new_ar_num = max(valid_nums) + 1
             else:
-                new_qc_num = 1
-            self.sample_id = f"QC{new_qc_num:04d}"
+                new_ar_num = 1
+                
+            self.sample_id = str(new_ar_num)
             
         # 2. Generate Category Serial Number (e.g. RM001)
         if not self.serial_number:
