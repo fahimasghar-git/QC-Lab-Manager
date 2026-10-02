@@ -28,6 +28,14 @@ class Sample(models.Model):
     ]
 
     # ISO 17025 requires unique, unambiguous sample identification
+    CATEGORY_CHOICES = [
+        ('PSQCA', 'PSQCA'),
+        ('SFRI', 'SFRI'),
+        ('Raw Material', 'Raw Material'),
+        ('Outside', 'Outside'),
+        ('Third Party', 'Third Party'),
+    ]
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='Raw Material', help_text="Select sample category for serial numbering")
     sample_id = models.CharField(max_length=50, unique=True, editable=False, help_text="Auto-generated unique ID")
     
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='samples')
@@ -66,9 +74,28 @@ class Sample(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.sample_id:
-            # Generate a unique ID like FERT-2026-ABCD
-            unique_part = str(uuid.uuid4()).split('-')[0].upper()
-            self.sample_id = f"FERT-{unique_part}"
+            prefix_map = {
+                'PSQCA': 'PQ',
+                'SFRI': 'SF',
+                'Raw Material': 'RM',
+                'Outside': 'OS',
+                'Third Party': 'TP',
+            }
+            prefix = prefix_map.get(self.category, 'SMP')
+            
+            # Find the last sample_id with this prefix
+            last_sample = Sample.objects.filter(sample_id__startswith=prefix).order_by('-id').first()
+            
+            if last_sample and len(last_sample.sample_id) > len(prefix):
+                number_part = last_sample.sample_id[len(prefix):]
+                if number_part.isdigit():
+                    new_number = int(number_part) + 1
+                else:
+                    new_number = 1
+            else:
+                new_number = 1
+                
+            self.sample_id = f"{prefix}{new_number:03d}"
         super().save(*args, **kwargs)
 
 

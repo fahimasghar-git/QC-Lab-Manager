@@ -110,16 +110,16 @@ def generate_coa(modeladmin, request, queryset):
 
 @admin.register(Sample)
 class SampleAdmin(ModelAdmin, SimpleHistoryAdmin):
-    list_display = ('sample_id', 'product_name', 'client', 'status', 'received_date')
+    list_display = ('category', 'sample_id', 'product_name', 'client', 'status', 'received_date')
     list_filter = ('status', 'received_date', 'product_name')
-    search_fields = ('sample_id', 'product_name', 'batch_number', 'client__name')
+    search_fields = ('category', 'sample_id', 'product_name', 'batch_number', 'client__name')
     readonly_fields = ('sample_id', 'received_date', 'verified_by', 'verified_at', 'approved_by', 'approved_at')
     inlines = [TestResultInline]
     actions = [print_analysis_request, submit_for_verification, verify_and_submit, approve_results, generate_coa]
     
     fieldsets = (
         ('Sample Identification & AR Details', {
-            'fields': ('sample_id', 'serial_number', 'client', 'product_name', 'batch_number', 'sample_quantity', 'assay')
+            'fields': ('category', 'sample_id', 'serial_number', 'client', 'product_name', 'batch_number', 'sample_quantity', 'assay')
         }),
         ('Condition & Storage', {
             'fields': ('description', 'storage_condition', 'status', 'rejection_reason')
