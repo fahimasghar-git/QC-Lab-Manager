@@ -1,6 +1,5 @@
 # Python
 __pycache__/
-*.py[cod]
 *$py.class
 *.so
 
@@ -25,3 +24,18 @@ media_root/
 # Static files (collected)
 staticfiles/
 static_root/
+ISO 17025/
+ISO 17025/
+patch_*.py
+update_*.py
+read_*.py
+fix_*.py
+check_*.py
+add_*.py
+remove_*.py
+rewrite_*.py
+test_*.py
+upgrade_*.py
+ingest_*.py
+generate_*.py
+extract_*.py
