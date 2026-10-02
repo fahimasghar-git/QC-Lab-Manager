@@ -73,7 +73,17 @@ class Sample(models.Model):
     notes = models.TextField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if not self.sample_id:
+        # 1. Generate Master QC ID (e.g. QC0001)
+        if not self.sample_id or not self.sample_id.startswith('QC'):
+            last_qc = Sample.objects.filter(sample_id__startswith='QC').order_by('-id').first()
+            if last_qc and last_qc.sample_id[2:].isdigit():
+                new_qc_num = int(last_qc.sample_id[2:]) + 1
+            else:
+                new_qc_num = 1
+            self.sample_id = f"QC{new_qc_num:04d}"
+            
+        # 2. Generate Category Serial Number (e.g. RM001)
+        if not self.serial_number:
             prefix_map = {
                 'PSQCA': 'PQ',
                 'SFRI': 'SF',
@@ -82,20 +92,19 @@ class Sample(models.Model):
                 'Third Party': 'TP',
             }
             prefix = prefix_map.get(self.category, 'SMP')
+            last_cat = Sample.objects.filter(serial_number__startswith=prefix).order_by('-id').first()
             
-            # Find the last sample_id with this prefix
-            last_sample = Sample.objects.filter(sample_id__startswith=prefix).order_by('-id').first()
-            
-            if last_sample and len(last_sample.sample_id) > len(prefix):
-                number_part = last_sample.sample_id[len(prefix):]
+            if last_cat and last_cat.serial_number and len(last_cat.serial_number) > len(prefix):
+                number_part = last_cat.serial_number[len(prefix):]
                 if number_part.isdigit():
-                    new_number = int(number_part) + 1
+                    new_cat_num = int(number_part) + 1
                 else:
-                    new_number = 1
+                    new_cat_num = 1
             else:
-                new_number = 1
+                new_cat_num = 1
                 
-            self.sample_id = f"{prefix}{new_number:03d}"
+            self.serial_number = f"{prefix}{new_cat_num:03d}"
+            
         super().save(*args, **kwargs)
 
 
