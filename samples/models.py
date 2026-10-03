@@ -197,3 +197,17 @@ class SampleReturn(models.Model):
         
     def __str__(self):
         return f"Return - {self.sample.sample_id}"
+
+
+class PendingApproval(Sample):
+    class Meta:
+        proxy = True
+        verbose_name = 'Pending QCM Approval (Samples)'
+        verbose_name_plural = 'Pending QCM Approvals (Samples)'
+
+class PendingVerification(Sample):
+    class Meta:
+        proxy = True
+        verbose_name = 'Pending AQCM Review (Samples)'
+        verbose_name_plural = 'Pending AQCM Reviews (Samples)'
+

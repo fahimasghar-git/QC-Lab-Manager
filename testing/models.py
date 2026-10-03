@@ -115,3 +115,11 @@ class TestResult(models.Model):
         # on the same sample, unless we remove that constraint or modify it. 
         # Actually, let's just drop the unique constraint for now to allow QC flexibility.
         pass
+
+
+class MyAssignedTest(TestResult):
+    class Meta:
+        proxy = True
+        verbose_name = 'My Assigned Test'
+        verbose_name_plural = 'My Assigned Tests'
+

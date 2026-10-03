@@ -205,3 +205,17 @@ class SampleReturnAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
         if pisa_status.err:
             return HttpResponse('We had some errors <pre>' + html_string + '</pre>')
         return response
+
+
+from .models import PendingApproval, PendingVerification
+
+@admin.register(PendingApproval)
+class PendingApprovalAdmin(SampleAdmin):
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(status='PENDING_APPROVAL')
+
+@admin.register(PendingVerification)
+class PendingVerificationAdmin(SampleAdmin):
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(status='PENDING_VERIFICATION')
+
