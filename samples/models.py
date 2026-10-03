@@ -87,7 +87,7 @@ class Sample(models.Model):
             else:
                 new_ar_num = 1
                 
-            self.sample_id = str(new_ar_num)
+            self.sample_id = f"{new_ar_num:04d}"
             
         # 2. Generate Category Serial Number (e.g. RM001)
         if not self.serial_number:
