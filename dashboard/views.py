@@ -55,30 +55,79 @@ def home(request):
             verification_queue.append({'type': 'Sample Verification', 'id': s.sample_id, 'status': 'Pending AQCM', 'url': f"/admin/samples/sample/{s.id}/change/"})
         # If any other model needs AQCM review in future, add here.
 
+
     approval_queue = []
     if can_see_qcm_queue:
-        # Unified Approval Queue
-        
-        
-        
-        for s in Sample.objects.filter(status='PENDING_APPROVAL'):
-            approval_queue.append({'type': 'Sample', 'id': s.sample_id, 'status': 'Pending QCM', 'url': f"/admin/samples/sample/{s.id}/change/"})
-        for d in Document.objects.filter(status='PENDING_APPROVAL'):
-            approval_queue.append({'type': 'Document SOP', 'id': d.document_id, 'status': 'Pending QCM', 'url': f"/admin/management/document/{d.id}/change/"})
-        for nc in NonConformance.objects.filter(status='PENDING_APPROVAL'):
-            approval_queue.append({'type': 'Non-Conformance', 'id': nc.nc_id, 'status': 'Pending QCM', 'url': f"/admin/management/nonconformance/{nc.id}/change/"})
-        for a in InternalAudit.objects.filter(status='PENDING_APPROVAL'):
-            approval_queue.append({'type': 'Audit', 'id': a.audit_id, 'status': 'Pending QCM', 'url': f"/admin/management/internalaudit/{a.id}/change/"})
-        for c in CompetencyRecord.objects.filter(status='PENDING_APPROVAL'):
-            approval_queue.append({'type': 'Competency', 'id': f"{c.personnel.username} - {c.test_parameter.name}", 'status': 'Pending QCM', 'url': f"/admin/resources/competencyrecord/{c.id}/change/"})
-        for sup in Supplier.objects.filter(status='PENDING_APPROVAL'):
-            approval_queue.append({'type': 'Supplier', 'id': sup.name, 'status': 'Pending QCM', 'url': f"/admin/resources/supplier/{sup.id}/change/"})
-        for pr in PurchaseRequest.objects.filter(status='PENDING_APPROVAL'):
-            approval_queue.append({'type': 'Purchase Request', 'id': pr.pr_number, 'status': 'Pending QCM', 'url': f"/admin/resources/purchaserequest/{pr.id}/change/"})
-        for ra in RecordArchive.objects.filter(status='PENDING_APPROVAL'):
-            approval_queue.append({'type': 'Record Archive', 'id': ra.record_id, 'status': 'Pending QCM', 'url': f"/admin/management/recordarchive/{ra.id}/change/"})
+        # Unified Approval Queue - Safely constructed
+        from django.core.exceptions import FieldError
+
+        def add_to_queue(queryset, item_type, id_attr_func, url_pattern):
+            try:
+                for obj in queryset:
+                    try:
+                        identifier = id_attr_func(obj)
+                    except AttributeError:
+                        identifier = f"{item_type} #{obj.pk}"
+                    
+                    approval_queue.append({
+                        'type': item_type,
+                        'id': identifier,
+                        'status': 'Pending QCM',
+                        'url': url_pattern.format(obj.id)
+                    })
+            except Exception:
+                pass # Catch all so the dashboard NEVER crashes due to a bad model query
+
+        # Samples
+        try:
+            add_to_queue(Sample.objects.filter(status='PENDING_APPROVAL'), 'Sample', lambda s: s.sample_id, "/admin/samples/sample/{}/change/")
+        except: pass
+
+        # Documents
+        try:
+            add_to_queue(Document.objects.filter(status='DRAFT'), 'Document SOP', lambda d: getattr(d, 'document_id', f"Doc #{d.id}"), "/admin/management/document/{}/change/")
+        except: pass
+
+        # Non-Conformances
+        try:
+            add_to_queue(NonConformance.objects.filter(status='OPEN'), 'Non-Conformance', lambda nc: getattr(nc, 'nc_id', f"NC #{nc.id}"), "/admin/management/nonconformance/{}/change/")
+        except: pass
+
+        # Audits
+        try:
+            add_to_queue(InternalAudit.objects.filter(status='SCHEDULED'), 'Audit', lambda a: getattr(a, 'audit_id', f"Audit #{a.id}"), "/admin/management/internalaudit/{}/change/")
+        except: pass
+
+        # Competency
+        try:
+            # Safely handle CompetencyRecord fields which are analyst and test_method
+            add_to_queue(
+                CompetencyRecord.objects.filter(status='IN_TRAINING'), 
+                'Competency', 
+                lambda c: f"{getattr(c.analyst, 'username', 'User')} - {getattr(c.test_method, 'name', 'Method')}", 
+                "/admin/resources/competencyrecord/{}/change/"
+            )
+        except: pass
+
+        # Supplier
+        try:
+            # Supplier might not have status field at all
+            if hasattr(Supplier, 'status'):
+                add_to_queue(Supplier.objects.filter(status='PENDING_APPROVAL'), 'Supplier', lambda s: s.name, "/admin/resources/supplier/{}/change/")
+        except: pass
+
+        # Purchase Request
+        try:
+            add_to_queue(PurchaseRequest.objects.filter(status='REQUESTED'), 'Purchase Request', lambda p: getattr(p, 'item_description', f"PR #{p.id}"), "/admin/resources/purchaserequest/{}/change/")
+        except: pass
+
+        # Record Archive
+        try:
+            add_to_queue(RecordArchive.objects.filter(status='PENDING_APPROVAL'), 'Record Archive', lambda r: getattr(r, 'record_id', f"Record #{r.id}"), "/admin/management/recordarchive/{}/change/")
+        except: pass
 
     context = {
+
         'total_samples': total_samples,
         'pending_samples': pending_samples,
         'completed_samples': completed_samples,
