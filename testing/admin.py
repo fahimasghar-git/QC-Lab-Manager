@@ -76,10 +76,5 @@ class TestResultAdmin(ModelAdmin, SimpleHistoryAdmin):
         super().save_model(request, obj, form, change)
 
 
-from .models import MyAssignedTest
 
-@admin.register(MyAssignedTest)
-class MyAssignedTestAdmin(TestResultAdmin):
-    def get_queryset(self, request):
-        return super().get_queryset(request).filter(analyst=request.user, status__in=['ASSIGNED', 'IN_PROGRESS'])
 

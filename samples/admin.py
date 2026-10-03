@@ -207,15 +207,5 @@ class SampleReturnAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
         return response
 
 
-from .models import PendingApproval, PendingVerification
 
-@admin.register(PendingApproval)
-class PendingApprovalAdmin(SampleAdmin):
-    def get_queryset(self, request):
-        return super().get_queryset(request).filter(status='PENDING_APPROVAL')
-
-@admin.register(PendingVerification)
-class PendingVerificationAdmin(SampleAdmin):
-    def get_queryset(self, request):
-        return super().get_queryset(request).filter(status='PENDING_VERIFICATION')
 

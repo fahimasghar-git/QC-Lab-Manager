@@ -117,9 +117,5 @@ class TestResult(models.Model):
         pass
 
 
-class MyAssignedTest(TestResult):
-    class Meta:
-        proxy = True
-        verbose_name = 'My Assigned Test'
-        verbose_name_plural = 'My Assigned Tests'
+
 

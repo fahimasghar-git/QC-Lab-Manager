@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'inbox',
     'unfold',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -173,35 +174,6 @@ UNFOLD = {
             "900": "30 58 138",
         },
     },
-    
-    "SIDEBAR": {
-        "show_search": True,
-        "show_all_applications": True,
-        "navigation": [
-            {
-                "title": "My To-Do Inbox",
-                "separator": True,
-                "items": [
-                    {
-                        "title": "My Assigned Tests",
-                        "icon": "science",
-                        "link": "/admin/testing/myassignedtest/",
-                    },
-                    {
-                        "title": "Pending AQCM Reviews",
-                        "icon": "fact_check",
-                        "link": "/admin/samples/pendingverification/",
-                    },
-                    {
-                        "title": "Pending QCM Approvals",
-                        "icon": "verified",
-                        "link": "/admin/samples/pendingapproval/",
-                    }
-                ]
-            }
-        ]
-    },
-
     "SCRIPTS": [
         "/static/js/custom_admin.js?v=3",
     ]
