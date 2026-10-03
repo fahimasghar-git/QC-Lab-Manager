@@ -177,3 +177,15 @@ UNFOLD = {
         "/static/js/custom_admin.js?v=3",
     ]
 }
+
+# Render.com Production Settings
+import os
+import dj_database_url
+
+if 'RENDER' in os.environ or 'DATABASE_URL' in os.environ:
+    # Use PostgreSQL on Render
+    db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=False)
+    DATABASES['default'].update(db_from_env)
+    
+    # Security for production
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
