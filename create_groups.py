@@ -39,7 +39,7 @@ def setup_groups():
                 groups_config['CEO'].append(perm)
 
         # 5. IT Admin: All infrastructure/user permissions, NO testing/sample permissions
-        if app not in ['samples', 'testing']:
+        if app in ['auth', 'sessions', 'admin', 'contenttypes']:
             groups_config['IT Admin'].append(perm)
 
     # Save to Database
