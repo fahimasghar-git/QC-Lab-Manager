@@ -25,18 +25,58 @@ def home(request):
     recent_samples = Sample.objects.order_by('-received_date')[:5]
 
     # --- NEW: Parameter-Level Routing (Eliminate Human Wait Factor) ---
-    testing_queue = TestResult.objects.filter(assigned_to=request.user, status__in=['PENDING', 'ASSIGNED', 'IN_PROGRESS']) if not request.user.is_superuser else TestResult.objects.filter(status__in=['PENDING', 'ASSIGNED', 'IN_PROGRESS'])
-    verification_queue = TestResult.objects.filter(status='PENDING_VERIFICATION')
     
-    # QCM queue: Find samples where all tests are verified, but the sample itself isn't approved yet.
-    # To avoid complex SQL, we'll fetch unapproved samples and check the property.
-    unapproved_samples = Sample.objects.exclude(status='APPROVED')
-    approval_queue = [s for s in unapproved_samples if s.is_ready_for_approval]
-    
-    is_analyst = request.user.groups.filter(name='Analyst').exists() or getattr(request.user, 'role', '') == 'ANALYST'
-    is_reviewer = request.user.groups.filter(name='Reviewer').exists() or getattr(request.user, 'role', '') == 'AQCM'
-    is_approver = request.user.groups.filter(name='Approver').exists() or getattr(request.user, 'role', '') == 'QCM'
-    is_admin = request.user.is_superuser or request.user.groups.filter(name='Admin').exists() or getattr(request.user, 'role', '') == 'ADMIN'
+    # Enforce strict group checks based on our new ISO groups
+    is_analyst = request.user.groups.filter(name='Analyst').exists()
+    is_aqcm = request.user.groups.filter(name='AQCM').exists()
+    is_qcm = request.user.groups.filter(name='QCM').exists()
+    is_ceo = request.user.groups.filter(name='CEO').exists()
+    is_admin = request.user.is_superuser or request.user.groups.filter(name='IT Admin').exists()
+
+    # Higher ranks can see lower rank queues:
+    can_see_analyst_queue = is_analyst or is_aqcm or is_qcm or is_admin
+    can_see_aqcm_queue = is_aqcm or is_qcm or is_admin
+    can_see_qcm_queue = is_qcm or is_ceo or is_admin
+
+    testing_queue = []
+    if can_see_analyst_queue:
+        q = TestResult.objects.filter(assigned_to=request.user, status__in=['PENDING', 'ASSIGNED', 'IN_PROGRESS']) if is_analyst and not (is_aqcm or is_qcm or is_admin) else TestResult.objects.filter(status__in=['PENDING', 'ASSIGNED', 'IN_PROGRESS'])
+        for t in q:
+            testing_queue.append({
+                'type': 'Testing',
+                'id': f"Test: {t.parameter.name} on {t.sample.sample_id}",
+                'status': t.get_status_display(),
+                'url': f"/admin/testing/testresult/{t.id}/change/"
+            })
+
+    verification_queue = []
+    if can_see_aqcm_queue:
+        for s in Sample.objects.filter(status='PENDING_VERIFICATION'):
+            verification_queue.append({'type': 'Sample Verification', 'id': s.sample_id, 'status': 'Pending AQCM', 'url': f"/admin/samples/sample/{s.id}/change/"})
+        # If any other model needs AQCM review in future, add here.
+
+    approval_queue = []
+    if can_see_qcm_queue:
+        # Unified Approval Queue
+        from management.models import Document, NonConformance, InternalAudit, RecordArchive
+        from resources.models import CompetencyRecord, Supplier, PurchaseRequest
+        
+        for s in Sample.objects.filter(status='PENDING_APPROVAL'):
+            approval_queue.append({'type': 'Sample', 'id': s.sample_id, 'status': 'Pending QCM', 'url': f"/admin/samples/sample/{s.id}/change/"})
+        for d in Document.objects.filter(status='PENDING_APPROVAL'):
+            approval_queue.append({'type': 'Document SOP', 'id': d.document_id, 'status': 'Pending QCM', 'url': f"/admin/management/document/{d.id}/change/"})
+        for nc in NonConformance.objects.filter(status='PENDING_APPROVAL'):
+            approval_queue.append({'type': 'Non-Conformance', 'id': nc.nc_id, 'status': 'Pending QCM', 'url': f"/admin/management/nonconformance/{nc.id}/change/"})
+        for a in InternalAudit.objects.filter(status='PENDING_APPROVAL'):
+            approval_queue.append({'type': 'Audit', 'id': a.audit_id, 'status': 'Pending QCM', 'url': f"/admin/management/internalaudit/{a.id}/change/"})
+        for c in CompetencyRecord.objects.filter(status='PENDING_APPROVAL'):
+            approval_queue.append({'type': 'Competency', 'id': f"{c.personnel.username} - {c.test_parameter.name}", 'status': 'Pending QCM', 'url': f"/admin/resources/competencyrecord/{c.id}/change/"})
+        for sup in Supplier.objects.filter(status='PENDING_APPROVAL'):
+            approval_queue.append({'type': 'Supplier', 'id': sup.name, 'status': 'Pending QCM', 'url': f"/admin/resources/supplier/{sup.id}/change/"})
+        for pr in PurchaseRequest.objects.filter(status='PENDING_APPROVAL'):
+            approval_queue.append({'type': 'Purchase Request', 'id': pr.pr_number, 'status': 'Pending QCM', 'url': f"/admin/resources/purchaserequest/{pr.id}/change/"})
+        for ra in RecordArchive.objects.filter(status='PENDING_APPROVAL'):
+            approval_queue.append({'type': 'Record Archive', 'id': ra.record_id, 'status': 'Pending QCM', 'url': f"/admin/management/recordarchive/{ra.id}/change/"})
 
     context = {
         'total_samples': total_samples,
@@ -48,13 +88,14 @@ def home(request):
         'docs_review_due': docs_review_due,
         'recent_samples': recent_samples,
         
-        # New context vars
+        # Unified Queues
         'testing_queue': testing_queue,
         'verification_queue': verification_queue,
         'approval_queue': approval_queue,
-        'is_analyst': is_analyst,
-        'is_reviewer': is_reviewer,
-        'is_approver': is_approver,
-        'is_admin': is_admin,
+        
+        # Permissions
+        'can_see_analyst_queue': can_see_analyst_queue,
+        'can_see_aqcm_queue': can_see_aqcm_queue,
+        'can_see_qcm_queue': can_see_qcm_queue,
     }
     return render(request, 'dashboard/home.html', context)
