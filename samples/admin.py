@@ -110,6 +110,10 @@ def generate_coa(modeladmin, request, queryset):
 
 @admin.register(Sample)
 class SampleAdmin(ModelAdmin, SimpleHistoryAdmin):
+
+    class Media:
+        js = ('js/sample_category_toggle.js',)
+
     list_display = ('sample_id', 'serial_number', 'category', 'product_name', 'client', 'status', 'received_date')
     list_filter = ('status', 'received_date', 'product_name')
     search_fields = ('category', 'sample_id', 'product_name', 'batch_number', 'client__name')
