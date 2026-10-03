@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from samples.models import Sample
 from testing.models import TestResult
-from resources.models import Equipment
-from management.models import NonConformance, Document
+from resources.models import Equipment, CompetencyRecord, Supplier, PurchaseRequest
+from management.models import NonConformance, Document, InternalAudit, RecordArchive
 from django.utils import timezone
 
 @login_required
@@ -58,8 +58,8 @@ def home(request):
     approval_queue = []
     if can_see_qcm_queue:
         # Unified Approval Queue
-        from management.models import Document, NonConformance, InternalAudit, RecordArchive
-        from resources.models import CompetencyRecord, Supplier, PurchaseRequest
+        
+        
         
         for s in Sample.objects.filter(status='PENDING_APPROVAL'):
             approval_queue.append({'type': 'Sample', 'id': s.sample_id, 'status': 'Pending QCM', 'url': f"/admin/samples/sample/{s.id}/change/"})
