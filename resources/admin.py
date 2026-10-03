@@ -7,8 +7,43 @@ from simple_history.admin import SimpleHistoryAdmin
 from .models import Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
 from django.utils import timezone
 
+
+from django.utils import timezone
+from django.contrib import admin
+
+@admin.action(description="Submit selected for Approval")
+def submit_for_approval(modeladmin, request, queryset):
+    updated = 0
+    for obj in queryset:
+        if hasattr(obj, 'status') and obj.status == 'DRAFT':
+            obj.status = 'PENDING_APPROVAL'
+            if hasattr(obj, 'prepared_by') and not obj.prepared_by:
+                obj.prepared_by = request.user
+                if hasattr(obj, 'prepared_at'):
+                    obj.prepared_at = timezone.now()
+            obj.save()
+            updated += 1
+    modeladmin.message_user(request, f"Successfully submitted {updated} records for approval.")
+
+@admin.action(description="Approve selected records")
+def approve_records(modeladmin, request, queryset):
+    updated = 0
+    for obj in queryset:
+        if hasattr(obj, 'status') and obj.status == 'PENDING_APPROVAL':
+            obj.status = 'APPROVED'
+            if hasattr(obj, 'approved_by'):
+                obj.approved_by = request.user
+                if hasattr(obj, 'approved_at'):
+                    obj.approved_at = timezone.now()
+            elif hasattr(obj, 'authorized_by'):
+                obj.authorized_by = request.user
+            obj.save()
+            updated += 1
+    modeladmin.message_user(request, f"Successfully approved {updated} records.")
+
 @admin.register(ReagentStandard)
 class ReagentStandardAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
+    actions = [submit_for_approval, approve_records]
     list_display = ('name', 'lot_number', 'supplier', 'expiry_date', 'status')
     list_filter = ('status', 'supplier')
     search_fields = ('name', 'lot_number', 'certificate_reference')
@@ -25,7 +60,7 @@ class EquipmentAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
     list_display = ('name', 'identification_no', 'serial_number', 'status', 'location', 'calibration_frequency')
     list_filter = ('status', 'location', 'calibration_frequency')
     search_fields = ('name', 'identification_no', 'serial_number')
-    actions = ['print_master_list', 'print_calibration_program']
+    actions = [submit_for_approval, approve_records, 'print_master_list', 'print_calibration_program']
 
     @admin.action(description='🖨️ Print Master List of Equipments (QCL-FRM-4.02)')
     def print_master_list(self, request, queryset):
@@ -55,7 +90,7 @@ class CompetencyRecordAdmin(ModelAdmin):
     list_filter = ('status', 'analyst')
     search_fields = ('analyst__username', 'test_method__name')
     readonly_fields = ('total_score', 'competency_level')
-    actions = ['print_competency_report']
+    actions = [submit_for_approval, approve_records, 'print_competency_report']
 
     fieldsets = (
         ('Analyst Information', {
@@ -91,7 +126,7 @@ class CompetencyEvaluationAdmin(ModelAdmin):
     list_display = ('analyst', 'evaluation_date', 'supervisor')
     list_filter = ('evaluation_date', 'analyst')
     search_fields = ('analyst__username', 'supervisor__username')
-    actions = ['print_competency_evaluation']
+    actions = [submit_for_approval, approve_records, 'print_competency_evaluation']
 
     fieldsets = (
         ('Basic Information (Section A)', {
@@ -136,7 +171,7 @@ class SupplierAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
     list_filter = ('decision', 'evaluation_type')
     search_fields = ('name', 'contact_person')
     readonly_fields = ('total_score', 'grading')
-    actions = ['print_supplier_selection', 'print_approved_supplier_list', 'print_supplier_evaluation', 'print_supplier_monitoring']
+    actions = [submit_for_approval, approve_records, 'print_supplier_selection', 'print_approved_supplier_list', 'print_supplier_evaluation', 'print_supplier_monitoring']
 
     fieldsets = (
         ('Supplier Information', {
@@ -169,7 +204,7 @@ class PurchaseRequestAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin
     list_display = ('id', 'item_description', 'quantity_required', 'status', 'requested_by', 'requested_date')
     list_filter = ('status', 'supplier')
     search_fields = ('item_description', 'specification', 'purpose')
-    actions = ['print_purchase_demand']
+    actions = [submit_for_approval, approve_records, 'print_purchase_demand']
 
     fieldsets = (
         ('Request Details', {
@@ -197,7 +232,7 @@ class EquipmentMaintenanceAdmin(ModelAdmin):
     list_display = ('equipment', 'maintenance_date', 'maintenance_by')
     list_filter = ('maintenance_date', 'equipment')
     search_fields = ('equipment__name', 'equipment__identification_no', 'maintenance_by')
-    actions = ['print_maintenance_record']
+    actions = [submit_for_approval, approve_records, 'print_maintenance_record']
     
     fieldsets = (
         ('Maintenance Details', {
@@ -216,6 +251,7 @@ class EquipmentMaintenanceAdmin(ModelAdmin):
 
 @admin.register(ProductServiceInspection)
 class ProductServiceInspectionAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
+    actions = [submit_for_approval, approve_records]
     list_display = ('description', 'inspection_type', 'external_provider', 'date_of_receipt', 'status')
     list_filter = ('inspection_type', 'status', 'date_of_receipt')
     search_fields = ('description', 'gate_pass_no', 'pr_po_no', 'invoice_no')
@@ -246,7 +282,7 @@ class ProductServiceInspectionAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHis
         }),
     )
     
-    actions = ['print_inspection_form']
+    actions = [submit_for_approval, approve_records, 'print_inspection_form']
     
     @admin.action(description='Print Products/Services Inspection Form (QCL-FRM-6.08)')
     def print_inspection_form(self, request, queryset):
@@ -272,7 +308,7 @@ class PersonnelAuthorizationAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHisto
     list_display = ('user', 'employee_code', 'designation', 'authorization_date')
     search_fields = ('user__username', 'user__first_name', 'employee_code', 'designation')
     
-    actions = ['print_authorization_permit', 'print_list_of_authorized_staff']
+    actions = [submit_for_approval, approve_records, 'print_authorization_permit', 'print_list_of_authorized_staff']
     
     fieldsets = (
         ('Staff Info', {
@@ -364,7 +400,7 @@ class ComparativeStatementAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistory
     list_display = ('item_name', 'date', 'purchase_demand', 'prepared_by')
     search_fields = ('item_name',)
     inlines = [ComparativeStatementSupplierInline]
-    actions = ['print_comparative_statement']
+    actions = [submit_for_approval, approve_records, 'print_comparative_statement']
     
     @admin.action(description='Print Comparative Statement (QCL-FRM-6.05)')
     def print_comparative_statement(self, request, queryset):
@@ -385,7 +421,7 @@ class SupplierEvaluationPlanAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHisto
     list_display = ('year', 'prepared_by', 'prepared_at', 'approved_by')
     search_fields = ('year',)
     inlines = [SupplierEvaluationPlanItemInline]
-    actions = ['print_evaluation_plan']
+    actions = [submit_for_approval, approve_records, 'print_evaluation_plan']
     
     @admin.action(description='Print Supplier Evaluation Plan (QCL-FRM-6.06)')
     def print_evaluation_plan(self, request, queryset):

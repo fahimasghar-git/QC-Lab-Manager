@@ -12,8 +12,43 @@ from django.utils import timezone
 
 
 
+
+from django.utils import timezone
+from django.contrib import admin
+
+@admin.action(description="Submit selected for Approval")
+def submit_for_approval(modeladmin, request, queryset):
+    updated = 0
+    for obj in queryset:
+        if hasattr(obj, 'status') and obj.status == 'DRAFT':
+            obj.status = 'PENDING_APPROVAL'
+            if hasattr(obj, 'prepared_by') and not obj.prepared_by:
+                obj.prepared_by = request.user
+                if hasattr(obj, 'prepared_at'):
+                    obj.prepared_at = timezone.now()
+            obj.save()
+            updated += 1
+    modeladmin.message_user(request, f"Successfully submitted {updated} records for approval.")
+
+@admin.action(description="Approve selected records")
+def approve_records(modeladmin, request, queryset):
+    updated = 0
+    for obj in queryset:
+        if hasattr(obj, 'status') and obj.status == 'PENDING_APPROVAL':
+            obj.status = 'APPROVED'
+            if hasattr(obj, 'approved_by'):
+                obj.approved_by = request.user
+                if hasattr(obj, 'approved_at'):
+                    obj.approved_at = timezone.now()
+            elif hasattr(obj, 'authorized_by'):
+                obj.authorized_by = request.user
+            obj.save()
+            updated += 1
+    modeladmin.message_user(request, f"Successfully approved {updated} records.")
+
 @admin.register(RecordArchive)
 class RecordArchiveAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
+    actions = [submit_for_approval, approve_records]
     list_display = ('record_id', 'record_type', 'created_at', 'archived_by', 'retention_date')
     list_filter = ('record_type', 'created_at', 'retention_date')
     search_fields = ('record_id',)
@@ -26,6 +61,7 @@ class RecordArchiveAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
 
 @admin.register(Document)
 class DocumentAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
+    actions = [submit_for_approval, approve_records]
     list_display = ('document_id', 'title', 'version', 'status', 'issue_date', 'next_review_date')
     list_filter = ('status', 'doc_type', 'next_review_date')
     search_fields = ('document_id', 'title')
@@ -85,7 +121,7 @@ class NonConformanceAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin)
     list_filter = ('status', 'date_identified')
     search_fields = ('nc_id', 'description', 'root_cause_analysis')
     readonly_fields = ('identified_by', 'date_identified', 'closed_date', 'closed_by')
-    actions = ['print_non_conformance', 'print_non_conformance_log', 'print_root_cause_analysis']
+    actions = [submit_for_approval, approve_records, 'print_non_conformance', 'print_non_conformance_log', 'print_root_cause_analysis']
     
     fieldsets = (
         ('Identification & Source', {
@@ -164,6 +200,7 @@ class AuditFindingInline(TabularInline):
 
 @admin.register(InternalAudit)
 class InternalAuditAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
+    actions = [submit_for_approval, approve_records]
     list_display = ('audit_id', 'scope', 'scheduled_date', 'status', 'lead_auditor')
     list_filter = ('status', 'scheduled_date')
     search_fields = ('audit_id', 'scope')
@@ -173,6 +210,7 @@ class InternalAuditAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
 # but can be registered separately if needed.
 @admin.register(AuditFinding)
 class AuditFindingAdmin(ModelAdmin, SimpleHistoryAdmin):
+    actions = [submit_for_approval, approve_records]
     list_display = ('audit', 'severity', 'clause_reference', 'linked_nc')
     list_filter = ('severity', 'audit')
 
@@ -180,12 +218,14 @@ from .models import Risk, ManagementReview, LabCleaningInspection, LabCleaningDa
 
 @admin.register(Risk)
 class RiskAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
+    actions = [submit_for_approval, approve_records]
     list_display = ('description', 'risk_type', 'likelihood', 'impact', 'risk_score', 'status')
     list_filter = ('risk_type', 'status')
     search_fields = ('description',)
 
 @admin.register(ManagementReview)
 class ManagementReviewAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
+    actions = [submit_for_approval, approve_records]
     list_display = ('meeting_date', 'chairperson', 'status')
     list_filter = ('status', 'meeting_date')
     search_fields = ('inputs_discussion', 'outputs_and_decisions')
@@ -200,7 +240,7 @@ class LabCleaningDailyRecordInline(TabularInline):
 class LabCleaningInspectionAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
     list_display = ('section_area', 'month_year')
     inlines = [LabCleaningDailyRecordInline]
-    actions = ['print_cleaning_inspection']
+    actions = [submit_for_approval, approve_records, 'print_cleaning_inspection']
     
     @admin.action(description='Print Lab Cleaning Inspection Sheet (17.14)')
     def print_cleaning_inspection(self, request, queryset):
@@ -215,7 +255,7 @@ class LabCleaningInspectionAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistor
 @admin.register(MasterListRecord)
 class MasterListRecordAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
     list_display = ('title', 'code', 'revision_no', 'location', 'retention_period')
-    actions = ['print_master_list_records']
+    actions = [submit_for_approval, approve_records, 'print_master_list_records']
     
     @admin.action(description='Print Master List of Records (20.01)')
     def print_master_list_records(self, request, queryset):
@@ -230,7 +270,7 @@ class MasterListRecordAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmi
 @admin.register(MasterListFileFolder)
 class MasterListFileFolderAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
     list_display = ("title", "file_code", "volume", "keeper", "folder_status", "status")
-    actions = ['print_master_list_files']
+    actions = [submit_for_approval, approve_records, 'print_master_list_files']
     
     @admin.action(description='Print Master List of Files and Folders (20.02)')
     def print_master_list_files(self, request, queryset):
@@ -245,7 +285,7 @@ class MasterListFileFolderAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistory
 @admin.register(CustomerFeedback)
 class CustomerFeedbackAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
     list_display = ('customer_name', 'date', 'percentage')
-    actions = ['print_customer_feedback']
+    actions = [submit_for_approval, approve_records, 'print_customer_feedback']
     
     @admin.action(description='Print Customer Feedback Form (21.01)')
     def print_customer_feedback(self, request, queryset):
