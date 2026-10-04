@@ -48,7 +48,17 @@
         </div>
     </div>
 
+    
+    <!-- KPI Summary Badges -->
+    <div class="row mb-4 text-center">
+        <div class="col-3"><div class="p-3 border rounded bg-white shadow-sm"><h3 class="text-primary fw-bold mb-0">{{ competencies|length }}</h3><small class="text-muted text-uppercase">Competencies</small></div></div>
+        <div class="col-3"><div class="p-3 border rounded bg-white shadow-sm"><h3 class="text-success fw-bold mb-0">{{ tests|length }}</h3><small class="text-muted text-uppercase">Tests Done</small></div></div>
+        <div class="col-3"><div class="p-3 border rounded bg-white shadow-sm"><h3 class="text-danger fw-bold mb-0">{{ capas|length }}</h3><small class="text-muted text-uppercase">CAPAs</small></div></div>
+        <div class="col-3"><div class="p-3 border rounded bg-white shadow-sm"><h3 class="text-warning fw-bold mb-0">{{ docs|length }}</h3><small class="text-muted text-uppercase">Documents</small></div></div>
+    </div>
+
     <!-- Section 1: Competency -->
+
     <h4 class="section-header"><i class="fas fa-certificate text-primary me-2"></i> 1. Authorized Competencies</h4>
     <table class="table table-bordered table-sm">
         <thead class="table-light">

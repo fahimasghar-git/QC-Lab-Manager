@@ -36,17 +36,19 @@
         <h3 class="fw-bold mb-1">QC Laboratory - ISO 17025 LIMS</h3>
         <h5 class="text-uppercase text-secondary">{{ title }}</h5>
         
-        <div class="row mt-4 text-start">
+        
+        <div class="row mt-4 text-start bg-light p-3 border rounded">
             <div class="col-4">
                 <strong>Filtered User:</strong> {{ user_filtered }}
             </div>
             <div class="col-4 text-center">
-                <strong>Date Range:</strong> {{ date_from|default:"Any" }} to {{ date_to|default:"Any" }}
+                <strong>Date Range:</strong> {{ date_from|default:"All Time" }} to {{ date_to|default:"All Time" }}
             </div>
-            <div class="col-4 text-end">
-                <strong>Generated On:</strong> {% now "Y-m-d H:i" %}
+            <div class="col-4 text-end text-primary fs-5">
+                <strong>Total Records Found:</strong> {{ records|length }}
             </div>
         </div>
+
     </div>
 
     <!-- Report Table -->

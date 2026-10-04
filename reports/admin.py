@@ -116,6 +116,7 @@ class ReportGeneratorAdmin(ModelAdmin):
                 **self.admin_site.each_context(request),
                 "title": "On-Demand Filter Reports",
                 "users": users,
+                "parameters": Parameter.objects.all().order_by("name"),
             }
             return render(request, "admin/reports/reportgenerator/form.html", context)
             
@@ -124,6 +125,7 @@ class ReportGeneratorAdmin(ModelAdmin):
         date_from = request.GET.get('date_from')
         date_to = request.GET.get('date_to')
         status = request.GET.get('status')
+        parameter_id = request.GET.get('parameter')
         export_csv = request.GET.get('export') == 'csv'
 
         records = []
@@ -138,6 +140,7 @@ class ReportGeneratorAdmin(ModelAdmin):
                     **self.admin_site.each_context(request),
                     "title": "On-Demand Filter Reports",
                     "users": users,
+                "parameters": Parameter.objects.all().order_by("name"),
                 }
                 return render(request, "admin/reports/reportgenerator/form.html", context)
                 
@@ -147,6 +150,7 @@ class ReportGeneratorAdmin(ModelAdmin):
             t_qs = TestResult.objects.filter(analyst=target_user).select_related('sample', 'parameter')
             if date_from: t_qs = t_qs.filter(tested_at__date__gte=date_from)
             if date_to: t_qs = t_qs.filter(tested_at__date__lte=date_to)
+            if parameter_id: t_qs = t_qs.filter(parameter_id=parameter_id)
             
             # 2. Competencies
             c_qs = CompetencyRecord.objects.filter(analyst=target_user).select_related('test_method', 'authorized_by')
@@ -180,6 +184,7 @@ class ReportGeneratorAdmin(ModelAdmin):
             if date_from: qs = qs.filter(tested_at__date__gte=date_from)
             if date_to: qs = qs.filter(tested_at__date__lte=date_to)
             if status: qs = qs.filter(status=status)
+            if parameter_id: qs = qs.filter(parameter_id=parameter_id)
             
             headers = ['Sample ID', 'Parameter', 'Analyst', 'Result', 'Status', 'Date Tested']
             records = [[r.sample.sample_id if r.sample else 'N/A', r.parameter.name, r.analyst.username if r.analyst else 'N/A', f"{r.result_value} {r.unit}", r.get_status_display(), r.tested_at.strftime('%Y-%m-%d') if r.tested_at else 'N/A'] for r in qs]
@@ -191,6 +196,7 @@ class ReportGeneratorAdmin(ModelAdmin):
             if date_from: qs = qs.filter(authorization_date__gte=date_from)
             if date_to: qs = qs.filter(authorization_date__lte=date_to)
             if status: qs = qs.filter(status=status)
+            if parameter_id: qs = qs.filter(parameter_id=parameter_id)
 
             headers = ['Analyst', 'Test Method', 'Authorized By', 'Status', 'Auth Date']
             records = [[r.analyst.username if r.analyst else 'N/A', r.test_method.name if r.test_method else 'N/A', r.authorized_by.username if r.authorized_by else 'N/A', r.get_status_display(), r.authorization_date.strftime('%Y-%m-%d') if r.authorization_date else 'N/A'] for r in qs]
@@ -202,6 +208,7 @@ class ReportGeneratorAdmin(ModelAdmin):
             if date_from: qs = qs.filter(issue_date__gte=date_from)
             if date_to: qs = qs.filter(issue_date__lte=date_to)
             if status: qs = qs.filter(status=status)
+            if parameter_id: qs = qs.filter(parameter_id=parameter_id)
 
             headers = ['Doc ID', 'Title', 'Rev', 'Status', 'Issue Date', 'Next Review']
             records = [[r.document_id, r.title, r.revision_number, r.get_status_display(), r.issue_date.strftime('%Y-%m-%d') if r.issue_date else 'N/A', r.next_review_date.strftime('%Y-%m-%d') if r.next_review_date else 'N/A'] for r in qs]
@@ -213,6 +220,7 @@ class ReportGeneratorAdmin(ModelAdmin):
             if date_from: qs = qs.filter(received_date__date__gte=date_from)
             if date_to: qs = qs.filter(received_date__date__lte=date_to)
             if status: qs = qs.filter(status=status)
+            if parameter_id: qs = qs.filter(parameter_id=parameter_id)
 
             headers = ['Sample ID', 'Product', 'Client', 'Priority', 'Status', 'Received Date']
             records = [[r.sample_id, r.product_name, r.client.name if r.client else 'N/A', r.get_priority_display(), r.get_status_display(), r.received_date.strftime('%Y-%m-%d') if r.received_date else 'N/A'] for r in qs]
@@ -224,6 +232,7 @@ class ReportGeneratorAdmin(ModelAdmin):
             if date_from: qs = qs.filter(date_reported__gte=date_from)
             if date_to: qs = qs.filter(date_reported__lte=date_to)
             if status: qs = qs.filter(status=status)
+            if parameter_id: qs = qs.filter(parameter_id=parameter_id)
 
             headers = ['NC ID', 'Description', 'Reported By', 'Assigned To', 'Status', 'Date']
             records = [[r.nc_id, r.description[:50], r.reported_by.username if r.reported_by else 'N/A', r.assigned_to.username if r.assigned_to else 'N/A', r.get_status_display(), r.date_reported.strftime('%Y-%m-%d') if r.date_reported else 'N/A'] for r in qs]
