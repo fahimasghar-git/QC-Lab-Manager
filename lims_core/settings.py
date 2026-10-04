@@ -162,6 +162,93 @@ UNFOLD = {
     "SITE_TITLE": "QC Lab Manager",
     "SITE_HEADER": "ISO 17025 LIMS",
     "SITE_URL": "/",
+
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": True,
+        "navigation": [
+            {
+                "title": "1. My To-Do Inbox",
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {"title": "Pending Approvals", "link": "/admin/inbox/inboxitem/", "icon": "inbox"},
+                ]
+            },
+            {
+                "title": "Laboratory Testing",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {"title": "Samples", "link": "/admin/samples/sample/", "icon": "science"},
+                    {"title": "Test Results", "link": "/admin/testing/testresult/", "icon": "biotech"},
+                    {"title": "Parameters", "link": "/admin/testing/parameter/", "icon": "tune"},
+                    {"title": "Test Methods", "link": "/admin/testing/testmethod/", "icon": "menu_book"},
+                ]
+            },
+            {
+                "title": "Quality Management",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {"title": "Documents (SOPs)", "link": "/admin/management/document/", "icon": "description"},
+                    {"title": "Non-Conformances", "link": "/admin/management/nonconformance/", "icon": "warning"},
+                    {"title": "Corrective Actions (CAPA)", "link": "/admin/management/correctiveaction/", "icon": "build"},
+                    {"title": "Internal Audits", "link": "/admin/management/internalaudit/", "icon": "fact_check"},
+                    {"title": "Management Reviews", "link": "/admin/management/managementreview/", "icon": "groups"},
+                    {"title": "Risks & Opportunities", "link": "/admin/management/riskopportunity/", "icon": "psychology"},
+                ]
+            },
+            {
+                "title": "Resources & Inventory",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {"title": "Equipment List", "link": "/admin/resources/equipment/", "icon": "precision_manufacturing"},
+                    {"title": "Equipment Maintenance", "link": "/admin/resources/equipmentmaintenance/", "icon": "handyman"},
+                    {"title": "Calibration Records", "link": "/admin/resources/calibrationrecord/", "icon": "speed"},
+                    {"title": "Reagents & CRMs (FRM 5.01)", "link": "/admin/resources/reagentstandard/", "icon": "science"},
+                    {"title": "Chemical Issuance Log", "link": "/admin/inventory/inventoryissuance/", "icon": "assignment"},
+                    {"title": "Test Cost Recipes (BOM)", "link": "/admin/inventory/testbom/", "icon": "receipt_long"},
+                    {"title": "Suppliers", "link": "/admin/resources/supplier/", "icon": "local_shipping"},
+                    {"title": "Purchase Requests", "link": "/admin/resources/purchaserequest/", "icon": "shopping_cart"},
+                    {"title": "Supplier Evaluations", "link": "/admin/resources/supplierevaluationplan/", "icon": "star"},
+                    {"title": "Product Inspections", "link": "/admin/resources/productserviceinspection/", "icon": "policy"},
+                    {"title": "Comparative Statements", "link": "/admin/resources/comparativestatement/", "icon": "compare_arrows"},
+                ]
+            },
+            {
+                "title": "Personnel & Competency",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {"title": "Personnel Authorizations", "link": "/admin/resources/personnelauthorization/", "icon": "badge"},
+                    {"title": "Competency Records", "link": "/admin/resources/competencyrecord/", "icon": "school"},
+                    {"title": "Competency Evaluations", "link": "/admin/resources/competencyevaluation/", "icon": "assignment_turned_in"},
+                ]
+            },
+            {
+                "title": "MIS Reports & Dashboards",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {"title": "Laboratory KPI Dashboard", "link": "/admin/reports/performancemetrics/", "icon": "dashboard"},
+                    {"title": "On-Demand Filter Reports", "link": "/admin/reports/reportgenerator/", "icon": "filter_alt"},
+                    {"title": "Costing & Financials", "link": "/admin/inventory/costingdashboard/", "icon": "attach_money"},
+                ]
+            },
+            {
+                "title": "Admin & Users",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {"title": "Users", "link": "/admin/auth/user/", "icon": "person"},
+                    {"title": "Groups (Roles)", "link": "/admin/auth/group/", "icon": "group"},
+                ]
+            }
+        ]
+    },
+
     "COLORS": {
         "primary": {
             "50": "239 246 255",
