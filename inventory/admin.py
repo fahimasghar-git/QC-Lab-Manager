@@ -1,26 +1,6 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin, TabularInline
-from .models import InventoryItem, TestBOM, BOMItem, InventoryIssuance
-
-@admin.register(InventoryItem)
-class InventoryItemAdmin(ModelAdmin):
-    list_display = ('name', 'item_type', 'current_stock', 'unit_of_measure', 'unit_cost', 'total_value', 'stock_status')
-    list_filter = ('item_type', 'supplier')
-    search_fields = ('name', 'part_number')
-    readonly_fields = ('created_at', 'updated_at')
-
-    def total_value(self, obj):
-        return f"${obj.current_stock * obj.unit_cost:.2f}"
-    total_value.short_description = "Total Value"
-
-    def stock_status(self, obj):
-        if obj.current_stock <= 0:
-            return "OUT OF STOCK"
-        elif obj.current_stock <= obj.reorder_level:
-            return "LOW STOCK"
-        return "OK"
-    stock_status.short_description = "Status"
-
+from .models import TestBOM, BOMItem, InventoryIssuance
 
 class BOMItemInline(TabularInline):
     model = BOMItem
@@ -64,6 +44,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.db.models import Sum
 from .models import CostingDashboard
+from resources.models import ReagentStandard
 
 @admin.register(CostingDashboard)
 class CostingDashboardAdmin(ModelAdmin):

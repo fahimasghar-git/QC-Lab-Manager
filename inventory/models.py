@@ -1,38 +1,8 @@
 from django.db import models
 from django.conf import settings
 from testing.models import Parameter, TestResult
+from resources.models import ReagentStandard
 from django.core.exceptions import ValidationError
-
-class InventoryItem(models.Model):
-    ITEM_TYPES = [
-        ('CHEMICAL', 'Chemical / Reagent'),
-        ('CRM', 'Certified Reference Material (CRM)'),
-        ('CONSUMABLE', 'Consumable (Filter Paper, etc.)'),
-        ('GLASSWARE', 'Glassware'),
-    ]
-
-    name = models.CharField(max_length=200, help_text="e.g. Sulfuric Acid, Sodium Hydroxide")
-    item_type = models.CharField(max_length=20, choices=ITEM_TYPES, default='CHEMICAL')
-    part_number = models.CharField(max_length=100, blank=True, null=True, help_text="CAS Number, SKU, or Internal ID")
-    
-    unit_of_measure = models.CharField(max_length=20, help_text="e.g. g, mg, kg, ml, L, unit")
-    unit_cost = models.DecimalField(max_digits=10, decimal_places=4, help_text="Cost per single unit of measure")
-    
-    current_stock = models.DecimalField(max_digits=12, decimal_places=4, default=0)
-    reorder_level = models.DecimalField(max_digits=12, decimal_places=4, default=0, help_text="Alert if stock falls below this")
-    
-    supplier = models.ForeignKey('resources.Supplier', on_delete=models.SET_NULL, null=True, blank=True)
-    expiry_date = models.DateField(null=True, blank=True)
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.name} ({self.current_stock} {self.unit_of_measure})"
-        
-    class Meta:
-        verbose_name = "Inventory Item (Chemical/CRM)"
-        verbose_name_plural = "Inventory Items (Chemicals/CRMs)"
 
 class TestBOM(models.Model):
     """Bill of Materials / Cost Recipe for a Test Parameter"""
@@ -52,7 +22,7 @@ class TestBOM(models.Model):
 
 class BOMItem(models.Model):
     bom = models.ForeignKey(TestBOM, on_delete=models.CASCADE, related_name='items')
-    inventory_item = models.ForeignKey(InventoryItem, on_delete=models.RESTRICT)
+    inventory_item = models.ForeignKey(ReagentStandard, on_delete=models.RESTRICT)
     quantity_required = models.DecimalField(max_digits=10, decimal_places=4, help_text="Quantity required per test")
 
     def __str__(self):
@@ -65,7 +35,7 @@ class BOMItem(models.Model):
         return 0
 
 class InventoryIssuance(models.Model):
-    inventory_item = models.ForeignKey(InventoryItem, on_delete=models.RESTRICT, related_name='issuances')
+    inventory_item = models.ForeignKey(ReagentStandard, on_delete=models.RESTRICT, related_name='issuances')
     test_result = models.ForeignKey(TestResult, on_delete=models.SET_NULL, null=True, blank=True, related_name='chemical_issuances', help_text="The specific test serial number this was issued for")
     
     quantity_issued = models.DecimalField(max_digits=10, decimal_places=4)
