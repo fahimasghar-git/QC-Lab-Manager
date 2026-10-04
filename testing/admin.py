@@ -9,6 +9,7 @@ from .models import Parameter, TestMethod, TestResult
 @admin.register(Parameter)
 class ParameterAdmin(ModelAdmin):
     list_display = ('name', 'default_unit')
+    search_fields = ('name',)
 
 @admin.register(TestMethod)
 class TestMethodAdmin(ModelAdmin):

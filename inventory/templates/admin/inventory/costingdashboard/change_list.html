@@ -1,0 +1,98 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block object-tools %}{% endblock %}
+{% block search %}{% endblock %}
+{% block filters %}{% endblock %}
+{% block date_hierarchy %}{% endblock %}
+{% block pagination %}{% endblock %}
+
+{% block result_list %}
+<div class="container-fluid p-0">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="fw-bold mb-1"><i class="fas fa-dollar-sign text-success me-2"></i> Financial & Costing Dashboard</h2>
+            <p class="text-muted">Analysis of chemical and inventory expenditures for {{ current_month_name }}</p>
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 border-start border-success border-4 bg-success text-white">
+                <div class="card-body">
+                    <h6 class="text-uppercase fw-bold mb-1">Total Monthly Testing Cost</h6>
+                    <h2 class="mb-0 fw-bold">${{ total_cost|floatformat:2 }}</h2>
+                    <small>Based on inventory issuances this month</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Parameter Cost Breakdown -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white fw-bold">
+                    <i class="fas fa-chart-pie text-primary me-2"></i> Cost by Test Parameter
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Parameter / Category</th>
+                                <th class="text-end">Total Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for param, cost in param_costs %}
+                            <tr>
+                                <td><strong>{{ param }}</strong></td>
+                                <td class="text-end text-danger fw-bold">${{ cost|floatformat:2 }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-center py-4 text-muted">No testing costs recorded this month.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Top Issuances -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white fw-bold">
+                    <i class="fas fa-history text-warning me-2"></i> Most Expensive Issuances
+                </div>
+                <div class="card-body p-0" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Item</th>
+                                <th>Test Serial</th>
+                                <th class="text-end">Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for issue in issuances %}
+                            <tr>
+                                <td>{{ issue.inventory_item.name }} <br><small class="text-muted">{{ issue.quantity_issued }}{{ issue.inventory_item.unit_of_measure }}</small></td>
+                                <td>{{ issue.test_result|default:"General Prep" }}</td>
+                                <td class="text-end text-danger fw-bold">${{ issue.calculated_cost|floatformat:2 }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">No issuances recorded.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
