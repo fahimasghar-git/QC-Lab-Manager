@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib import messages
 from django.shortcuts import render
 from django.utils import timezone
 from django.db.models import Count, Q, F
@@ -129,6 +130,50 @@ class ReportGeneratorAdmin(ModelAdmin):
         headers = []
         report_title = "Filtered Report"
 
+
+        if module == 'consolidated_profile':
+            if not user_id:
+                messages.error(request, "You MUST select a User/Analyst to generate a Consolidated Member Profile.")
+                context = {
+                    **self.admin_site.each_context(request),
+                    "title": "On-Demand Filter Reports",
+                    "users": users,
+                }
+                return render(request, "admin/reports/reportgenerator/form.html", context)
+                
+            target_user = User.objects.get(id=user_id)
+            
+            # 1. Tests
+            t_qs = TestResult.objects.filter(analyst=target_user).select_related('sample', 'parameter')
+            if date_from: t_qs = t_qs.filter(tested_at__date__gte=date_from)
+            if date_to: t_qs = t_qs.filter(tested_at__date__lte=date_to)
+            
+            # 2. Competencies
+            c_qs = CompetencyRecord.objects.filter(analyst=target_user).select_related('test_method', 'authorized_by')
+            if date_from: c_qs = c_qs.filter(authorization_date__gte=date_from)
+            if date_to: c_qs = c_qs.filter(authorization_date__lte=date_to)
+            
+            # 3. CAPAs
+            nc_qs = NonConformance.objects.filter(Q(reported_by=target_user) | Q(assigned_to=target_user))
+            if date_from: nc_qs = nc_qs.filter(date_reported__gte=date_from)
+            if date_to: nc_qs = nc_qs.filter(date_reported__lte=date_to)
+            
+            # 4. Docs
+            d_qs = Document.objects.filter(Q(prepared_by=target_user) | Q(reviewed_by=target_user) | Q(approved_by=target_user))
+            if date_from: d_qs = d_qs.filter(issue_date__gte=date_from)
+            if date_to: d_qs = d_qs.filter(issue_date__lte=date_to)
+
+            context = {
+                "title": "Consolidated Member Performance Profile",
+                "target_user": target_user,
+                "date_from": date_from,
+                "date_to": date_to,
+                "tests": t_qs,
+                "competencies": c_qs,
+                "capas": nc_qs,
+                "docs": d_qs,
+            }
+            return render(request, "admin/reports/reportgenerator/print_consolidated.html", context)
         if module == 'test_results':
             qs = TestResult.objects.all().select_related('sample', 'parameter', 'analyst')
             if user_id: qs = qs.filter(analyst_id=user_id)

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Profile - {{ target_user.username }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { padding: 0; margin: 0; background-color: #fff; }
+            table { font-size: 11px; }
+            h4 { font-size: 14px; font-weight: bold; margin-top: 20px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+            th { background-color: #f8f9fa !important; -webkit-print-color-adjust: exact; }
+            @page { margin: 1cm; size: portrait; }
+            .page-break { page-break-before: always; }
+        }
+        body { background-color: #f4f6f9; padding: 2rem; }
+        .report-container { background-color: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .lab-header { border-bottom: 2px solid #000; padding-bottom: 1rem; margin-bottom: 2rem; }
+        .section-header { margin-top: 2rem; margin-bottom: 1rem; color: #2c3e50; font-weight: bold; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+
+<div class="container report-container">
+    
+    <div class="d-flex justify-content-between mb-4 no-print">
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">&larr; Back to Filters</a>
+        <button onclick="window.print()" class="btn btn-primary"><i class="fas fa-print"></i> Print Report Card</button>
+    </div>
+
+    <!-- Header -->
+    <div class="lab-header text-center">
+        <h3 class="fw-bold mb-1">QC Laboratory - ISO 17025 LIMS</h3>
+        <h5 class="text-uppercase text-secondary">Consolidated Member Performance Profile</h5>
+        
+        <div class="row mt-4 text-start bg-light p-3 border rounded">
+            <div class="col-6">
+                <strong>Member Name:</strong> {{ target_user.first_name }} {{ target_user.last_name }}<br>
+                <strong>System ID (Username):</strong> {{ target_user.username }}<br>
+                <strong>Email:</strong> {{ target_user.email|default:"N/A" }}
+            </div>
+            <div class="col-6 text-end">
+                <strong>Date Range Filter:</strong> {{ date_from|default:"All Time" }} to {{ date_to|default:"All Time" }}<br>
+                <strong>Report Generated:</strong> {% now "Y-m-d H:i" %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 1: Competency -->
+    <h4 class="section-header"><i class="fas fa-certificate text-primary me-2"></i> 1. Authorized Competencies</h4>
+    <table class="table table-bordered table-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Test Method</th>
+                <th>Status</th>
+                <th>Authorized By</th>
+                <th>Authorization Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in competencies %}
+            <tr>
+                <td>{{ c.test_method.name }}</td>
+                <td>{{ c.get_status_display }}</td>
+                <td>{{ c.authorized_by.username|default:"N/A" }}</td>
+                <td>{{ c.authorization_date|date:"Y-m-d"|default:"N/A" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center text-muted">No competency records found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Section 2: Test Results -->
+    <h4 class="section-header"><i class="fas fa-vial text-success me-2"></i> 2. Analytical Performance (Test Results)</h4>
+    <table class="table table-bordered table-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Sample ID</th>
+                <th>Parameter</th>
+                <th>Result</th>
+                <th>Status</th>
+                <th>Tested Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in tests %}
+            <tr>
+                <td>{{ t.sample.sample_id|default:"N/A" }}</td>
+                <td>{{ t.parameter.name }}</td>
+                <td>{{ t.result_value }} {{ t.unit }}</td>
+                <td>{{ t.get_status_display }}</td>
+                <td>{{ t.tested_at|date:"Y-m-d H:i"|default:"N/A" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center text-muted">No test results found for this period.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Section 3: CAPAs -->
+    <h4 class="section-header"><i class="fas fa-exclamation-triangle text-danger me-2"></i> 3. Non-Conformances (Quality Issues)</h4>
+    <table class="table table-bordered table-sm">
+        <thead class="table-light">
+            <tr>
+                <th>NC ID</th>
+                <th>Role</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Date Reported</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for nc in capas %}
+            <tr>
+                <td>{{ nc.nc_id }}</td>
+                <td>
+                    {% if nc.reported_by == target_user %}Reported By{% endif %}
+                    {% if nc.assigned_to == target_user %}Assigned To{% endif %}
+                </td>
+                <td>{{ nc.description|truncatechars:60 }}</td>
+                <td>{{ nc.get_status_display }}</td>
+                <td>{{ nc.date_reported|date:"Y-m-d"|default:"N/A" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center text-muted">No CAPAs associated with this user.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <!-- Section 4: Documents -->
+    <h4 class="section-header"><i class="fas fa-file-pdf text-warning me-2"></i> 4. Document Control Involvement</h4>
+    <table class="table table-bordered table-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Doc ID</th>
+                <th>Title</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Issue Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in docs %}
+            <tr>
+                <td>{{ d.document_id }}</td>
+                <td>{{ d.title }}</td>
+                <td>
+                    {% if d.prepared_by == target_user %}Prepared By <br>{% endif %}
+                    {% if d.reviewed_by == target_user %}Reviewed By <br>{% endif %}
+                    {% if d.approved_by == target_user %}Approved By{% endif %}
+                </td>
+                <td>{{ d.get_status_display }}</td>
+                <td>{{ d.issue_date|date:"Y-m-d"|default:"N/A" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center text-muted">No document involvement found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="mt-5 pt-5 row no-break">
+        <div class="col-4 text-center">
+            <hr class="w-75 mx-auto border-dark">
+            <small class="fw-bold">Generated By</small>
+        </div>
+        <div class="col-4 text-center">
+            <hr class="w-75 mx-auto border-dark">
+            <small class="fw-bold">Employee Signature</small>
+        </div>
+        <div class="col-4 text-center">
+            <hr class="w-75 mx-auto border-dark">
+            <small class="fw-bold">Quality Control Manager (QCM)</small>
+        </div>
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    @media print {
+        .no-break { page-break-inside: avoid; }
+    }
+</style>
+</body>
+</html>
