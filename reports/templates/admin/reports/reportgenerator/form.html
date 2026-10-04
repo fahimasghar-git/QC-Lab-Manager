@@ -1,0 +1,90 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block object-tools %}{% endblock %}
+{% block search %}{% endblock %}
+{% block filters %}{% endblock %}
+{% block date_hierarchy %}{% endblock %}
+{% block pagination %}{% endblock %}
+
+{% block result_list %}
+<div class="container-fluid p-0">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="fw-bold mb-1"><i class="fas fa-filter text-primary me-2"></i> On-Demand Filter Reports</h2>
+            <p class="text-muted">Select your criteria to generate a printable or exportable report.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <form method="GET" action="">
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">1. Select Data Module <span class="text-danger">*</span></label>
+                            <select name="module" class="form-select" required>
+                                <option value="" disabled selected>-- Choose Module --</option>
+                                <option value="test_results">Test Results (Analyst Performance)</option>
+                                <option value="competency">Personnel Competency Matrix</option>
+                                <option value="documents">Document Control (SOPs)</option>
+                                <option value="samples">Sample Registration & Status</option>
+                                <option value="nc">Non-Conformances (CAPA)</option>
+                            </select>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">2. Filter by User/Analyst (Optional)</label>
+                                <select name="user" class="form-select">
+                                    <option value="">-- All Users --</option>
+                                    {% for u in users %}
+                                    <option value="{{ u.id }}">{{ u.username }} ({{ u.first_name }} {{ u.last_name }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">3. Filter by Status (Optional)</label>
+                                <input type="text" name="status" class="form-control" placeholder="e.g. VERIFIED, APPROVED, DRAFT">
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">4. Date Range (From)</label>
+                                <input type="date" name="date_from" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Date Range (To)</label>
+                                <input type="date" name="date_to" class="form-control">
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" name="export" value="csv" class="btn btn-outline-success">
+                                <i class="fas fa-file-csv me-2"></i> Download CSV
+                            </button>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-print me-2"></i> Generate Printable Report
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-light">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold"><i class="fas fa-info-circle text-info me-2"></i> How to Print</h5>
+                    <p class="small text-muted">When you click "Generate Printable Report", the system will render a clean, white-background page devoid of menus and sidebars.</p>
+                    <p class="small text-muted">You can then press <strong>Ctrl+P</strong> (or Cmd+P on Mac) to print it directly to PDF or your laboratory printer.</p>
+                    <p class="small text-muted mb-0">Alternatively, you can export the raw data to CSV for Excel analysis.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

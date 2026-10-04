@@ -6,3 +6,9 @@ class PerformanceMetrics(models.Model):
         managed = False
         verbose_name = "Laboratory KPI Dashboard"
         verbose_name_plural = "Laboratory KPI Dashboard"
+
+class ReportGenerator(models.Model):
+    class Meta:
+        managed = False
+        verbose_name = "On-Demand Filter Reports"
+        verbose_name_plural = "On-Demand Filter Reports"
