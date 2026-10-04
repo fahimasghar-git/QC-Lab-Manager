@@ -25,12 +25,12 @@ def setup_groups():
                 groups_config['Analyst'].append(perm)
 
         # 2. AQCM: Analyst perms + filling/adding/reviewing management forms. No deleting samples/results.
-        if app in ['samples', 'testing', 'resources', 'management', 'inbox']:
+        if app in ['samples', 'testing', 'resources', 'management', 'inbox', 'reports']:
             if action in ['add', 'change', 'view']:
                 groups_config['AQCM'].append(perm)
 
         # 3. QCM: All permissions for lab operations, no user management.
-        if app in ['samples', 'testing', 'resources', 'management', 'inbox']:
+        if app in ['samples', 'testing', 'resources', 'management', 'inbox', 'reports']:
             groups_config['QCM'].append(perm)
 
         # 4. CEO: Only approval related (needs view and change to trigger approval actions)
