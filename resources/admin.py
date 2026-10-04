@@ -44,7 +44,7 @@ def approve_records(modeladmin, request, queryset):
 @admin.register(ReagentStandard)
 class ReagentStandardAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmin):
     actions = [submit_for_approval, approve_records]
-    list_display = ('name', 'lot_number', 'supplier', 'current_stock', 'unit_of_measure', 'expiry_date', 'status')
+    list_display = ('name', 'lot_number', 'supplier', 'expiry_date', 'status')
     list_filter = ('status', 'supplier')
     search_fields = ('name', 'lot_number', 'certificate_reference')
     readonly_fields = ('receipt_date',)

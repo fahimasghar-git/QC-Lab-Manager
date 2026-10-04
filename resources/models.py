@@ -260,12 +260,6 @@ class ReagentStandard(models.Model):
     quantity = models.CharField(max_length=50, blank=True, null=True, verbose_name="Quantity")
 
     
-
-    # --- ERP Costing & Inventory Fields ---
-    current_stock = models.DecimalField(max_digits=12, decimal_places=4, default=0, verbose_name="Current Stock")
-    unit_of_measure = models.CharField(max_length=20, default='g', help_text="e.g., g, ml, L, unit")
-    unit_cost = models.DecimalField(max_digits=10, decimal_places=4, default=0, help_text="Cost per single unit of measure")
-    
     def __str__(self):
         return f"{self.name} (Lot: {self.lot_number})"
 
