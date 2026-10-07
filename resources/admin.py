@@ -1,11 +1,10 @@
 from lims_core.admin_mixins import DigitalSignatureMixin
 from django.contrib import admin
-from django.utils.html import format_html
 from django.shortcuts import render
 from unfold.admin import ModelAdmin
 from unfold.admin import TabularInline, StackedInline
 from simple_history.admin import SimpleHistoryAdmin
-from .models import FacilityArea, EnvironmentalLog, Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
+from .models import Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
 from django.utils import timezone
 
 
@@ -433,24 +432,3 @@ class SupplierEvaluationPlanAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHisto
         if pisa_status.err:
             return HttpResponse('We had some errors <pre>' + html_string + '</pre>')
         return response
-
-@admin.register(FacilityArea)
-class FacilityAreaAdmin(ModelAdmin, SimpleHistoryAdmin):
-    list_display = ('name', 'target_temperature_min', 'target_temperature_max', 'target_humidity_min', 'target_humidity_max')
-    search_fields = ('name',)
-
-@admin.register(EnvironmentalLog)
-class EnvironmentalLogAdmin(ModelAdmin, SimpleHistoryAdmin):
-    list_display = ('area', 'date', 'time', 'temperature', 'humidity', 'is_compliant_icon', 'recorded_by')
-    list_filter = ('area', 'date', 'recorded_by')
-    search_fields = ('area__name', 'remarks')
-    date_hierarchy = 'date'
-    
-    def is_compliant_icon(self, obj):
-        if obj.is_compliant:
-            return format_html('<span style="color: green;">✔ Pass</span>')
-        return format_html('<span style="color: red;">✘ Out of Range</span>')
-    is_compliant_icon.short_description = "Compliance"
-
-    def get_changeform_initial_data(self, request):
-        return {'recorded_by': request.user}
