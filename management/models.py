@@ -448,3 +448,40 @@ class CustomerFeedback(models.Model):
 class LabCleaningInspection_Update(models.Model):
     class Meta:
         managed = False
+
+class ISODocument(models.Model):
+    DOCUMENT_TYPES = [
+        ('LSP', 'Laboratory Standard Procedure (LSP)'),
+        ('FRM', 'Form (FRM)'),
+        ('POL', 'Policy (POL)'),
+        ('MAN', 'Manual (LSM)'),
+        ('OTHER', 'Other')
+    ]
+    
+    doc_type = models.CharField(max_length=10, choices=DOCUMENT_TYPES, default='LSP')
+    document_code = models.CharField(max_length=50, unique=True, help_text="e.g., QCL-LSP-01")
+    title = models.CharField(max_length=255)
+    revision_number = models.CharField(max_length=20, default="00")
+    issue_date = models.DateField(null=True, blank=True)
+    file = models.FileField(upload_to='iso_documents/', null=True, blank=True)
+    
+    STATUS_CHOICES = [
+        ('DRAFT', 'Draft'),
+        ('ACTIVE', 'Active'),
+        ('OBSOLETE', 'Obsolete')
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ACTIVE')
+    
+    prepared_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="iso_docs_prepared", on_delete=models.SET_NULL, null=True, blank=True)
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="iso_docs_reviewed", on_delete=models.SET_NULL, null=True, blank=True)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="iso_docs_approved", on_delete=models.SET_NULL, null=True, blank=True)
+
+    history = HistoricalRecords()
+
+    class Meta:
+        verbose_name = "ISO Document (LSP/POL/FRM)"
+        verbose_name_plural = "ISO Documents Database"
+        ordering = ['doc_type', 'document_code']
+
+    def __str__(self):
+        return f"{self.document_code} - {self.title}"

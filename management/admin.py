@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from xhtml2pdf import pisa
 from django.contrib import admin
 from django.shortcuts import render
+from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 from unfold.admin import TabularInline, StackedInline
 from simple_history.admin import SimpleHistoryAdmin
@@ -296,3 +297,17 @@ class CustomerFeedbackAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHistoryAdmi
         if pisa_status.err:
             return HttpResponse('We had some errors <pre>' + html_string + '</pre>')
         return response
+
+from .models import ISODocument
+
+@admin.register(ISODocument)
+class ISODocumentAdmin(ModelAdmin, SimpleHistoryAdmin):
+    list_display = ('document_code', 'title', 'doc_type', 'revision_number', 'issue_date', 'status', 'file_link')
+    list_filter = ('doc_type', 'status', 'issue_date')
+    search_fields = ('document_code', 'title')
+    
+    def file_link(self, obj):
+        if obj.file:
+            return format_html('<a href="{}" target="_blank" class="text-blue-500 underline">Download</a>', obj.file.url)
+        return "-"
+    file_link.short_description = "File"
