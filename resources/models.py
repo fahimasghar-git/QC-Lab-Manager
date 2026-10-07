@@ -2,6 +2,7 @@ from django.db import models
 from simple_history.models import HistoricalRecords
 
 from django.conf import settings
+from .approval_utils import ISOApprovalModel
 from testing.models import TestMethod
 
 class Equipment(models.Model):
@@ -656,71 +657,153 @@ class SupplierEvaluationPlanItem(models.Model):
     records = models.CharField(max_length=100, default="QCL-FRM-6.03")
 from django.db import models
 from django.conf import settings
+from .approval_utils import ISOApprovalModel
 
 # QCL-FRM-1.01 Personnel Authorization Permit
-class PersonnelAuthorizationPermit(models.Model):
-    analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='auth_permits')
-    issue_date = models.DateField()
+class PersonnelAuthorizationPermit(ISOApprovalModel):
+    analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    issue_date = models.DateField(null=True, blank=True)
     valid_until = models.DateField(null=True, blank=True)
-    authorized_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='issued_permits')
-    remarks = models.TextField(blank=True, null=True)
+    
+    # Checkboxes
+    op_flame_photometer = models.BooleanField("Operation of Flame Photometer", default=False)
+    op_uv_vis = models.BooleanField("Operation of UV-Visible Spectrophotometer", default=False)
+    op_karl_fischer = models.BooleanField("Operation of Karl Fischer", default=False)
+    op_kjeldhal = models.BooleanField("Operation of Kjeldhal's Apparatus", default=False)
+    op_furnace = models.BooleanField("Operation of Furnace", default=False)
+    op_ph_meter = models.BooleanField("Operation of pH Meter", default=False)
+    op_tds_meter = models.BooleanField("Operation of TDS Meter", default=False)
+    op_analytical_balance = models.BooleanField("Operation of Analytical Balance", default=False)
+    loss_on_ignition = models.BooleanField("Loss on Ignition", default=False)
+    monitoring_env_cond = models.BooleanField("Monitoring Environmental Conditions", default=False)
+    intermediate_checks = models.BooleanField("Perform the Intermediate Checks", default=False)
+    control_chart = models.BooleanField("Prepare Control Chart", default=False)
+    sample_receiving = models.BooleanField("Sample Receiving", default=False)
+    method_validation = models.BooleanField("Method Validation/Verification", default=False)
+    sample_handling = models.BooleanField("Sample Handling", default=False)
+    report_preparation = models.BooleanField("Report Preparation", default=False)
+    preparing_review_reports = models.BooleanField("Preparing/Review the Analysis Reports", default=False)
+    measurements_uncertainty = models.BooleanField("Measurements of Uncertainty", default=False)
+    internal_auditing = models.BooleanField("Internal Auditing", default=False)
+    training_lms = models.BooleanField("Training of Lab Staff on LMS 17025:2017", default=False)
+    prep_review_procedures = models.BooleanField("Preparation and Reviewing of Procedures/Other Documents", default=False)
+    prep_review_approved_reports = models.BooleanField("Preparation, Reviewing and Approved of Reports", default=False)
+    prep_review_release_slip = models.BooleanField("Preparation and Review/Verify the Release slip", default=False)
+    review_analysis_reports = models.BooleanField("Review the Analysis Reports", default=False)
+    practical_demo = models.BooleanField("Practical Demonstration of Testing Parameters", default=False)
+    assigned_samples = models.BooleanField("Assigned the samples for testing", default=False)
+    analyzed_samples = models.BooleanField("Analyzed the samples", default=False)
+    release_slip_prep = models.BooleanField("Release Slip Preparation", default=False)
+    house_keeping = models.BooleanField("House Keeping", default=False)
+    solution_prep = models.BooleanField("Solution Preparation", default=False)
+    sample_retaining = models.BooleanField("Sample Retaining", default=False)
+    sample_discard = models.BooleanField("Sample Discard/Dispose", default=False)
+    stock_management = models.BooleanField("Stock Management", default=False)
+    ident_non_conformity = models.BooleanField("Identification of Non-Conformity", default=False)
+    ident_improvement = models.BooleanField("Identification of Need for improvement or Deviation", default=False)
+    prep_temp_charts = models.BooleanField("Prepare the temperature/humidity charts", default=False)
+    cleaning_inspections = models.BooleanField("Perform the Cleaning Inspections", default=False)
+    density_test = models.BooleanField("Density Test", default=False)
+    ph_test = models.BooleanField("pH Test", default=False)
+    conductivity_test = models.BooleanField("Conductivity Test", default=False)
+    tds_test = models.BooleanField("TDS Test", default=False)
+    loss_on_drying = models.BooleanField("Loss on Drying", default=False)
+    weighing = models.BooleanField("Weighing", default=False)
+    sieve_test = models.BooleanField("Sieve Test", default=False)
+    calcium_test = models.BooleanField("Calcium test", default=False)
+    sulfur_test = models.BooleanField("Sulfur/Sulfate Test", default=False)
+    nitrogen_test = models.BooleanField("Nitrogen Test", default=False)
+    manual_titrations = models.BooleanField("Manual Titrations", default=False)
+    humic_acid_test = models.BooleanField("Humic Acid Test", default=False)
+    phosphorus_test = models.BooleanField("Phosphorus Testing", default=False)
+    total_organic_carbon = models.BooleanField("Total Organic Carbon", default=False)
+    cn_ratio = models.BooleanField("C/N Ratio Calculation", default=False)
+    organic_matter = models.BooleanField("Organic Matter", default=False)
+    cec = models.BooleanField("CEC", default=False)
+    sodium_test = models.BooleanField("Sodium Test", default=False)
+    zinc_test = models.BooleanField("Zinc Test", default=False)
+    boron_analysis = models.BooleanField("Boron Analysis", default=False)
+    copper_test = models.BooleanField("Copper Test", default=False)
+    moisture_test = models.BooleanField("Moisture Test", default=False)
+    standardization = models.BooleanField("Standardization", default=False)
+    pt_samples = models.BooleanField("PT Samples/Blind Samples", default=False)
+    
+    remarks = models.TextField(null=True, blank=True)
     
     class Meta:
-        verbose_name = "Personnel Authorization Permit (1.01)"
-        verbose_name_plural = "Personnel Authorization Permits (1.01)"
+        verbose_name = "Personnel Auth Permit (1.01)"
+        verbose_name_plural = "Personnel Auth Permits (1.01)"
 
 # QCL-FRM-1.01A Analyst Authorization For Tests and Instruments
-class AnalystAuthorizationTestInstrument(models.Model):
-    permit = models.ForeignKey(PersonnelAuthorizationPermit, on_delete=models.CASCADE, related_name='test_authorizations')
-    test_or_instrument_name = models.CharField(max_length=255)
-    authorization_status = models.CharField(max_length=50, choices=[('AUTHORIZED', 'Authorized'), ('UNDER_SUPERVISION', 'Under Supervision')])
-    
-    class Meta:
-        verbose_name = "Analyst Auth Tests/Instruments (1.01A)"
-        verbose_name_plural = "Analyst Auth Tests/Instruments (1.01A)"
-
-# QCL-FRM-1.01B Product and Sample Testing Authorization
-class AnalystAuthorizationProduct(models.Model):
-    permit = models.ForeignKey(PersonnelAuthorizationPermit, on_delete=models.CASCADE, related_name='product_authorizations')
-    product_name = models.CharField(max_length=255)
-    authorization_status = models.CharField(max_length=50, choices=[('AUTHORIZED', 'Authorized'), ('UNDER_SUPERVISION', 'Under Supervision')])
-    
-    class Meta:
-        verbose_name = "Product & Sample Auth (1.01B)"
-        verbose_name_plural = "Product & Sample Auth (1.01B)"
-
-# Evaluation choices used across C and D
-EVAL_CHOICES = [
-    ('SATISFACTORY', 'Satisfactory'),
-    ('UNSATISFACTORY', 'Unsatisfactory'),
-]
-
-# QCL-FRM-1.01C Competency Evaluation Internal Samples
-class CompetencyEvalInternalSample(models.Model):
+class CompetencyEvalInternalSample(ISOApprovalModel):
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    evaluation_date = models.DateField()
-    sample_id = models.CharField(max_length=100)
-    parameter_tested = models.CharField(max_length=100)
-    result_status = models.CharField(max_length=20, choices=EVAL_CHOICES)
-    evaluator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='+')
+    evaluation_date = models.DateField(null=True, blank=True)
+    
+    material_description = models.CharField(max_length=255, null=True, blank=True)
+    reference_method = models.CharField(max_length=255, null=True, blank=True)
+    batch_lot_no = models.CharField(max_length=100, null=True, blank=True)
+    mfg_date = models.DateField(null=True, blank=True)
+    working_standard_qty = models.CharField(max_length=100, null=True, blank=True)
+    exp_date = models.DateField(null=True, blank=True)
+    unknown_sample_qty = models.CharField(max_length=100, null=True, blank=True)
+    analysis_date = models.DateField(null=True, blank=True)
+    temp_rh = models.CharField(max_length=100, null=True, blank=True)
+    result_submission_date = models.DateField(null=True, blank=True)
+    source_of_material = models.CharField(max_length=255, null=True, blank=True)
+    
+    remarks = models.TextField(null=True, blank=True)
+    state_deviation = models.TextField(null=True, blank=True)
+    interpretation_of_result = models.TextField(null=True, blank=True)
     
     class Meta:
         verbose_name = "Eval Internal Samples (1.01C)"
         verbose_name_plural = "Eval Internal Samples (1.01C)"
 
+class InternalSampleTestRow(models.Model):
+    evaluation = models.ForeignKey(CompetencyEvalInternalSample, on_delete=models.CASCADE, related_name='tests')
+    test_description = models.CharField(max_length=255)
+    assigned_value = models.CharField(max_length=100, null=True, blank=True)
+    report_value = models.CharField(max_length=100, null=True, blank=True)
+    z_score = models.CharField(max_length=100, null=True, blank=True)
+    nmt_2_0 = models.CharField(max_length=100, null=True, blank=True)
+    remarks = models.CharField(max_length=255, null=True, blank=True)
+
+
 # QCL-FRM-1.01D Competency Evaluation PT Samples
-class CompetencyEvalPTSample(models.Model):
+class CompetencyEvalPTSample(ISOApprovalModel):
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    evaluation_date = models.DateField()
-    pt_round_name = models.CharField(max_length=100)
-    parameter_tested = models.CharField(max_length=100)
-    z_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    result_status = models.CharField(max_length=20, choices=EVAL_CHOICES)
-    evaluator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='+')
+    evaluation_date = models.DateField(null=True, blank=True)
+    pt_round_name = models.CharField(max_length=100, null=True, blank=True)
+    
+    material_description = models.CharField(max_length=255, null=True, blank=True)
+    reference_method = models.CharField(max_length=255, null=True, blank=True)
+    batch_lot_no = models.CharField(max_length=100, null=True, blank=True)
+    mfg_date = models.DateField(null=True, blank=True)
+    working_standard_qty = models.CharField(max_length=100, null=True, blank=True)
+    exp_date = models.DateField(null=True, blank=True)
+    unknown_sample_qty = models.CharField(max_length=100, null=True, blank=True)
+    analysis_date = models.DateField(null=True, blank=True)
+    temp_rh = models.CharField(max_length=100, null=True, blank=True)
+    result_submission_date = models.DateField(null=True, blank=True)
+    source_of_material = models.CharField(max_length=255, null=True, blank=True)
+    
+    remarks = models.TextField(null=True, blank=True)
+    state_deviation = models.TextField(null=True, blank=True)
+    interpretation_of_result = models.TextField(null=True, blank=True)
     
     class Meta:
         verbose_name = "Eval PT Samples (1.01D)"
         verbose_name_plural = "Eval PT Samples (1.01D)"
+
+class PTSampleTestRow(models.Model):
+    evaluation = models.ForeignKey(CompetencyEvalPTSample, on_delete=models.CASCADE, related_name='tests')
+    test_description = models.CharField(max_length=255)
+    assigned_value = models.CharField(max_length=100, null=True, blank=True)
+    report_value = models.CharField(max_length=100, null=True, blank=True)
+    z_score = models.CharField(max_length=100, null=True, blank=True)
+    nmt_2_0 = models.CharField(max_length=100, null=True, blank=True)
+    remarks = models.CharField(max_length=255, null=True, blank=True)
+
 
 GRADING_CHOICES = [
     ('E', 'Exceptional'),
@@ -731,50 +814,64 @@ GRADING_CHOICES = [
 ]
 
 # QCL-FRM-1.01E Grading Matrix Equipment
-class GradingMatrixEquipment(models.Model):
+class GradingMatrixEquipment(ISOApprovalModel):
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date = models.DateField()
-    equipment_name = models.CharField(max_length=100)
-    calibration_check = models.CharField(max_length=2, choices=GRADING_CHOICES, default='ND')
-    operation_skill = models.CharField(max_length=2, choices=GRADING_CHOICES, default='ND')
-    maintenance_skill = models.CharField(max_length=2, choices=GRADING_CHOICES, default='ND')
-    overall_grade = models.CharField(max_length=2, choices=GRADING_CHOICES, default='ND')
-    evaluator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='+')
+    remarks = models.TextField(null=True, blank=True)
     
     class Meta:
         verbose_name = "Grading Matrix Equipment (1.01E)"
         verbose_name_plural = "Grading Matrix Equipment (1.01E)"
 
+class GradingMatrixEquipmentRow(models.Model):
+    matrix = models.ForeignKey(GradingMatrixEquipment, on_delete=models.CASCADE, related_name='rows')
+    equipment_instrument = models.CharField(max_length=255)
+    level_1 = models.CharField(max_length=50, null=True, blank=True)
+    level_2 = models.CharField(max_length=50, null=True, blank=True)
+
+
 # QCL-FRM-1.01F Grading Matrix Product
-class GradingMatrixProduct(models.Model):
+class GradingMatrixProduct(ISOApprovalModel):
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date = models.DateField()
-    product_category = models.CharField(max_length=100)
-    sample_prep_skill = models.CharField(max_length=2, choices=GRADING_CHOICES, default='ND')
-    testing_skill = models.CharField(max_length=2, choices=GRADING_CHOICES, default='ND')
-    overall_grade = models.CharField(max_length=2, choices=GRADING_CHOICES, default='ND')
-    evaluator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='+')
+    dosage_form = models.CharField(max_length=100, null=True, blank=True)
+    product_name = models.CharField(max_length=255, null=True, blank=True)
+    batch_no = models.CharField(max_length=100, null=True, blank=True)
+    mfg_date = models.DateField(null=True, blank=True)
+    exp_date = models.DateField(null=True, blank=True)
+    remarks = models.TextField(null=True, blank=True)
     
     class Meta:
         verbose_name = "Grading Matrix Product (1.01F)"
         verbose_name_plural = "Grading Matrix Product (1.01F)"
 
+class GradingMatrixProductRow(models.Model):
+    matrix = models.ForeignKey(GradingMatrixProduct, on_delete=models.CASCADE, related_name='rows')
+    tests = models.CharField(max_length=255)
+    methodology = models.CharField(max_length=255, null=True, blank=True)
+    level_1 = models.CharField(max_length=50, null=True, blank=True)
+    level_2 = models.CharField(max_length=50, null=True, blank=True)
+
+
 # QCL-FRM-1.01G Grading Matrix Document
-class GradingMatrixDocument(models.Model):
+class GradingMatrixDocument(ISOApprovalModel):
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date = models.DateField()
-    document_comprehension = models.CharField(max_length=2, choices=GRADING_CHOICES, default='ND')
-    record_keeping = models.CharField(max_length=2, choices=GRADING_CHOICES, default='ND')
-    iso_awareness = models.CharField(max_length=2, choices=GRADING_CHOICES, default='ND')
-    overall_grade = models.CharField(max_length=2, choices=GRADING_CHOICES, default='ND')
-    evaluator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='+')
+    remarks = models.TextField(null=True, blank=True)
     
     class Meta:
         verbose_name = "Grading Matrix Document (1.01G)"
         verbose_name_plural = "Grading Matrix Document (1.01G)"
 
+class GradingMatrixDocumentRow(models.Model):
+    matrix = models.ForeignKey(GradingMatrixDocument, on_delete=models.CASCADE, related_name='rows')
+    document_title = models.CharField(max_length=255)
+    level_1 = models.CharField(max_length=50, null=True, blank=True)
+    level_2 = models.CharField(max_length=50, null=True, blank=True)
+
+
 # QCL-FRM-1.02 List of Authorized Analyst / Staff
-class AuthorizedAnalystList(models.Model):
+class AuthorizedAnalystList(ISOApprovalModel):
     revision_number = models.CharField(max_length=20)
     date_issued = models.DateField()
     approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
@@ -785,7 +882,7 @@ class AuthorizedAnalystList(models.Model):
         verbose_name_plural = "List of Authorized Analysts (1.02)"
 
 # QCL-FRM-1.03 List of Technical Personnel
-class TechnicalPersonnelList(models.Model):
+class TechnicalPersonnelList(ISOApprovalModel):
     revision_number = models.CharField(max_length=20)
     date_issued = models.DateField()
     approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
@@ -797,9 +894,10 @@ class TechnicalPersonnelList(models.Model):
 
 from django.db import models
 from django.conf import settings
+from .approval_utils import ISOApprovalModel
 
 # QCL-FRM-2.02 Training Need Assessment Form
-class TrainingNeedAssessment(models.Model):
+class TrainingNeedAssessment(ISOApprovalModel):
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     assessment_year = models.IntegerField()
     amendment_no = models.CharField(max_length=20, blank=True)
@@ -830,7 +928,7 @@ class TrainingNeedAssessment(models.Model):
         verbose_name_plural = "Training Need Assessments (2.02)"
 
 # QCL-FRM-2.03 Annual Training Plan
-class AnnualTrainingPlan(models.Model):
+class AnnualTrainingPlan(ISOApprovalModel):
     month_year = models.CharField(max_length=50)
     plan_no = models.CharField(max_length=50)
     
@@ -853,7 +951,7 @@ class TrainingPlanItem(models.Model):
     status = models.CharField(max_length=50)
 
 # QCL-FRM-2.04 Attendance Sheet
-class TrainingAttendanceSheet(models.Model):
+class TrainingAttendanceSheet(ISOApprovalModel):
     reference = models.CharField(max_length=100)
     date_held = models.DateField()
     time_held = models.TimeField()
@@ -872,7 +970,7 @@ class AttendanceRecord(models.Model):
     attended = models.BooleanField(default=True)
 
 # QCL-FRM-2.05 Training Evaluation Form
-class TrainingEvaluation(models.Model):
+class TrainingEvaluation(ISOApprovalModel):
     training = models.ForeignKey(TrainingAttendanceSheet, on_delete=models.CASCADE)
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     evaluator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='+')
@@ -915,7 +1013,7 @@ class TrainingEvaluation(models.Model):
 
 
 # QCL-FRM-2.07 Training Feedback Form
-class TrainingFeedback(models.Model):
+class TrainingFeedback(ISOApprovalModel):
     training = models.ForeignKey(TrainingAttendanceSheet, on_delete=models.CASCADE)
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     
@@ -961,7 +1059,7 @@ class TrainingFeedback(models.Model):
 
 
 # QCL-FRM-2.08 Individual Training Record
-class IndividualTrainingRecord(models.Model):
+class IndividualTrainingRecord(ISOApprovalModel):
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     training_title = models.CharField(max_length=255)
     date_completed = models.DateField()
@@ -975,7 +1073,7 @@ class IndividualTrainingRecord(models.Model):
 
 
 # QCL-FRM-2.09 Orientation Plan
-class OrientationPlan(models.Model):
+class OrientationPlan(ISOApprovalModel):
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
@@ -994,7 +1092,7 @@ class OrientationPlanTopic(models.Model):
 
 
 # QCL-FRM-2.10 Competence Reassessment form
-class CompetenceReassessment(models.Model):
+class CompetenceReassessment(ISOApprovalModel):
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date = models.DateField()
     reason_for_reassessment = models.TextField()
@@ -1006,7 +1104,7 @@ class CompetenceReassessment(models.Model):
         verbose_name_plural = "Competence Reassessments (2.10)"
 
 # QCL-FRM-2.12 Trainer Evaluation Form
-class TrainerEvaluation(models.Model):
+class TrainerEvaluation(ISOApprovalModel):
     trainer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='evaluated_as_trainer')
     topic = models.CharField(max_length=255, null=True, blank=True)
     date = models.DateField()
@@ -1045,3 +1143,38 @@ class TrainerEvaluation(models.Model):
         verbose_name_plural = "Trainer Evaluations (2.12)"
 
 
+
+class CompetencyMonitoring(ISOApprovalModel):
+    analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    main_functions = models.CharField(max_length=255, null=True, blank=True)
+    
+    # Rows for the table (Score 1-4)
+    score_education = models.IntegerField(null=True, blank=True)
+    remarks_education = models.TextField(null=True, blank=True)
+    
+    score_qualification = models.IntegerField(null=True, blank=True)
+    remarks_qualification = models.TextField(null=True, blank=True)
+    
+    score_experience = models.IntegerField(null=True, blank=True)
+    remarks_experience = models.TextField(null=True, blank=True)
+    
+    score_training = models.IntegerField(null=True, blank=True)
+    remarks_training = models.TextField(null=True, blank=True)
+    
+    score_technical_knowledge = models.IntegerField(null=True, blank=True)
+    remarks_technical_knowledge = models.TextField(null=True, blank=True)
+    
+    score_skills = models.IntegerField(null=True, blank=True)
+    remarks_skills = models.TextField(null=True, blank=True)
+    
+    score_testing_activities = models.IntegerField(null=True, blank=True)
+    remarks_testing_activities = models.TextField(null=True, blank=True)
+    
+    score_continuous_education = models.IntegerField(null=True, blank=True)
+    remarks_continuous_education = models.TextField(null=True, blank=True)
+    
+    overall_score = models.IntegerField(null=True, blank=True)
+    
+    class Meta:
+        verbose_name = "Competency Monitoring (1.04)"
+        verbose_name_plural = "Competency Monitoring (1.04)"

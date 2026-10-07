@@ -96,5 +96,44 @@
             <td style="width: 50%; text-align: right;">Approved By: ___________________</td>
         </tr>
     </table>
+
+    {% if obj.prepared_by or obj.checked_by or obj.approved_by %}
+    <div class="signature-block" style="margin-top: 40px;">
+        <table style="width: 100%; border: 1px solid #333; text-align: center; border-collapse: collapse;">
+            <tr style="background-color: #f4f4f4;">
+                <th style="width: 33%; border: 1px solid #333; padding: 5px;">Prepared By</th>
+                <th style="width: 33%; border: 1px solid #333; padding: 5px;">Checked By</th>
+                <th style="width: 33%; border: 1px solid #333; padding: 5px;">Approved By</th>
+            </tr>
+            <tr>
+                <td style="height: 60px; border: 1px solid #333; vertical-align: bottom; padding-bottom: 5px;">
+                    {% if obj.prepared_by %}
+                        <b>{{ obj.prepared_by.get_full_name|default:obj.prepared_by.username }}</b><br>
+                        <span style="font-size: 10px;">{{ obj.prepared_at|date:"d-M-Y" }}</span>
+                    {% else %}
+                        <span style="color: white;">[Unsigned]</span>
+                    {% endif %}
+                </td>
+                <td style="height: 60px; border: 1px solid #333; vertical-align: bottom; padding-bottom: 5px;">
+                    {% if obj.checked_by %}
+                        <b>{{ obj.checked_by.get_full_name|default:obj.checked_by.username }}</b><br>
+                        <span style="font-size: 10px;">{{ obj.checked_at|date:"d-M-Y" }}</span>
+                    {% else %}
+                        <span style="color: white;">[Unsigned]</span>
+                    {% endif %}
+                </td>
+                <td style="height: 60px; border: 1px solid #333; vertical-align: bottom; padding-bottom: 5px;">
+                    {% if obj.approved_by %}
+                        <b>{{ obj.approved_by.get_full_name|default:obj.approved_by.username }}</b><br>
+                        <span style="font-size: 10px;">{{ obj.approved_at|date:"d-M-Y" }}</span>
+                    {% else %}
+                        <span style="color: white;">[Unsigned]</span>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </div>
+    {% endif %}
+
 </body>
 </html>

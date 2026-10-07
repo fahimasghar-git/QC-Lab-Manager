@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.shortcuts import render
 from unfold.admin import ModelAdmin
 from .pdf_utils import generate_iso_pdf
+from .approval_utils import action_mark_prepared, action_mark_checked, action_mark_approved
 from unfold.admin import TabularInline, StackedInline
 from simple_history.admin import SimpleHistoryAdmin
 from .models import Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
@@ -36,7 +37,7 @@ def approve_records(modeladmin, request, queryset):
                 obj.approved_by = request.user
                 if hasattr(obj, 'approved_at'):
                     obj.approved_at = timezone.now()
-            elif hasattr(obj, 'authorized_by'):
+            elif hasattr(obj, 'approved_by'):
                 obj.authorized_by = request.user
             obj.save()
             updated += 1
@@ -106,7 +107,7 @@ class CompetencyRecordAdmin(ModelAdmin):
             'description': '4 = High Competence | 3 = Partial Competence | 2 = Low Competence | 1 = No Competence'
         }),
         ('Authorization & Approval', {
-            'fields': ('total_score', 'competency_level', 'assessor', 'authorized_by', 'comments', 'notes')
+            'fields': ('total_score', 'competency_level', 'assessor', 'approved_by', 'comments', 'notes')
         }),
     )
 
@@ -355,7 +356,7 @@ class PersonnelAuthorizationAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHisto
             'classes': ('collapse',)
         }),
         ('Signatures', {
-            'fields': ('prepared_by', 'authorized_by')
+            'fields': ('prepared_by', 'approved_by')
         }),
     )
 
@@ -436,9 +437,10 @@ class SupplierEvaluationPlanAdmin(DigitalSignatureMixin, ModelAdmin, SimpleHisto
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 from .models import (
+    InternalSampleTestRow, PTSampleTestRow, GradingMatrixEquipmentRow, GradingMatrixProductRow, GradingMatrixDocumentRow,
     PersonnelAuthorizationPermit,
-    AnalystAuthorizationTestInstrument,
-    AnalystAuthorizationProduct,
+    
+    
     CompetencyEvalInternalSample,
     CompetencyEvalPTSample,
     GradingMatrixEquipment,
@@ -446,60 +448,84 @@ from .models import (
     GradingMatrixDocument,
     AuthorizedAnalystList,
     TechnicalPersonnelList
-)
+,
+    CompetencyMonitoring)
 
-class AnalystAuthorizationTestInstrumentInline(admin.TabularInline):
-    model = AnalystAuthorizationTestInstrument
-    extra = 1
 
-class AnalystAuthorizationProductInline(admin.TabularInline):
-    model = AnalystAuthorizationProduct
-    extra = 1
+
+
 
 @admin.register(PersonnelAuthorizationPermit)
 class PersonnelAuthorizationPermitAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
-    list_display = ['analyst', 'issue_date', 'valid_until', 'authorized_by']
-    inlines = [AnalystAuthorizationTestInstrumentInline, AnalystAuthorizationProductInline]
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
+    list_display = ['analyst', 'issue_date', 'valid_until', 'approved_by']
+    
+
+class InternalSampleTestRowInline(admin.TabularInline):
+    model = InternalSampleTestRow
+    extra = 1
 
 @admin.register(CompetencyEvalInternalSample)
 class CompetencyEvalInternalSampleAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
-    list_display = ['analyst', 'evaluation_date', 'parameter_tested', 'result_status']
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
+    list_display = ['analyst', 'evaluation_date', 'material_description', 'status']
+    inlines = [InternalSampleTestRowInline]
+
+class PTSampleTestRowInline(admin.TabularInline):
+    model = PTSampleTestRow
+    extra = 1
 
 @admin.register(CompetencyEvalPTSample)
 class CompetencyEvalPTSampleAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
-    list_display = ['analyst', 'evaluation_date', 'parameter_tested', 'z_score', 'result_status']
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
+    list_display = ['analyst', 'evaluation_date', 'pt_round_name', 'status']
+    inlines = [PTSampleTestRowInline]
+
+class GradingMatrixEquipmentRowInline(admin.TabularInline):
+    model = GradingMatrixEquipmentRow
+    extra = 1
 
 @admin.register(GradingMatrixEquipment)
 class GradingMatrixEquipmentAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
-    list_display = ['analyst', 'equipment_name', 'date', 'overall_grade']
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
+    list_display = ['analyst', 'date', 'status']
+    inlines = [GradingMatrixEquipmentRowInline]
+
+class GradingMatrixProductRowInline(admin.TabularInline):
+    model = GradingMatrixProductRow
+    extra = 1
 
 @admin.register(GradingMatrixProduct)
 class GradingMatrixProductAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
-    list_display = ['analyst', 'product_category', 'date', 'overall_grade']
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
+    list_display = ['analyst', 'product_name', 'date', 'status']
+    inlines = [GradingMatrixProductRowInline]
+
+class GradingMatrixDocumentRowInline(admin.TabularInline):
+    model = GradingMatrixDocumentRow
+    extra = 1
 
 @admin.register(GradingMatrixDocument)
 class GradingMatrixDocumentAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
-    list_display = ['analyst', 'date', 'overall_grade']
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
+    list_display = ['analyst', 'date', 'status']
+    inlines = [GradingMatrixDocumentRowInline]
 
 @admin.register(AuthorizedAnalystList)
 class AuthorizedAnalystListAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
     list_display = ['revision_number', 'date_issued', 'approved_by']
 
 @admin.register(TechnicalPersonnelList)
 class TechnicalPersonnelListAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
     list_display = ['revision_number', 'date_issued', 'approved_by']
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 from .pdf_utils import generate_iso_pdf
+from .approval_utils import action_mark_prepared, action_mark_checked, action_mark_approved
 from .models import (
+    InternalSampleTestRow, PTSampleTestRow, GradingMatrixEquipmentRow, GradingMatrixProductRow, GradingMatrixDocumentRow,
     TrainingNeedAssessment,
     AnnualTrainingPlan,
     TrainingPlanItem,
@@ -516,7 +542,7 @@ from .models import (
 
 @admin.register(TrainingNeedAssessment)
 class TrainingNeedAssessmentAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
     list_display = ['analyst', 'assessment_year', 'total_percentage', 'approved_by']
 
 class TrainingPlanItemInline(admin.TabularInline):
@@ -525,7 +551,7 @@ class TrainingPlanItemInline(admin.TabularInline):
 
 @admin.register(AnnualTrainingPlan)
 class AnnualTrainingPlanAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
     list_display = ['plan_no', 'month_year', 'prepared_by', 'approved_by']
     inlines = [TrainingPlanItemInline]
 
@@ -535,18 +561,18 @@ class AttendanceRecordInline(admin.TabularInline):
 
 @admin.register(TrainingAttendanceSheet)
 class TrainingAttendanceSheetAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
     list_display = ['reference', 'title', 'date_held', 'instructor']
     inlines = [AttendanceRecordInline]
 
 @admin.register(TrainingEvaluation)
 class TrainingEvaluationAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
     list_display = ['analyst', 'training', 'evaluation_date', 'total_obtained_percentage', 'final_remarks']
 
 @admin.register(TrainingFeedback)
 class TrainingFeedbackAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
     list_display = ['analyst', 'training', 'overall_rating']
     
     def overall_rating(self, obj):
@@ -554,7 +580,7 @@ class TrainingFeedbackAdmin(ModelAdmin):
 
 @admin.register(IndividualTrainingRecord)
 class IndividualTrainingRecordAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
     list_display = ['analyst', 'training_title', 'date_completed', 'verified_by']
 
 class OrientationPlanTopicInline(admin.TabularInline):
@@ -563,17 +589,22 @@ class OrientationPlanTopicInline(admin.TabularInline):
 
 @admin.register(OrientationPlan)
 class OrientationPlanAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
     list_display = ['analyst', 'department', 'start_date', 'mentor']
     inlines = [OrientationPlanTopicInline]
 
 @admin.register(CompetenceReassessment)
 class CompetenceReassessmentAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
     list_display = ['analyst', 'date', 'outcome', 'evaluator']
 
 @admin.register(TrainerEvaluation)
 class TrainerEvaluationAdmin(ModelAdmin):
-    actions = [generate_iso_pdf]
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
     list_display = ['trainer', 'date', 'overall_effectiveness', 'evaluator']
 
+
+@admin.register(CompetencyMonitoring)
+class CompetencyMonitoringAdmin(ModelAdmin):
+    actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
+    list_display = ['analyst', 'main_functions', 'overall_score', 'status']
