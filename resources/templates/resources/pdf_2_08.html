@@ -76,16 +76,50 @@
         </tr>
     </table>
 
-    <table class="main-table">
-        {% for field in fields %}
-        {% if field.name != 'Status' %}
+    
+    <table style="width: 100%; font-size: 11px; margin-bottom: 20px;">
         <tr>
-            <th style="width: 40%;">{{ field.name }}</th>
-            <td>{{ field.value }}</td>
+            <td style="width: 20%;"><b>Employee Name:</b></td>
+            <td style="width: 30%; border-bottom: 1px solid black;">{{ obj.analyst.get_full_name|default:obj.analyst.username }}</td>
+            <td style="width: 15%;"><b>Year:</b></td>
+            <td style="width: 35%; border-bottom: 1px solid black;">{{ obj.year }}</td>
         </tr>
-        {% endif %}
-        {% endfor %}
+        <tr>
+            <td><b>Degree / Certificate:</b></td>
+            <td colspan="3" style="border-bottom: 1px solid black;">{{ obj.degree_certificate }} ({{ obj.year_of_passing }}) - {{ obj.name_of_university }}</td>
+        </tr>
     </table>
+
+    <table class="main-table" style="font-size: 11px; text-align: center;">
+        <thead>
+            <tr>
+                <th rowspan="2" style="width: 5%; text-align: center;">S.NO</th>
+                <th rowspan="2" style="width: 45%; text-align: center;">Training Title</th>
+                <th colspan="2" style="width: 25%; text-align: center;">Training Attended</th>
+                <th rowspan="2" style="width: 25%; text-align: center;">Remarks</th>
+            </tr>
+            <tr>
+                <th style="width: 15%; text-align: center;">Date</th>
+                <th style="width: 10%; text-align: center;">Int / Ext</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in obj.training_records.all %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td style="text-align: left;">{{ record.title }}</td>
+                <td>{{ record.date_attended|date:"d-M-Y" }}</td>
+                <td>{{ record.int_ext }}</td>
+                <td>{{ record.remarks }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No training records found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
     
     <table class="sig-table">
         <tr>

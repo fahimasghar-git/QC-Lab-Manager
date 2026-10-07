@@ -76,16 +76,21 @@
         </tr>
     </table>
 
-    <table class="main-table">
-        {% for field in fields %}
-        {% if field.name != 'Status' %}
-        <tr>
-            <th style="width: 40%;">{{ field.name }}</th>
-            <td>{{ field.value }}</td>
-        </tr>
+    
+    <div style="font-size: 12px; margin-top: 40px; text-align: center;">
+        <h3>Technical Personnel List (QCL-FRM-1.03)</h3>
+        <p>This document is maintained as a master list file attachment.</p>
+        <p><b>Date Issued:</b> {{ obj.date_issued|date:"d-M-Y" }}</p>
+        <p><b>Revision Number:</b> {{ obj.revision_number }}</p>
+        <br><br>
+        {% if obj.file_attachment %}
+            <p><b>Attached File:</b> {{ obj.file_attachment.name }}</p>
+            <p>Please refer to the physical attachment for the full list of personnel.</p>
+        {% else %}
+            <p>No file attached.</p>
         {% endif %}
-        {% endfor %}
-    </table>
+    </div>
+
     
     <table class="sig-table">
         <tr>

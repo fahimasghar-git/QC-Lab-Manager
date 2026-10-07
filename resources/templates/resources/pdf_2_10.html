@@ -76,16 +76,33 @@
         </tr>
     </table>
 
-    <table class="main-table">
-        {% for field in fields %}
-        {% if field.name != 'Status' %}
+    
+    <table style="width: 100%; font-size: 11px; margin-bottom: 20px;">
         <tr>
-            <th style="width: 40%;">{{ field.name }}</th>
-            <td>{{ field.value }}</td>
+            <td style="width: 20%;"><b>Name of Personnel:</b></td>
+            <td style="width: 30%; border-bottom: 1px solid black;">{{ obj.analyst.get_full_name|default:obj.analyst.username }}</td>
+            <td style="width: 15%;"><b>Date:</b></td>
+            <td style="width: 35%; border-bottom: 1px solid black;">{{ obj.created_at|date:"d-M-Y" }}</td>
         </tr>
-        {% endif %}
-        {% endfor %}
     </table>
+
+    <table class="main-table" style="font-size: 11px; margin-bottom: 20px;">
+        <tr>
+            <td style="width: 70%; font-weight: bold;">Competence Criteria Met?</td>
+            <td style="width: 30%; text-align: center;">
+                <span style="font-family: monospace; font-size: 12pt; font-weight: bold;">
+                    {% if obj.criteria_met %} [ X ] Yes &nbsp; [ &nbsp; ] No
+                    {% else %} [ &nbsp; ] Yes &nbsp; [ X ] No {% endif %}
+                </span>
+            </td>
+        </tr>
+    </table>
+
+    <div style="font-size: 11px;">
+        <b>Remarks:</b>
+        <p style="white-space: pre-wrap; padding: 10px; border: 1px solid black; min-height: 50px;">{{ obj.remarks }}</p>
+    </div>
+
     
     <table class="sig-table">
         <tr>
