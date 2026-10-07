@@ -250,6 +250,49 @@ UNFOLD = {
                 ]
             },
             {
+                "title": "LSP-08: Risk & Opportunities",
+                "separator": True,
+                "items": [
+                    {"title": "8.01 Risk Management Sheet", "icon": "assignment_late", "link": "/admin/resources/riskmanagementsheet_8_01/"},
+                    {"title": "8.02 Opportunity Assessment", "icon": "emoji_objects", "link": "/admin/resources/opportunityassessment_8_02/"},
+                ]
+            },
+            {
+                "title": "LSP-09: Corrective Actions",
+                "separator": True,
+                "items": [
+                    {"title": "9.01 CAR", "icon": "assignment_turned_in", "link": "/admin/resources/correctiveactionrequest_9_01/"},
+                    {"title": "9.02 CAR Log", "icon": "list", "link": "/admin/resources/correctiveactionsrequestlog_9_02/"},
+                    {"title": "9.04 Root Cause Analysis", "icon": "search", "link": "/admin/resources/rootcauseanalysisform_9_04/"},
+                ]
+            },
+            {
+                "title": "LSP-10: Internal Audit",
+                "separator": True,
+                "items": [
+                    {"title": "10.01 Audit Notification", "icon": "notifications", "link": "/admin/resources/auditnotification_10_01/"},
+                    {"title": "10.02 Audit Schedule", "icon": "calendar_month", "link": "/admin/resources/auditschedule_10_02/"},
+                    {"title": "10.03 MRM Schedule", "icon": "calendar_today", "link": "/admin/resources/mrmschedule_10_03/"},
+                    {"title": "10.04 Trained Auditors List", "icon": "people", "link": "/admin/resources/trainedauditorslist_10_04/"},
+                    {"title": "10.05 Auditor Competence", "icon": "verified", "link": "/admin/resources/auditorcompetence_10_05/"},
+                    {"title": "10.06 Confidential Agreement", "icon": "gavel", "link": "/admin/resources/confidentialagreementauditors_10_06/"},
+                    {"title": "10.07 Impartiality Form", "icon": "balance", "link": "/admin/resources/impartialityform_10_07/"},
+                    {"title": "10.08 Internal Audit Form", "icon": "fact_check", "link": "/admin/resources/internalauditform_10_08/"},
+                    {"title": "10.09 Audit Check List", "icon": "checklist", "link": "/admin/resources/internalauditchecklist_10_09/"},
+                    {"title": "10.10 Audit Report", "icon": "analytics", "link": "/admin/resources/auditreport_10_10/"},
+                ]
+            },
+            {
+                "title": "LSP-11: Managerial Meetings",
+                "separator": True,
+                "items": [
+                    {"title": "11.01 MRM Schedule", "icon": "event", "link": "/admin/resources/mrmschedule_11_01/"},
+                    {"title": "11.02 MRM Notice", "icon": "campaign", "link": "/admin/resources/mrmnotice_11_02/"},
+                    {"title": "11.03 MRM Agenda", "icon": "view_list", "link": "/admin/resources/mrmagenda_11_03/"},
+                    {"title": "11.04 MRM Form", "icon": "assignment", "link": "/admin/resources/mrmform_11_04/"},
+                ]
+            },
+            {
                 "title": "Purchasing & Suppliers",
                 "separator": True,
                 "items": [

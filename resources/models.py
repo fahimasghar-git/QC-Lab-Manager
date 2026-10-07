@@ -1620,3 +1620,368 @@ class DocumentChangeRequest_7_02(ISOApprovalModel):
     class Meta:
         verbose_name = "Document Change Request (7.02)"
         verbose_name_plural = "Document Change Requests (7.02)"
+from django.db import models
+from django.conf import settings
+
+# ==========================================
+# LSP-08 Risk and Opportunities
+# ==========================================
+
+class RiskManagementSheet_8_01(ISOApprovalModel):
+    last_updated_on = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Risk Management Sheet (8.01)"
+        verbose_name_plural = "Risk Management Sheets (8.01)"
+
+class RiskManagementItem(models.Model):
+    sheet = models.ForeignKey(RiskManagementSheet_8_01, on_delete=models.CASCADE, related_name="items")
+    risk = models.CharField(max_length=255)
+    o = models.IntegerField(verbose_name="Occurrence (O)")
+    s = models.IntegerField(verbose_name="Severity (S)")
+    risk_rating = models.IntegerField()
+    risk_treatment = models.CharField(max_length=255)
+    responsibility = models.CharField(max_length=150)
+    target_date = models.DateField(blank=True, null=True)
+    actual_date_of_completion = models.DateField(blank=True, null=True)
+    status = models.CharField(max_length=100, blank=True, null=True)
+    risk_revision_sn = models.CharField(max_length=50, blank=True, null=True)
+
+
+class OpportunityAssessment_8_02(ISOApprovalModel):
+    review_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Opportunity Assessment (8.02)"
+        verbose_name_plural = "Opportunity Assessments (8.02)"
+
+class OpportunityAssessmentItem(models.Model):
+    assessment = models.ForeignKey(OpportunityAssessment_8_02, on_delete=models.CASCADE, related_name="items")
+    area_activity = models.CharField(max_length=255)
+    concern = models.CharField(max_length=255)
+    opportunities = models.TextField()
+    risks = models.TextField()
+    risk_action = models.TextField()
+
+
+# ==========================================
+# LSP-09 Corrective Actions and Improvements
+# ==========================================
+
+class CorrectiveActionRequest_9_01(ISOApprovalModel):
+    initiated_by = models.CharField(max_length=150)
+    department = models.CharField(max_length=150)
+    car_no = models.CharField(max_length=100)
+    designation = models.CharField(max_length=150, blank=True, null=True)
+    car_initiated_date = models.DateField()
+    nc_no = models.CharField(max_length=100)
+    
+    INITIATED_DUE_TO_CHOICES = [
+        ('PNAC Assessment', 'PNAC Assessment'),
+        ('Complaint', 'Complaint'),
+        ('Accident/Incident', 'Accident/Incident'),
+        ('Internal Audit', 'Internal Audit'),
+        ('Suggestion/Improvement', 'Suggestion/Improvement'),
+        ('Technical Fault', 'Technical Fault'),
+        ('Others', 'Others')
+    ]
+    initiated_due_to = models.CharField(max_length=150, choices=INITIATED_DUE_TO_CHOICES)
+    description = models.TextField()
+    
+    PRIORITY_CHOICES = [('Urgent', 'Urgent'), ('Normal', 'Normal'), ('Non-significance', 'Non-significance')]
+    significance_priority_level = models.CharField(max_length=50, choices=PRIORITY_CHOICES, blank=True, null=True)
+    
+    accepted = models.BooleanField(default=False)
+    rejected = models.BooleanField(default=False)
+    
+    assigned_to = models.CharField(max_length=150, blank=True, null=True)
+    assigned_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Corrective Action Request (9.01)"
+        verbose_name_plural = "Corrective Action Requests (9.01)"
+
+
+class CorrectiveActionsRequestLog_9_02(ISOApprovalModel):
+    sheet_no = models.CharField(max_length=50)
+    year = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "Corrective Actions Request Log (9.02)"
+        verbose_name_plural = "Corrective Actions Request Logs (9.02)"
+
+class CorrectiveActionsLogItem(models.Model):
+    log = models.ForeignKey(CorrectiveActionsRequestLog_9_02, on_delete=models.CASCADE, related_name="items")
+    car_no = models.CharField(max_length=100)
+    types_of_request = models.CharField(max_length=255)
+    initiator_name = models.CharField(max_length=150)
+    department = models.CharField(max_length=150)
+    target_date = models.DateField(blank=True, null=True)
+    closing_date = models.DateField(blank=True, null=True)
+
+
+class RootCauseAnalysisForm_9_04(ISOApprovalModel):
+    non_conformance_description = models.TextField()
+    rca_team_members = models.CharField(max_length=255)
+    rca_team_lead = models.CharField(max_length=150)
+    rca_start_date = models.DateField()
+    submission_date = models.DateField()
+    
+    cause_and_effect_diagram = models.BooleanField(default=False)
+    five_why_analysis = models.BooleanField(default=False)
+    w_2h_5w2h = models.BooleanField(default=False, verbose_name="3W2H / 5W2H")
+
+    class Meta:
+        verbose_name = "Root Cause Analysis Form (9.04)"
+        verbose_name_plural = "Root Cause Analysis Forms (9.04)"
+
+from django.db import models
+from django.conf import settings
+
+# ==========================================
+# LSP-10 Internal Audit
+# ==========================================
+
+class AuditNotification_10_01(ISOApprovalModel):
+    date = models.DateField()
+    to_person = models.CharField(max_length=150)
+    from_person = models.CharField(max_length=150)
+    cc_aqcm = models.CharField(max_length=150, blank=True, null=True)
+    
+    audit_type_scheduled = models.BooleanField(default=False)
+    audit_type_rescheduled = models.BooleanField(default=False)
+    audit_type_follow_up = models.BooleanField(default=False)
+    
+    scope_management_system = models.BooleanField(default=False)
+    scope_customer_complaints = models.BooleanField(default=False)
+    scope_implementation = models.BooleanField(default=False)
+    
+    audit_schedule_held_on = models.CharField(max_length=255, blank=True, null=True)
+    audit_duration = models.CharField(max_length=100, blank=True, null=True)
+    audit_date = models.DateField(blank=True, null=True)
+    audit_time = models.CharField(max_length=100, blank=True, null=True)
+    lead_auditor = models.CharField(max_length=150, blank=True, null=True)
+    members = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Audit Notification (10.01)"
+        verbose_name_plural = "Audit Notifications (10.01)"
+
+
+class AuditSchedule_10_02(ISOApprovalModel):
+    for_the_year = models.CharField(max_length=50)
+    audit_type = models.CharField(max_length=100, choices=[('Scheduled', 'Scheduled'), ('Un-Scheduled', 'Un-Scheduled')])
+
+    class Meta:
+        verbose_name = "Audit Schedule (10.02)"
+        verbose_name_plural = "Audit Schedules (10.02)"
+
+class AuditScheduleItem(models.Model):
+    schedule = models.ForeignKey(AuditSchedule_10_02, on_delete=models.CASCADE, related_name="items")
+    audit_no = models.CharField(max_length=50)
+    schedule_date = models.DateField(blank=True, null=True)
+    actual_date = models.DateField(blank=True, null=True)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+
+class AuditScheduleDeptItem(models.Model):
+    schedule = models.ForeignKey(AuditSchedule_10_02, on_delete=models.CASCADE, related_name="dept_items")
+    dept_section = models.CharField(max_length=150)
+    date_time_from = models.CharField(max_length=100)
+    date_time_to = models.CharField(max_length=100)
+    auditors = models.CharField(max_length=255)
+    auditee = models.CharField(max_length=255)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+
+
+class MRMSchedule_10_03(ISOApprovalModel):
+    for_the_year = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "MRM Schedule (10.03)"
+        verbose_name_plural = "MRM Schedules (10.03)"
+
+class MRMScheduleItem(models.Model):
+    schedule = models.ForeignKey(MRMSchedule_10_03, on_delete=models.CASCADE, related_name="items")
+    meeting_no = models.CharField(max_length=50)
+    plan_date = models.DateField(blank=True, null=True)
+    actual_date = models.DateField(blank=True, null=True)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+
+
+class TrainedAuditorsList_10_04(ISOApprovalModel):
+    date = models.DateField()
+
+    class Meta:
+        verbose_name = "Trained Auditors List (10.04)"
+        verbose_name_plural = "Trained Auditors Lists (10.04)"
+
+class TrainedAuditorItem(models.Model):
+    auditors_list = models.ForeignKey(TrainedAuditorsList_10_04, on_delete=models.CASCADE, related_name="items")
+    name = models.CharField(max_length=150)
+    designation = models.CharField(max_length=150)
+    department = models.CharField(max_length=150)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+
+
+class AuditorCompetence_10_05(ISOApprovalModel):
+    auditor_name = models.CharField(max_length=150)
+    designation = models.CharField(max_length=150)
+    division_name = models.CharField(max_length=150)
+    working_experience = models.CharField(max_length=255)
+    trainings = models.TextField()
+    education = models.CharField(max_length=255)
+    job_knowledge = models.TextField()
+    impartiality_and_confidentiality = models.TextField()
+    skills_scope = models.TextField()
+    remarks = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Auditor Competence (10.05)"
+        verbose_name_plural = "Auditor Competences (10.05)"
+
+
+class ConfidentialAgreementAuditors_10_06(ISOApprovalModel):
+    mr_name = models.CharField(max_length=150)
+    working_as = models.CharField(max_length=150)
+    date_of_agreement = models.DateField()
+    laboratory_name = models.CharField(max_length=255, default="Vital Agri Nutrients Quality Control Lab")
+
+    class Meta:
+        verbose_name = "Confidential Agreement Auditors (10.06)"
+        verbose_name_plural = "Confidential Agreement Auditors (10.06)"
+
+
+class ImpartialityForm_10_07(ISOApprovalModel):
+    mr_name = models.CharField(max_length=150)
+    working_as = models.CharField(max_length=150)
+    date_of_agreement = models.DateField()
+    laboratory_name = models.CharField(max_length=255, default="Vital Agri Nutrients Quality Control Lab")
+
+    class Meta:
+        verbose_name = "Impartiality form (10.07)"
+        verbose_name_plural = "Impartiality forms (10.07)"
+
+
+class InternalAuditForm_10_08(ISOApprovalModel):
+    audit_location = models.CharField(max_length=255)
+    department = models.CharField(max_length=150)
+    team_leader = models.CharField(max_length=150)
+    team_member = models.CharField(max_length=150)
+    date_of_audit = models.DateField()
+    general_observations = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    results_findings = models.TextField(blank=True, null=True)
+    remarks = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Internal Audit Form (10.08)"
+        verbose_name_plural = "Internal Audit Forms (10.08)"
+
+
+class InternalAuditCheckList_10_09(ISOApprovalModel):
+    auditor_name = models.CharField(max_length=150)
+    clauses_covered = models.CharField(max_length=255)
+    organisation = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    standard_guide = models.CharField(max_length=255)
+    manager_represented = models.CharField(max_length=150)
+    date_of_audit = models.DateField()
+    report_to_be = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Internal Audit Check List (10.09)"
+        verbose_name_plural = "Internal Audit Check Lists (10.09)"
+
+class InternalAuditCheckListItem(models.Model):
+    checklist = models.ForeignKey(InternalAuditCheckList_10_09, on_delete=models.CASCADE, related_name="items")
+    question = models.TextField()
+    status = models.CharField(max_length=50) # Yes/No/NA
+    remarks = models.TextField(blank=True, null=True)
+
+
+class AuditReport_10_10(ISOApprovalModel):
+    date = models.DateField()
+    audit_number = models.CharField(max_length=100)
+    audit_type = models.CharField(max_length=100, choices=[('Scheduled', 'Scheduled'), ('Unscheduled', 'Unscheduled')])
+    department_section = models.CharField(max_length=150, default="QCL")
+    
+    observation_count = models.IntegerField(default=0)
+    minor_count = models.IntegerField(default=0)
+    major_count = models.IntegerField(default=0)
+    
+    remarks = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Audit Report (10.10)"
+        verbose_name_plural = "Audit Reports (10.10)"
+
+
+# ==========================================
+# LSP-11 Managerial Meetings
+# ==========================================
+
+class MRMSchedule_11_01(ISOApprovalModel):
+    for_the_year = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "MRM Schedule (11.01)"
+        verbose_name_plural = "MRM Schedules (11.01)"
+
+class MRMScheduleItem_11_01(models.Model):
+    schedule = models.ForeignKey(MRMSchedule_11_01, on_delete=models.CASCADE, related_name="items")
+    meeting_no = models.CharField(max_length=50)
+    plan_date = models.DateField(blank=True, null=True)
+    actual_date = models.DateField(blank=True, null=True)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+
+
+class MRMNotice_11_02(ISOApprovalModel):
+    date = models.DateField()
+    from_person = models.CharField(max_length=150)
+    to_person = models.CharField(max_length=150)
+    sub = models.CharField(max_length=255)
+    mrm_no = models.CharField(max_length=50)
+    held_on_date = models.DateField()
+    time = models.CharField(max_length=100)
+    location = models.CharField(max_length=255, default="Chief Executive Office")
+
+    class Meta:
+        verbose_name = "MRM Notice (11.02)"
+        verbose_name_plural = "MRM Notices (11.02)"
+
+class MRMNoticeParticipant(models.Model):
+    notice = models.ForeignKey(MRMNotice_11_02, on_delete=models.CASCADE, related_name="items")
+    participant_name = models.CharField(max_length=150)
+    designation = models.CharField(max_length=150)
+
+
+class MRMAgenda_11_03(ISOApprovalModel):
+    mrm_date = models.DateField()
+    mrm_time = models.CharField(max_length=100)
+    mrm_no = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "MRM Agenda (11.03)"
+        verbose_name_plural = "MRM Agendas (11.03)"
+
+class MRMAgendaItem(models.Model):
+    agenda = models.ForeignKey(MRMAgenda_11_03, on_delete=models.CASCADE, related_name="items")
+    agenda_point = models.CharField(max_length=255)
+
+
+class MRMForm_11_04(ISOApprovalModel):
+    held_on = models.DateField()
+    mrm_no = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "MRM Form (11.04)"
+        verbose_name_plural = "MRM Forms (11.04)"
+
+class MRMFormItem(models.Model):
+    form = models.ForeignKey(MRMForm_11_04, on_delete=models.CASCADE, related_name="items")
+    agenda_point = models.CharField(max_length=255)
+    action_taken = models.CharField(max_length=255)
+    responsibility = models.CharField(max_length=150)
+    target_date = models.DateField(blank=True, null=True)
+    follow_up_by = models.CharField(max_length=150)
+

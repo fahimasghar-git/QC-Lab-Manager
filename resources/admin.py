@@ -36,6 +36,20 @@ from .models import (
     DocumentChangeRequest_7_02
 )
 
+
+from .models import (
+    RiskManagementSheet_8_01, RiskManagementItem,
+    OpportunityAssessment_8_02, OpportunityAssessmentItem,
+    CorrectiveActionRequest_9_01, CorrectiveActionsRequestLog_9_02, CorrectiveActionsLogItem,
+    RootCauseAnalysisForm_9_04,
+    AuditNotification_10_01, AuditSchedule_10_02, AuditScheduleItem, AuditScheduleDeptItem,
+    MRMSchedule_10_03, MRMScheduleItem, TrainedAuditorsList_10_04, TrainedAuditorItem,
+    AuditorCompetence_10_05, ConfidentialAgreementAuditors_10_06, ImpartialityForm_10_07,
+    InternalAuditForm_10_08, InternalAuditCheckList_10_09, InternalAuditCheckListItem,
+    AuditReport_10_10, MRMSchedule_11_01, MRMScheduleItem_11_01, MRMNotice_11_02, MRMNoticeParticipant,
+    MRMAgenda_11_03, MRMAgendaItem, MRMForm_11_04, MRMFormItem
+)
+
 from .models import AuthorizedPersonnelList_2_06, NewInductionOrientation_2_11, InductionOrientationItem, Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
 from django.utils import timezone
 
@@ -826,4 +840,162 @@ class MasterListDocumentAdmin(ModelAdmin):
 @admin.register(DocumentChangeRequest_7_02)
 class DocumentChangeRequestAdmin(ModelAdmin):
     list_display = ('dcr_no', 'dcr_date', 'document_title', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+# ==========================================
+# LSP-08 to LSP-11 Admin
+# ==========================================
+
+class RiskManagementItemInline(StackedInline):
+    model = RiskManagementItem
+    extra = 1
+
+@admin.register(RiskManagementSheet_8_01)
+class RiskManagementSheetAdmin(ModelAdmin):
+    list_display = ('last_updated_on', 'status')
+    inlines = [RiskManagementItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class OpportunityAssessmentItemInline(StackedInline):
+    model = OpportunityAssessmentItem
+    extra = 1
+
+@admin.register(OpportunityAssessment_8_02)
+class OpportunityAssessmentAdmin(ModelAdmin):
+    list_display = ('review_date', 'status')
+    inlines = [OpportunityAssessmentItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(CorrectiveActionRequest_9_01)
+class CorrectiveActionRequest901Admin(ModelAdmin):
+    list_display = ('car_no', 'department', 'car_initiated_date', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class CorrectiveActionsLogItemInline(StackedInline):
+    model = CorrectiveActionsLogItem
+    extra = 1
+
+@admin.register(CorrectiveActionsRequestLog_9_02)
+class CorrectiveActionsRequestLogAdmin(ModelAdmin):
+    list_display = ('sheet_no', 'year', 'status')
+    inlines = [CorrectiveActionsLogItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(RootCauseAnalysisForm_9_04)
+class RootCauseAnalysisFormAdmin(ModelAdmin):
+    list_display = ('rca_team_lead', 'rca_start_date', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(AuditNotification_10_01)
+class AuditNotificationAdmin(ModelAdmin):
+    list_display = ('date', 'to_person', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class AuditScheduleItemInline(StackedInline):
+    model = AuditScheduleItem
+    extra = 1
+
+class AuditScheduleDeptItemInline(StackedInline):
+    model = AuditScheduleDeptItem
+    extra = 1
+
+@admin.register(AuditSchedule_10_02)
+class AuditScheduleAdmin(ModelAdmin):
+    list_display = ('for_the_year', 'audit_type', 'status')
+    inlines = [AuditScheduleItemInline, AuditScheduleDeptItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class MRMScheduleItemInline(StackedInline):
+    model = MRMScheduleItem
+    extra = 1
+
+@admin.register(MRMSchedule_10_03)
+class MRMSchedule1003Admin(ModelAdmin):
+    list_display = ('for_the_year', 'status')
+    inlines = [MRMScheduleItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class TrainedAuditorItemInline(StackedInline):
+    model = TrainedAuditorItem
+    extra = 1
+
+@admin.register(TrainedAuditorsList_10_04)
+class TrainedAuditorsListAdmin(ModelAdmin):
+    list_display = ('date', 'status')
+    inlines = [TrainedAuditorItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(AuditorCompetence_10_05)
+class AuditorCompetenceAdmin(ModelAdmin):
+    list_display = ('auditor_name', 'designation', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(ConfidentialAgreementAuditors_10_06)
+class ConfidentialAgreementAuditorsAdmin(ModelAdmin):
+    list_display = ('mr_name', 'date_of_agreement', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(ImpartialityForm_10_07)
+class ImpartialityFormAdmin(ModelAdmin):
+    list_display = ('mr_name', 'date_of_agreement', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(InternalAuditForm_10_08)
+class InternalAuditFormAdmin(ModelAdmin):
+    list_display = ('department', 'date_of_audit', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class InternalAuditCheckListItemInline(StackedInline):
+    model = InternalAuditCheckListItem
+    extra = 1
+
+@admin.register(InternalAuditCheckList_10_09)
+class InternalAuditCheckListAdmin(ModelAdmin):
+    list_display = ('auditor_name', 'date_of_audit', 'status')
+    inlines = [InternalAuditCheckListItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(AuditReport_10_10)
+class AuditReportAdmin(ModelAdmin):
+    list_display = ('audit_number', 'date', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class MRMScheduleItem1101Inline(StackedInline):
+    model = MRMScheduleItem_11_01
+    extra = 1
+
+@admin.register(MRMSchedule_11_01)
+class MRMSchedule1101Admin(ModelAdmin):
+    list_display = ('for_the_year', 'status')
+    inlines = [MRMScheduleItem1101Inline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class MRMNoticeParticipantInline(StackedInline):
+    model = MRMNoticeParticipant
+    extra = 1
+
+@admin.register(MRMNotice_11_02)
+class MRMNoticeAdmin(ModelAdmin):
+    list_display = ('mrm_no', 'held_on_date', 'status')
+    inlines = [MRMNoticeParticipantInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class MRMAgendaItemInline(StackedInline):
+    model = MRMAgendaItem
+    extra = 1
+
+@admin.register(MRMAgenda_11_03)
+class MRMAgendaAdmin(ModelAdmin):
+    list_display = ('mrm_no', 'mrm_date', 'status')
+    inlines = [MRMAgendaItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class MRMFormItemInline(StackedInline):
+    model = MRMFormItem
+    extra = 1
+
+@admin.register(MRMForm_11_04)
+class MRMFormAdmin(ModelAdmin):
+    list_display = ('mrm_no', 'held_on', 'status')
+    inlines = [MRMFormItemInline]
     actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
