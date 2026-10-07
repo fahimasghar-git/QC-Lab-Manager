@@ -485,3 +485,38 @@ class ISODocument(models.Model):
 
     def __str__(self):
         return f"{self.document_code} - {self.title}"
+
+
+class ObsoleteDocument(models.Model):
+    original_document = models.ForeignKey(ISODocument, on_delete=models.SET_NULL, null=True, blank=True)
+    document_code = models.CharField(max_length=50)
+    title = models.CharField(max_length=255)
+    revision_number = models.CharField(max_length=20)
+    issue_date = models.DateField(null=True, blank=True)
+    file = models.FileField(upload_to='iso_documents/', null=True, blank=True)
+    obsolete_date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = "Obsolete Document"
+        verbose_name_plural = "Obsolete Documents Archive"
+
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
+@receiver(pre_save, sender=ISODocument)
+def archive_obsolete_iso_document(sender, instance, **kwargs):
+    if instance.pk:
+        try:
+            old_instance = ISODocument.objects.get(pk=instance.pk)
+            # If revision number changed OR a new file is uploaded, archive the old one
+            if old_instance.revision_number != instance.revision_number or (instance.file and old_instance.file and old_instance.file != instance.file):
+                ObsoleteDocument.objects.create(
+                    original_document=old_instance,
+                    document_code=old_instance.document_code,
+                    title=old_instance.title,
+                    revision_number=old_instance.revision_number,
+                    issue_date=old_instance.issue_date,
+                    file=old_instance.file
+                )
+        except ISODocument.DoesNotExist:
+            pass

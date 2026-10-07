@@ -311,3 +311,29 @@ class ISODocumentAdmin(ModelAdmin, SimpleHistoryAdmin):
             return format_html('<a href="{}" target="_blank" class="text-blue-500 underline">Download</a>', obj.file.url)
         return "-"
     file_link.short_description = "File"
+
+
+from .models import ObsoleteDocument
+
+@admin.register(ObsoleteDocument)
+class ObsoleteDocumentAdmin(ModelAdmin):
+    list_display = ('document_code', 'title', 'revision_number', 'issue_date', 'obsolete_date', 'file_link')
+    search_fields = ('document_code', 'title')
+    list_filter = ('obsolete_date',)
+    
+    def file_link(self, obj):
+        if obj.file:
+            from django.utils.html import format_html
+            return format_html('<a href="{}" target="_blank" class="text-blue-500 underline">Download</a>', obj.file.url)
+        return "-"
+    file_link.short_description = "File"
+
+    # Make it strictly read-only
+    def has_add_permission(self, request):
+        return False
+    
+    def has_change_permission(self, request, obj=None):
+        return False
+        
+    def has_delete_permission(self, request, obj=None):
+        return False

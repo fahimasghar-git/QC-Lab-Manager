@@ -170,6 +170,15 @@ UNFOLD = {
         "show_all_applications": True,
         "navigation": [
             {
+                "title": "ISO Document Control",
+                "separator": True,
+                "items": [
+                    {"title": "Active Documents", "icon": "file_present", "link": "/admin/management/isodocument/"},
+                    {"title": "Obsolete Archive", "icon": "inventory_2", "link": "/admin/management/obsoletedocument/"},
+                ]
+            },
+
+            {
                 "title": "LSP-01: Competence & Auth",
                 "separator": True,
                 "items": [
@@ -396,17 +405,6 @@ UNFOLD = {
                     {"title": "22.03 Sample Receiving", "icon": "call_received", "link": "/admin/resources/samplereceivingform_22_03/"},
                     {"title": "22.04 Sample Storage", "icon": "inventory_2", "link": "/admin/resources/samplestorageform_22_04/"},
                     {"title": "22.05 Sample Handling", "icon": "science", "link": "/admin/resources/samplehandlingform_22_05/"},
-                ]
-            },
-            {
-                "title": "Purchasing & Suppliers",
-                "separator": True,
-                "items": [
-                    {"title": "Purchase Requests", "icon": "shopping_cart", "link": "/admin/resources/purchaserequest/"},
-                    {"title": "Comparative Statements", "icon": "compare_arrows", "link": "/admin/resources/comparativestatement/"},
-                    {"title": "Suppliers", "icon": "storefront", "link": "/admin/resources/supplier/"},
-                    {"title": "Supplier Evaluation Plans", "icon": "fact_check", "link": "/admin/resources/supplierevaluationplan/"},
-                    {"title": "Product/Service Inspections", "icon": "policy", "link": "/admin/resources/productserviceinspection/"},
                 ]
             },
         ]
