@@ -221,6 +221,27 @@ UNFOLD = {
                 ]
             },
             {
+                "title": "LSP-05: Metrological Traceability",
+                "separator": True,
+                "items": [
+                    {"title": "5.01 CRM List", "icon": "science", "link": "/admin/resources/crmlist_5_01/"},
+                ]
+            },
+            {
+                "title": "LSP-06: Provided Services",
+                "separator": True,
+                "items": [
+                    {"title": "6.01 Supplier Selection Form", "icon": "person_add", "link": "/admin/resources/supplierselection_6_01/"},
+                    {"title": "6.02 Approved Supplier Service", "icon": "verified_user", "link": "/admin/resources/approvedsupplierserviceprovider_6_02/"},
+                    {"title": "6.03 External Provider Eval", "icon": "fact_check", "link": "/admin/resources/externalproviderevaluation_6_03/"},
+                    {"title": "6.04 Supplier Perf Monitoring", "icon": "trending_up", "link": "/admin/resources/supplierperformancemonitoring_6_04/"},
+                    {"title": "6.05 Comparative Statement", "icon": "compare", "link": "/admin/resources/comparativestatement_6_05/"},
+                    {"title": "6.06 Supplier Eval Plan", "icon": "event_available", "link": "/admin/resources/supplierevaluationplan_6_06/"},
+                    {"title": "6.07 Store Purchase Demand", "icon": "add_shopping_cart", "link": "/admin/resources/storepurchasedemand_6_07/"},
+                    {"title": "6.08 Products/Services Insp.", "icon": "inventory", "link": "/admin/resources/productsservicesinspection_6_08/"},
+                ]
+            },
+            {
                 "title": "Purchasing & Suppliers",
                 "separator": True,
                 "items": [

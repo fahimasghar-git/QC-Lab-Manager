@@ -1358,3 +1358,181 @@ class CalibrationProgramItem(models.Model):
     frequency = models.CharField(max_length=100)
     schedule_month = models.CharField(max_length=100)
     remarks = models.CharField(max_length=255, blank=True, null=True)
+from django.db import models
+from django.conf import settings
+
+# ==========================================
+# LSP-05 Metrological Traceability
+# ==========================================
+
+class CRMList_5_01(ISOApprovalModel):
+    month = models.CharField(max_length=50, blank=True, null=True)
+    year = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "CRM List (5.01)"
+        verbose_name_plural = "CRM Lists (5.01)"
+
+class CRMListItem(models.Model):
+    crm_list = models.ForeignKey(CRMList_5_01, on_delete=models.CASCADE, related_name="items")
+    analyte = models.CharField(max_length=255)
+    make = models.CharField(max_length=255)
+    cat_no = models.CharField(max_length=150, blank=True, null=True)
+    lot_no = models.CharField(max_length=150, blank=True, null=True)
+    traceability = models.CharField(max_length=255, blank=True, null=True)
+    quantity = models.CharField(max_length=100)
+    acquisition_date = models.DateField(blank=True, null=True)
+    use_by_date = models.DateField(blank=True, null=True)
+
+# ==========================================
+# LSP-06 Procedure for Provided Services
+# ==========================================
+
+class SupplierSelection_6_01(ISOApprovalModel):
+    selection_date = models.DateField(blank=True, null=True)
+    form_no = models.CharField(max_length=100, blank=True, null=True)
+    name_of_supplier = models.CharField(max_length=255)
+    contact_person = models.CharField(max_length=255)
+    phone = models.CharField(max_length=100)
+    email = models.CharField(max_length=150, blank=True, null=True)
+    website = models.CharField(max_length=255, blank=True, null=True)
+    requirements_from_supplier = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Supplier Selection Form (6.01)"
+        verbose_name_plural = "Supplier Selection Forms (6.01)"
+
+class SupplierSelectionCriteria(models.Model):
+    selection = models.ForeignKey(SupplierSelection_6_01, on_delete=models.CASCADE, related_name="items")
+    criteria = models.CharField(max_length=255)
+    status_against_criteria = models.CharField(max_length=255)
+
+class ApprovedSupplierServiceProvider_6_02(ISOApprovalModel):
+    period = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Approved Supplier Service Provider (6.02)"
+        verbose_name_plural = "Approved Supplier Service Providers (6.02)"
+
+class ApprovedSupplierItem(models.Model):
+    provider_list = models.ForeignKey(ApprovedSupplierServiceProvider_6_02, on_delete=models.CASCADE, related_name="items")
+    name_of_supplier = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    contact_no = models.CharField(max_length=100)
+    contact_person = models.CharField(max_length=255)
+    product_service = models.CharField(max_length=255)
+
+class ExternalProviderEvaluation_6_03(ISOApprovalModel):
+    supplier_name = models.CharField(max_length=255)
+    evaluation_date = models.DateField()
+    overall_rating = models.CharField(max_length=100, blank=True, null=True)
+    remarks = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "External Provider Evaluation (6.03)"
+        verbose_name_plural = "External Provider Evaluations (6.03)"
+
+class ExternalProviderEvaluationCriteria(models.Model):
+    evaluation = models.ForeignKey(ExternalProviderEvaluation_6_03, on_delete=models.CASCADE, related_name="items")
+    criteria = models.CharField(max_length=255)
+    score_or_status = models.CharField(max_length=100)
+
+class SupplierPerformanceMonitoring_6_04(ISOApprovalModel):
+    period = models.CharField(max_length=100)
+    assessed_by = models.CharField(max_length=150)
+
+    class Meta:
+        verbose_name = "Supplier Performance Monitoring (6.04)"
+        verbose_name_plural = "Supplier Performance Monitoring (6.04)"
+
+class SupplierPerformanceItem(models.Model):
+    monitoring = models.ForeignKey(SupplierPerformanceMonitoring_6_04, on_delete=models.CASCADE, related_name="items")
+    supplier_name = models.CharField(max_length=255)
+    quality_rating = models.CharField(max_length=50, blank=True, null=True)
+    assessment_rating = models.CharField(max_length=50, blank=True, null=True)
+    price_rate = models.CharField(max_length=50, blank=True, null=True)
+    market_reputation = models.CharField(max_length=50, blank=True, null=True)
+    overall_rating = models.CharField(max_length=50, blank=True, null=True)
+    certification_rating = models.CharField(max_length=50, blank=True, null=True)
+
+class ComparativeStatement_6_05(ISOApprovalModel):
+    item_name = models.CharField(max_length=255)
+    statement_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Comparative Statement (6.05)"
+        verbose_name_plural = "Comparative Statements (6.05)"
+
+class ComparativeStatementItem_6_05(models.Model):
+    statement = models.ForeignKey(ComparativeStatement_6_05, on_delete=models.CASCADE, related_name="items")
+    supplier_name = models.CharField(max_length=255)
+    rate_rs = models.CharField(max_length=100, blank=True, null=True)
+    items = models.CharField(max_length=100, blank=True, null=True)
+    quality = models.CharField(max_length=100, blank=True, null=True)
+    quantity = models.CharField(max_length=100, blank=True, null=True)
+    time_delivery = models.CharField(max_length=100, blank=True, null=True)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+
+class SupplierEvaluationPlan_6_06(ISOApprovalModel):
+    for_the_year = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "Supplier Evaluation Plan (6.06)"
+        verbose_name_plural = "Supplier Evaluation Plans (6.06)"
+
+class SupplierEvaluationPlanItem_6_06(models.Model):
+    plan = models.ForeignKey(SupplierEvaluationPlan_6_06, on_delete=models.CASCADE, related_name="items")
+    name_of_supplier = models.CharField(max_length=255)
+    frequency = models.CharField(max_length=100)
+    evaluation_date = models.DateField(blank=True, null=True)
+    next_eval_1 = models.DateField(blank=True, null=True)
+    next_eval_2 = models.DateField(blank=True, null=True)
+    next_eval_3 = models.DateField(blank=True, null=True)
+    next_eval_4 = models.DateField(blank=True, null=True)
+    responsibility = models.CharField(max_length=150, blank=True, null=True)
+    records = models.CharField(max_length=150, blank=True, null=True)
+
+class StorePurchaseDemand_6_07(ISOApprovalModel):
+    demand_date = models.DateField(blank=True, null=True)
+    intender = models.CharField(max_length=150, blank=True, null=True)
+    store_keeper = models.CharField(max_length=150, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Store Purchase Demand (6.07)"
+        verbose_name_plural = "Store Purchase Demands (6.07)"
+
+class StorePurchaseDemandItem(models.Model):
+    demand = models.ForeignKey(StorePurchaseDemand_6_07, on_delete=models.CASCADE, related_name="items")
+    item_name = models.CharField(max_length=255)
+    model = models.CharField(max_length=150, blank=True, null=True)
+    brand = models.CharField(max_length=150, blank=True, null=True)
+    quality = models.CharField(max_length=100, blank=True, null=True)
+    material_unit = models.CharField(max_length=50, blank=True, null=True)
+    quantity_required = models.CharField(max_length=50, blank=True, null=True)
+    stock_in_hand = models.CharField(max_length=50, blank=True, null=True)
+    net_purchase_required = models.CharField(max_length=50, blank=True, null=True)
+    concentration = models.CharField(max_length=100, blank=True, null=True)
+    purpose_of_purchase = models.CharField(max_length=255, blank=True, null=True)
+
+class ProductsServicesInspection_6_08(ISOApprovalModel):
+    TYPE_CHOICES = [('Products', 'Products'), ('Services', 'Services')]
+    STATUS_CHOICES = [('Newly engaged', 'Newly engaged'), ('Pre-existing', 'Pre-existing')]
+
+    type_of_purchase = models.CharField(max_length=50, choices=TYPE_CHOICES)
+    products_services = models.CharField(max_length=255)
+    external_provider = models.CharField(max_length=255)
+    provider_status = models.CharField(max_length=50, choices=STATUS_CHOICES)
+    gate_pass_no = models.CharField(max_length=100, blank=True, null=True)
+    pr_po_no = models.CharField(max_length=100, blank=True, null=True)
+    invoice_no = models.CharField(max_length=100, blank=True, null=True)
+    date_of_receipt = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Products Services Inspection (6.08)"
+        verbose_name_plural = "Products Services Inspections (6.08)"
+
+class ProductsServicesInspectionItem(models.Model):
+    inspection = models.ForeignKey(ProductsServicesInspection_6_08, on_delete=models.CASCADE, related_name="items")
+    requirements = models.CharField(max_length=255)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+

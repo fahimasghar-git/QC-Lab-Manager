@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    @page {
+        size: a4 portrait;
+        margin: 1cm;
+        margin-top: 1.5cm;
+    }
+    body {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 11px;
+    }
+    .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+        margin-bottom: 20px;
+    }
+    .header-table td {
+        border: 1px solid black;
+        padding: 5px;
+    }
+    .main-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    .main-table th, .main-table td {
+        border: 1px solid black;
+        padding: 6px;
+    }
+    .main-table th {
+        background-color: #f2f2f2;
+        text-align: left;
+    }
+    .sig-table {
+        width: 100%;
+        border: none;
+        margin-top: 60px;
+        text-align: center;
+        font-size: 12px;
+    }
+    .sig-table td {
+        padding: 10px;
+    }
+</style>
+</head>
+<body>
+    <table class="header-table">
+        <tr>
+            <td rowspan="3" style="width: 15%; text-align: center; border-right: none;">
+                <!-- Logo Space -->
+                <strong>LOGO</strong>
+            </td>
+            <td rowspan="2" style="width: 65%; font-size: 14px; font-weight: bold; text-align: center;">
+                VITAL AGRI NUTRIENTS QC LAB<br/>
+                ANNUAL TRAINING PLAN
+            </td>
+            <td style="width: 20%; text-align: left; font-size: 10px;">
+                <strong>Format No:</strong> QCL-FRM-6.07
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Revision No:</strong> 01
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 11px; font-weight: bold; text-align: center;">
+                ISO/IEC 17025 Accredited
+            </td>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Page:</strong> <pdf:pagenumber> of <pdf:pagecount>
+            </td>
+        </tr>
+    </table>
+
+    
+    <table style="width: 100%; font-size: 11px; margin-bottom: 20px;">
+        <tr>
+            <td style="width: 20%;"><b>Month / Year:</b></td>
+            <td style="width: 30%; border-bottom: 1px solid black;">{{ obj.month_year|default:"-" }}</td>
+            <td style="width: 15%;"><b>Plan No:</b></td>
+            <td style="width: 35%; border-bottom: 1px solid black;">{{ obj.plan_no|default:"-" }}</td>
+        </tr>
+    </table>
+
+    
+    <table class="main-table" style="font-size: 9px; text-align: center;">
+        <thead>
+            <tr>
+                <th style="width: 5%;">Sr. No.</th>
+                <th style="width: 15%;">Items Name</th>
+                <th style="width: 10%;">Model</th>
+                <th style="width: 10%;">Brand</th>
+                <th style="width: 10%;">Quality</th>
+                <th style="width: 5%;">Material Unit</th>
+                <th style="width: 5%;">Quantity Required</th>
+                <th style="width: 5%;">Stock in Hand</th>
+                <th style="width: 10%;">Net Purchase Required</th>
+                <th style="width: 10%;">Concentration</th>
+                <th style="width: 15%;">Purpose of Purchase</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in obj.items.all %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.item_name }}</td>
+                <td>{{ item.model|default:"-" }}</td>
+                <td>{{ item.brand|default:"-" }}</td>
+                <td>{{ item.quality|default:"-" }}</td>
+                <td>{{ item.material_unit|default:"-" }}</td>
+                <td>{{ item.quantity_required|default:"-" }}</td>
+                <td>{{ item.stock_in_hand|default:"-" }}</td>
+                <td>{{ item.net_purchase_required|default:"-" }}</td>
+                <td>{{ item.concentration|default:"-" }}</td>
+                <td>{{ item.purpose_of_purchase|default:"-" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="11">No records added yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <table style="width: 100%; font-size: 11px; margin-top: 20px;">
+        <tr>
+            <td style="width: 33%;"><b>Intender:</b> {{ obj.intender|default:"-" }}</td>
+            <td style="width: 33%;"><b>Store Keeper:</b> {{ obj.store_keeper|default:"-" }}</td>
+            <td style="width: 33%;"><b>Date:</b> {{ obj.demand_date|date:"d-M-Y"|default:"-" }}</td>
+        </tr>
+    </table>
+
+
+    
+    <table class="sig-table">
+        <tr>
+            <td>
+                {% if obj.prepared_by %}
+                    <strong>{{ obj.prepared_by.get_full_name|default:obj.prepared_by.username }}</strong><br>
+                    {{ obj.prepared_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Prepared By</strong>
+            </td>
+            <td>
+                {% if obj.checked_by %}
+                    <strong>{{ obj.checked_by.get_full_name|default:obj.checked_by.username }}</strong><br>
+                    {{ obj.checked_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Checked By</strong>
+            </td>
+            <td>
+                {% if obj.approved_by %}
+                    <strong>{{ obj.approved_by.get_full_name|default:obj.approved_by.username }}</strong><br>
+                    {{ obj.approved_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Approved By</strong>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

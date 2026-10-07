@@ -17,6 +17,19 @@ from .models import (
     CalibrationProgram_4_04, CalibrationProgramItem
 )
 
+
+from .models import (
+    CRMList_5_01, CRMListItem,
+    SupplierSelection_6_01, SupplierSelectionCriteria,
+    ApprovedSupplierServiceProvider_6_02, ApprovedSupplierItem,
+    ExternalProviderEvaluation_6_03, ExternalProviderEvaluationCriteria,
+    SupplierPerformanceMonitoring_6_04, SupplierPerformanceItem,
+    ComparativeStatement_6_05, ComparativeStatementItem_6_05,
+    SupplierEvaluationPlan_6_06, SupplierEvaluationPlanItem_6_06,
+    StorePurchaseDemand_6_07, StorePurchaseDemandItem,
+    ProductsServicesInspection_6_08, ProductsServicesInspectionItem
+)
+
 from .models import AuthorizedPersonnelList_2_06, NewInductionOrientation_2_11, InductionOrientationItem, Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
 from django.utils import timezone
 
@@ -699,4 +712,96 @@ class CalibrationProgramItemInline(StackedInline):
 class CalibrationProgramAdmin(ModelAdmin):
     list_display = ('year', 'status')
     inlines = [CalibrationProgramItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+# LSP-05 Admin
+class CRMListItemInline(StackedInline):
+    model = CRMListItem
+    extra = 1
+
+@admin.register(CRMList_5_01)
+class CRMListAdmin(ModelAdmin):
+    list_display = ('month', 'year', 'status')
+    inlines = [CRMListItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+# LSP-06 Admin
+class SupplierSelectionCriteriaInline(StackedInline):
+    model = SupplierSelectionCriteria
+    extra = 1
+
+@admin.register(SupplierSelection_6_01)
+class SupplierSelectionAdmin(ModelAdmin):
+    list_display = ('name_of_supplier', 'form_no', 'selection_date', 'status')
+    inlines = [SupplierSelectionCriteriaInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class ApprovedSupplierItemInline(StackedInline):
+    model = ApprovedSupplierItem
+    extra = 1
+
+@admin.register(ApprovedSupplierServiceProvider_6_02)
+class ApprovedSupplierServiceProviderAdmin(ModelAdmin):
+    list_display = ('period', 'status')
+    inlines = [ApprovedSupplierItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class ExternalProviderEvaluationCriteriaInline(StackedInline):
+    model = ExternalProviderEvaluationCriteria
+    extra = 1
+
+@admin.register(ExternalProviderEvaluation_6_03)
+class ExternalProviderEvaluationAdmin(ModelAdmin):
+    list_display = ('supplier_name', 'evaluation_date', 'status')
+    inlines = [ExternalProviderEvaluationCriteriaInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class SupplierPerformanceItemInline(StackedInline):
+    model = SupplierPerformanceItem
+    extra = 1
+
+@admin.register(SupplierPerformanceMonitoring_6_04)
+class SupplierPerformanceMonitoringAdmin(ModelAdmin):
+    list_display = ('period', 'assessed_by', 'status')
+    inlines = [SupplierPerformanceItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class ComparativeStatementItem605Inline(StackedInline):
+    model = ComparativeStatementItem_6_05
+    extra = 1
+
+@admin.register(ComparativeStatement_6_05)
+class ComparativeStatement605Admin(ModelAdmin):
+    list_display = ('item_name', 'statement_date', 'status')
+    inlines = [ComparativeStatementItem605Inline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class SupplierEvaluationPlanItem606Inline(StackedInline):
+    model = SupplierEvaluationPlanItem_6_06
+    extra = 1
+
+@admin.register(SupplierEvaluationPlan_6_06)
+class SupplierEvaluationPlan606Admin(ModelAdmin):
+    list_display = ('for_the_year', 'status')
+    inlines = [SupplierEvaluationPlanItem606Inline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class StorePurchaseDemandItemInline(StackedInline):
+    model = StorePurchaseDemandItem
+    extra = 1
+
+@admin.register(StorePurchaseDemand_6_07)
+class StorePurchaseDemandAdmin(ModelAdmin):
+    list_display = ('demand_date', 'status')
+    inlines = [StorePurchaseDemandItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class ProductsServicesInspectionItemInline(StackedInline):
+    model = ProductsServicesInspectionItem
+    extra = 1
+
+@admin.register(ProductsServicesInspection_6_08)
+class ProductsServicesInspectionAdmin(ModelAdmin):
+    list_display = ('external_provider', 'type_of_purchase', 'date_of_receipt', 'status')
+    inlines = [ProductsServicesInspectionItemInline]
     actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
