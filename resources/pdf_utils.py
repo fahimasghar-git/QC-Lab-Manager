@@ -39,6 +39,7 @@ def generate_iso_pdf(model_admin, request, queryset):
             'value': str(value) if value is not None else ''
         })
     
+
     # Try to extract the FRM code from verbose_name
     # e.g. "Training Need Assessment (2.02)" -> "FRM-2.02"
     doc_code = "ISO-17025 Document"
@@ -54,7 +55,12 @@ def generate_iso_pdf(model_admin, request, queryset):
         'obj': obj,
     }
     
-    pdf = render_to_pdf('resources/universal_iso_pdf.html', context)
+    template_name = 'resources/universal_iso_pdf.html'
+    if model_meta.model_name == 'personnelauthorizationpermit':
+        template_name = 'resources/pdf_1_01_authorization_permit.html'
+    
+    pdf = render_to_pdf(template_name, context)
+
     if pdf:
         response = HttpResponse(pdf, content_type='application/pdf')
         filename = f"{doc_code}_{obj.id}.pdf"

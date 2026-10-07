@@ -44,19 +44,27 @@
         font-size: 9pt;
         text-align: left;
     }
-    .content-table {
+    .meta-table {
         width: 100%;
-        border-collapse: collapse;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+    .meta-table td {
+        padding: 5px;
+    }
+    .checkbox-table {
+        width: 100%;
         margin-top: 20px;
+        font-size: 10pt;
     }
-    .content-table th, .content-table td {
-        border: 1px solid #ddd;
-        padding: 8px;
+    .checkbox-table td {
+        padding: 4px;
+        vertical-align: top;
     }
-    .content-table th {
-        background-color: #f2f2f2;
-        width: 40%;
-        text-align: left;
+    .checkbox {
+        font-family: monospace;
+        font-weight: bold;
+        font-size: 12pt;
     }
 </style>
 </head>
@@ -79,17 +87,46 @@
         Page <pdf:pagenumber> of <pdf:pagecount>
     </div>
 
-    <h3 style="margin-top: 50px;">Document Details</h3>
-    <table class="content-table">
-        {% for field in fields %}
+    <table class="meta-table">
         <tr>
-            <th>{{ field.name }}</th>
-            <td>{{ field.value }}</td>
+            <td style="width: 20%;"><b>Employee Name:</b></td>
+            <td style="width: 30%; border-bottom: 1px solid black;">{{ obj.analyst.get_full_name|default:obj.analyst.username }}</td>
+            <td style="width: 15%;"><b>Designation:</b></td>
+            <td style="width: 35%; border-bottom: 1px solid black;">{{ obj.analyst.groups.first.name|default:"" }}</td>
         </tr>
+        <tr>
+            <td><b>Issue Date:</b></td>
+            <td style="border-bottom: 1px solid black;">{{ obj.issue_date|date:"d-M-Y" }}</td>
+            <td><b>Valid Until:</b></td>
+            <td style="border-bottom: 1px solid black;">{{ obj.valid_until|date:"d-M-Y"|default:"-" }}</td>
+        </tr>
+    </table>
+
+    <p style="margin-top: 20px; margin-bottom: 20px;">
+        On the basis of experience, training performance & evaluation and competence, Analyst is authorized for performance of analytical activities on following instrument/techniques/parameter testing.
+    </p>
+
+    <table class="checkbox-table">
+        {% for field in fields %}
+            {% if field.value == 'True' or field.value == 'False' %}
+            <tr>
+                <td style="width: 5%;">
+                    <span class="checkbox">
+                        {% if field.value == 'True' %} [ X ] {% else %} [ &nbsp; ] {% endif %}
+                    </span>
+                </td>
+                <td style="width: 95%;">{{ field.name }}</td>
+            </tr>
+            {% endif %}
         {% endfor %}
     </table>
-    
 
+    {% if obj.remarks %}
+    <div style="margin-top: 20px;">
+        <b>Remarks:</b><br>
+        <p>{{ obj.remarks }}</p>
+    </div>
+    {% endif %}
 
     {% if obj.prepared_by or obj.checked_by or obj.approved_by %}
     <div class="signature-block" style="margin-top: 40px;">
