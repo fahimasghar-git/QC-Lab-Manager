@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    @page {
+        size: a4 portrait;
+        margin: 2cm;
+        @frame header_frame {
+            -pdf-frame-content: header_content;
+            left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+        }
+        @frame footer_frame {
+            -pdf-frame-content: footer_content;
+            left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+        }
+    }
+    body {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 11pt;
+    }
+    .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+        margin-bottom: 20px;
+    }
+    .header-table td {
+        border: 1px solid black;
+        padding: 5px;
+        text-align: center;
+    }
+    .logo-cell {
+        width: 20%;
+        font-weight: bold;
+        font-size: 14pt;
+    }
+    .title-cell {
+        width: 60%;
+        font-weight: bold;
+        font-size: 14pt;
+    }
+    .meta-cell {
+        width: 20%;
+        font-size: 9pt;
+        text-align: left;
+    }
+    .content-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .content-table th, .content-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    .content-table th {
+        background-color: #f2f2f2;
+        width: 40%;
+        text-align: left;
+    }
+</style>
+</head>
+<body>
+    <div id="header_content">
+        <table class="header-table">
+            <tr>
+                <td class="logo-cell">Vital Agri Nutrients</td>
+                <td class="title-cell">{{ doc_title }}</td>
+                <td class="meta-cell">
+                    Doc Code: {{ doc_code }}<br>
+                    Rev No: 00<br>
+                    Date: {{ date_generated }}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="footer_content" style="text-align: right; font-size: 9pt;">
+        Page <pdf:pagenumber> of <pdf:pagecount>
+    </div>
+
+    <h3 style="margin-top: 50px;">Document Details</h3>
+    <table class="content-table">
+        {% for field in fields %}
+        <tr>
+            <th>{{ field.name }}</th>
+            <td>{{ field.value }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <br><br><br>
+    <table style="width: 100%; margin-top: 50px;">
+        <tr>
+            <td style="width: 50%;">Prepared By: ___________________</td>
+            <td style="width: 50%; text-align: right;">Approved By: ___________________</td>
+        </tr>
+    </table>
+</body>
+</html>
