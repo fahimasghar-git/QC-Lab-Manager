@@ -2260,3 +2260,300 @@ class ComplaintOutcomeLetter_15_04(ISOApprovalModel):
     class Meta:
         verbose_name = "Complaint Outcome Letter (15.04)"
         verbose_name_plural = "Complaint Outcome Letters (15.04)"
+from django.db import models
+from django.conf import settings
+
+# ==========================================
+# LSP-16 Ensuring Validity of Results
+# ==========================================
+
+class QAProgram_16_01(ISOApprovalModel):
+    title = models.CharField(max_length=150, default="Verification of Method / QA Program")
+    class Meta:
+        verbose_name = "QA Program / Method Verification (16.01)"
+        verbose_name_plural = "QA Programs / Method Verifications (16.01)"
+
+class QAProgramItem(models.Model):
+    program = models.ForeignKey(QAProgram_16_01, on_delete=models.CASCADE, related_name="items")
+    parameter = models.CharField(max_length=150)
+    results_validity_activities = models.CharField(max_length=255)
+    remarks = models.CharField(max_length=150, blank=True, null=True)
+    verify_by = models.CharField(max_length=150, blank=True, null=True)
+
+
+class RandRReport_16_02(ISOApprovalModel):
+    test_title = models.CharField(max_length=150)
+    date_of_performance = models.DateField()
+    method_reference = models.CharField(max_length=150)
+    
+    class Meta:
+        verbose_name = "R&R Report (16.02)"
+        verbose_name_plural = "R&R Reports (16.02)"
+
+class RandRReportItem(models.Model):
+    report = models.ForeignKey(RandRReport_16_02, on_delete=models.CASCADE, related_name="items")
+    analyst_1 = models.CharField(max_length=100)
+    analyst_2 = models.CharField(max_length=100)
+
+
+class ListOfPTProviders_16_03(ISOApprovalModel):
+    list_name = models.CharField(max_length=150, default="List of PT Providers")
+    
+    class Meta:
+        verbose_name = "List of PT Providers (16.03)"
+        verbose_name_plural = "Lists of PT Providers (16.03)"
+
+class PTProviderItem(models.Model):
+    provider_list = models.ForeignKey(ListOfPTProviders_16_03, on_delete=models.CASCADE, related_name="items")
+    name = models.CharField(max_length=150)
+    place = models.CharField(max_length=150)
+    scheme = models.CharField(max_length=150)
+    brief_areas = models.TextField(blank=True, null=True)
+
+
+# ==========================================
+# LSP-17 Procedure for Quality Assurance
+# ==========================================
+
+class CorrectivePreventiveAction_17_01(ISOApprovalModel):
+    month = models.CharField(max_length=100)
+    department = models.CharField(max_length=100, default="QC Lab")
+    car_no = models.CharField(max_length=100)
+    initiated_on = models.DateField()
+    initiated_by = models.CharField(max_length=150)
+    
+    INITIATED_DUE_TO_CHOICES = [
+        ('NC', 'NC'), ('Complaint', 'Complaint'), ('Accident/Incident', 'Accident/Incident'),
+        ('Audit NC', 'Audit NC'), ('Suggestion/Improvement', 'Suggestion/Improvement'),
+        ('Technical Fault', 'Technical Fault'), ('Others', 'Others')
+    ]
+    initiated_due_to = models.CharField(max_length=50, choices=INITIATED_DUE_TO_CHOICES)
+    description = models.TextField()
+    
+    accepted_rejected = models.CharField(max_length=50, choices=[('Accepted', 'Accepted'), ('Rejected', 'Rejected')])
+    marked_to = models.CharField(max_length=150, blank=True, null=True)
+    date_marked = models.DateField(blank=True, null=True)
+    
+    root_cause_analysis = models.TextField(blank=True, null=True)
+    proposed_action = models.TextField(blank=True, null=True)
+    target_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Corrective & Preventive Action Form (17.01)"
+        verbose_name_plural = "Corrective & Preventive Action Forms (17.01)"
+
+
+class ConductivityMeterCheck_17_02(ISOApprovalModel):
+    equipment_no = models.CharField(max_length=100)
+    month = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Conductivity Meter Check (17.02)"
+        verbose_name_plural = "Conductivity Meter Checks (17.02)"
+
+class ConductivityMeterCheckItem(models.Model):
+    equipment_check = models.ForeignKey(ConductivityMeterCheck_17_02, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    reading = models.CharField(max_length=100)
+    pass_fail = models.CharField(max_length=50, choices=[('Pass', 'Pass'), ('Fail', 'Fail')])
+    performed_by = models.CharField(max_length=100)
+
+
+class pHMeterCheck_17_03(ISOApprovalModel):
+    equipment_no = models.CharField(max_length=100)
+    month = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "pH Meter Check (17.03)"
+        verbose_name_plural = "pH Meter Checks (17.03)"
+
+class pHMeterCheckItem(models.Model):
+    equipment_check = models.ForeignKey(pHMeterCheck_17_03, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    reading = models.CharField(max_length=100)
+    pass_fail = models.CharField(max_length=50, choices=[('Pass', 'Pass'), ('Fail', 'Fail')])
+    performed_by = models.CharField(max_length=100)
+
+
+class ILCRegistrationForm_17_04(ISOApprovalModel):
+    org_name = models.CharField(max_length=150)
+    postal_address = models.TextField()
+    contact_person = models.CharField(max_length=150)
+    designation = models.CharField(max_length=100)
+    contact_number = models.CharField(max_length=100)
+    email = models.EmailField()
+    name_of_controlling_lab = models.CharField(max_length=150)
+    tests = models.TextField(help_text="Tests like Nitrogen, Phosphorus, Potassium")
+
+    class Meta:
+        verbose_name = "ILC Registration Form (17.04)"
+        verbose_name_plural = "ILC Registration Forms (17.04)"
+
+
+class ILCResultSheet_17_05(ISOApprovalModel):
+    sheet_name = models.CharField(max_length=150, default="Inter Lab Comparison Result Sheet")
+
+    class Meta:
+        verbose_name = "ILC Result Sheet (17.05)"
+        verbose_name_plural = "ILC Result Sheets (17.05)"
+
+class ILCResultSheetItem(models.Model):
+    sheet = models.ForeignKey(ILCResultSheet_17_05, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    tests = models.CharField(max_length=150)
+    van_results = models.CharField(max_length=100)
+    sayban_results = models.CharField(max_length=100)
+    accuracy_95 = models.CharField(max_length=100)
+
+
+class ILCSummary_17_06(ISOApprovalModel):
+    summary_name = models.CharField(max_length=150, default="Inter Lab Comparison Summary")
+
+    class Meta:
+        verbose_name = "ILC Summary (17.06)"
+        verbose_name_plural = "ILC Summaries (17.06)"
+
+class ILCSummaryItem(models.Model):
+    summary = models.ForeignKey(ILCSummary_17_06, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    tests = models.CharField(max_length=150)
+    van_results = models.CharField(max_length=100)
+    sayban_results = models.CharField(max_length=100)
+    accuracy_95 = models.CharField(max_length=100)
+
+
+class AnnualQAProgram_17_07(ISOApprovalModel):
+    year = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Annual QA Program (17.07)"
+        verbose_name_plural = "Annual QA Programs (17.07)"
+
+class AnnualQAProgramItem(models.Model):
+    program = models.ForeignKey(AnnualQAProgram_17_07, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField(blank=True, null=True)
+    tests = models.CharField(max_length=150)
+    type_of_check = models.CharField(max_length=150)
+    target_date = models.CharField(max_length=100)
+    completion_date = models.CharField(max_length=100, blank=True, null=True)
+    deviation = models.CharField(max_length=100, blank=True, null=True)
+
+
+class AnalyticalBalanceCheck_17_08(ISOApprovalModel):
+    equipment_no = models.CharField(max_length=100)
+    month = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Analytical Balance Check (17.08)"
+        verbose_name_plural = "Analytical Balance Checks (17.08)"
+
+class AnalyticalBalanceCheckItem(models.Model):
+    equipment_check = models.ForeignKey(AnalyticalBalanceCheck_17_08, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    reading_0_5g = models.CharField(max_length=50, blank=True, null=True)
+    reading_1g = models.CharField(max_length=50, blank=True, null=True)
+    reading_5g = models.CharField(max_length=50, blank=True, null=True)
+    reading_10g = models.CharField(max_length=50, blank=True, null=True)
+    pass_fail = models.CharField(max_length=50, choices=[('Pass', 'Pass'), ('Fail', 'Fail')])
+    signature = models.CharField(max_length=100, blank=True, null=True)
+
+
+class FreezerCheck_17_09(ISOApprovalModel):
+    equipment_no = models.CharField(max_length=100)
+    month = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Freezer Check (17.09)"
+        verbose_name_plural = "Freezer Checks (17.09)"
+
+class FreezerCheckItem(models.Model):
+    equipment_check = models.ForeignKey(FreezerCheck_17_09, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    reading = models.CharField(max_length=100)
+    pass_fail = models.CharField(max_length=50, choices=[('Pass', 'Pass'), ('Fail', 'Fail')])
+    performed_by = models.CharField(max_length=100)
+
+
+class AnnualRetestingDataForm_17_10(ISOApprovalModel):
+    year = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Annual Retesting Data Form (17.10)"
+        verbose_name_plural = "Annual Retesting Data Forms (17.10)"
+
+class AnnualRetestingDataItem(models.Model):
+    form = models.ForeignKey(AnnualRetestingDataForm_17_10, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    parameter = models.CharField(max_length=150)
+    test_result_1 = models.CharField(max_length=100)
+    test_result_2 = models.CharField(max_length=100)
+    status = models.CharField(max_length=100, blank=True, null=True)
+
+
+class UltrasonicBathCheck_17_11(ISOApprovalModel):
+    equipment_no = models.CharField(max_length=100)
+    month = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Ultrasonic Bath Check (17.11)"
+        verbose_name_plural = "Ultrasonic Bath Checks (17.11)"
+
+class UltrasonicBathCheckItem(models.Model):
+    equipment_check = models.ForeignKey(UltrasonicBathCheck_17_11, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    reading = models.CharField(max_length=100)
+    pass_fail = models.CharField(max_length=50, choices=[('Pass', 'Pass'), ('Fail', 'Fail')])
+    performed_by = models.CharField(max_length=100)
+
+
+class OvenCheck_17_12(ISOApprovalModel):
+    equipment_no = models.CharField(max_length=100)
+    month = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Oven Check (17.12)"
+        verbose_name_plural = "Oven Checks (17.12)"
+
+class OvenCheckItem(models.Model):
+    equipment_check = models.ForeignKey(OvenCheck_17_12, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    reading = models.CharField(max_length=100)
+    pass_fail = models.CharField(max_length=50, choices=[('Pass', 'Pass'), ('Fail', 'Fail')])
+    performed_by = models.CharField(max_length=100)
+
+
+class QualityControlChart_17_13(ISOApprovalModel):
+    title = models.CharField(max_length=150)
+    month = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Quality Control Chart (17.13)"
+        verbose_name_plural = "Quality Control Charts (17.13)"
+
+class QualityControlChartItem(models.Model):
+    chart = models.ForeignKey(QualityControlChart_17_13, on_delete=models.CASCADE, related_name="items")
+    product = models.CharField(max_length=150)
+    batch_no = models.CharField(max_length=100)
+    active_ingredient = models.CharField(max_length=150)
+    n = models.CharField(max_length=50, blank=True, null=True)
+    p = models.CharField(max_length=50, blank=True, null=True)
+    k = models.CharField(max_length=50, blank=True, null=True)
+
+
+class LabCleaningInspectionSheet_17_14(ISOApprovalModel):
+    section_area = models.CharField(max_length=150)
+    month = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Lab Cleaning Inspection Sheet (17.14)"
+        verbose_name_plural = "Lab Cleaning Inspection Sheets (17.14)"
+
+class LabCleaningInspectionItem(models.Model):
+    sheet = models.ForeignKey(LabCleaningInspectionSheet_17_14, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    floor_sinks_taps = models.BooleanField(default=False)
+    bench_shelves = models.BooleanField(default=False)
+    equipment = models.BooleanField(default=False)
+    checked_by = models.CharField(max_length=100, blank=True, null=True)
+    verified_by = models.CharField(max_length=100, blank=True, null=True)
+

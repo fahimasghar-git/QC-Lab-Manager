@@ -60,6 +60,18 @@ from .models import (
     CustomerAgreement_15_03, CustomerAgreementItem, ComplaintOutcomeLetter_15_04
 )
 
+
+from .models import (
+    QAProgram_16_01, QAProgramItem, RandRReport_16_02, RandRReportItem, ListOfPTProviders_16_03, PTProviderItem,
+    CorrectivePreventiveAction_17_01, ConductivityMeterCheck_17_02, ConductivityMeterCheckItem,
+    pHMeterCheck_17_03, pHMeterCheckItem, ILCRegistrationForm_17_04, ILCResultSheet_17_05, ILCResultSheetItem,
+    ILCSummary_17_06, ILCSummaryItem, AnnualQAProgram_17_07, AnnualQAProgramItem,
+    AnalyticalBalanceCheck_17_08, AnalyticalBalanceCheckItem, FreezerCheck_17_09, FreezerCheckItem,
+    AnnualRetestingDataForm_17_10, AnnualRetestingDataItem, UltrasonicBathCheck_17_11, UltrasonicBathCheckItem,
+    OvenCheck_17_12, OvenCheckItem, QualityControlChart_17_13, QualityControlChartItem,
+    LabCleaningInspectionSheet_17_14, LabCleaningInspectionItem
+)
+
 from .models import AuthorizedPersonnelList_2_06, NewInductionOrientation_2_11, InductionOrientationItem, Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
 from django.utils import timezone
 
@@ -1106,4 +1118,168 @@ class CustomerAgreementAdmin(ModelAdmin):
 @admin.register(ComplaintOutcomeLetter_15_04)
 class ComplaintOutcomeLetterAdmin(ModelAdmin):
     list_display = ('customer_name', 'dear_name', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+# ==========================================
+# LSP-16 and LSP-17 Admin
+# ==========================================
+
+class QAProgramItemInline(StackedInline):
+    model = QAProgramItem
+    extra = 1
+
+@admin.register(QAProgram_16_01)
+class QAProgramAdmin(ModelAdmin):
+    list_display = ('title', 'status')
+    inlines = [QAProgramItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class RandRReportItemInline(StackedInline):
+    model = RandRReportItem
+    extra = 1
+
+@admin.register(RandRReport_16_02)
+class RandRReportAdmin(ModelAdmin):
+    list_display = ('test_title', 'date_of_performance', 'status')
+    inlines = [RandRReportItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class PTProviderItemInline(StackedInline):
+    model = PTProviderItem
+    extra = 1
+
+@admin.register(ListOfPTProviders_16_03)
+class ListOfPTProvidersAdmin(ModelAdmin):
+    list_display = ('list_name', 'status')
+    inlines = [PTProviderItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(CorrectivePreventiveAction_17_01)
+class CorrectivePreventiveActionAdmin(ModelAdmin):
+    list_display = ('car_no', 'month', 'initiated_due_to', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class ConductivityMeterCheckItemInline(StackedInline):
+    model = ConductivityMeterCheckItem
+    extra = 1
+
+@admin.register(ConductivityMeterCheck_17_02)
+class ConductivityMeterCheckAdmin(ModelAdmin):
+    list_display = ('equipment_no', 'month', 'status')
+    inlines = [ConductivityMeterCheckItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class pHMeterCheckItemInline(StackedInline):
+    model = pHMeterCheckItem
+    extra = 1
+
+@admin.register(pHMeterCheck_17_03)
+class pHMeterCheckAdmin(ModelAdmin):
+    list_display = ('equipment_no', 'month', 'status')
+    inlines = [pHMeterCheckItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(ILCRegistrationForm_17_04)
+class ILCRegistrationFormAdmin(ModelAdmin):
+    list_display = ('org_name', 'contact_person', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class ILCResultSheetItemInline(StackedInline):
+    model = ILCResultSheetItem
+    extra = 1
+
+@admin.register(ILCResultSheet_17_05)
+class ILCResultSheetAdmin(ModelAdmin):
+    list_display = ('sheet_name', 'status')
+    inlines = [ILCResultSheetItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class ILCSummaryItemInline(StackedInline):
+    model = ILCSummaryItem
+    extra = 1
+
+@admin.register(ILCSummary_17_06)
+class ILCSummaryAdmin(ModelAdmin):
+    list_display = ('summary_name', 'status')
+    inlines = [ILCSummaryItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class AnnualQAProgramItemInline(StackedInline):
+    model = AnnualQAProgramItem
+    extra = 1
+
+@admin.register(AnnualQAProgram_17_07)
+class AnnualQAProgramAdmin(ModelAdmin):
+    list_display = ('year', 'status')
+    inlines = [AnnualQAProgramItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class AnalyticalBalanceCheckItemInline(StackedInline):
+    model = AnalyticalBalanceCheckItem
+    extra = 1
+
+@admin.register(AnalyticalBalanceCheck_17_08)
+class AnalyticalBalanceCheckAdmin(ModelAdmin):
+    list_display = ('equipment_no', 'month', 'status')
+    inlines = [AnalyticalBalanceCheckItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class FreezerCheckItemInline(StackedInline):
+    model = FreezerCheckItem
+    extra = 1
+
+@admin.register(FreezerCheck_17_09)
+class FreezerCheckAdmin(ModelAdmin):
+    list_display = ('equipment_no', 'month', 'status')
+    inlines = [FreezerCheckItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class AnnualRetestingDataItemInline(StackedInline):
+    model = AnnualRetestingDataItem
+    extra = 1
+
+@admin.register(AnnualRetestingDataForm_17_10)
+class AnnualRetestingDataFormAdmin(ModelAdmin):
+    list_display = ('year', 'status')
+    inlines = [AnnualRetestingDataItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class UltrasonicBathCheckItemInline(StackedInline):
+    model = UltrasonicBathCheckItem
+    extra = 1
+
+@admin.register(UltrasonicBathCheck_17_11)
+class UltrasonicBathCheckAdmin(ModelAdmin):
+    list_display = ('equipment_no', 'month', 'status')
+    inlines = [UltrasonicBathCheckItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class OvenCheckItemInline(StackedInline):
+    model = OvenCheckItem
+    extra = 1
+
+@admin.register(OvenCheck_17_12)
+class OvenCheckAdmin(ModelAdmin):
+    list_display = ('equipment_no', 'month', 'status')
+    inlines = [OvenCheckItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class QualityControlChartItemInline(StackedInline):
+    model = QualityControlChartItem
+    extra = 1
+
+@admin.register(QualityControlChart_17_13)
+class QualityControlChartAdmin(ModelAdmin):
+    list_display = ('title', 'month', 'status')
+    inlines = [QualityControlChartItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class LabCleaningInspectionItemInline(StackedInline):
+    model = LabCleaningInspectionItem
+    extra = 1
+
+@admin.register(LabCleaningInspectionSheet_17_14)
+class LabCleaningInspectionSheetAdmin(ModelAdmin):
+    list_display = ('section_area', 'month', 'status')
+    inlines = [LabCleaningInspectionItemInline]
     actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']

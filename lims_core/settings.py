@@ -329,6 +329,35 @@ UNFOLD = {
                 ]
             },
             {
+                "title": "LSP-16: Ensuring Validity of Results",
+                "separator": True,
+                "items": [
+                    {"title": "16.01 QA Program", "icon": "verified", "link": "/admin/resources/qaprogram_16_01/"},
+                    {"title": "16.02 R&R Report", "icon": "analytics", "link": "/admin/resources/randrreport_16_02/"},
+                    {"title": "16.03 PT Providers", "icon": "list", "link": "/admin/resources/listofptproviders_16_03/"},
+                ]
+            },
+            {
+                "title": "LSP-17: Quality Assurance",
+                "separator": True,
+                "items": [
+                    {"title": "17.01 Corrective Preventive", "icon": "build", "link": "/admin/resources/correctivepreventiveaction_17_01/"},
+                    {"title": "17.02 Conductivity Meter", "icon": "speed", "link": "/admin/resources/conductivitymetercheck_17_02/"},
+                    {"title": "17.03 pH Meter", "icon": "science", "link": "/admin/resources/phmetercheck_17_03/"},
+                    {"title": "17.04 ILC Registration", "icon": "app_registration", "link": "/admin/resources/ilcregistrationform_17_04/"},
+                    {"title": "17.05 ILC Result Sheet", "icon": "fact_check", "link": "/admin/resources/ilcresultsheet_17_05/"},
+                    {"title": "17.06 ILC Summary", "icon": "summarize", "link": "/admin/resources/ilcsummary_17_06/"},
+                    {"title": "17.07 Annual QA Program", "icon": "event_note", "link": "/admin/resources/annualqaprogram_17_07/"},
+                    {"title": "17.08 Balance Check", "icon": "scale", "link": "/admin/resources/analyticalbalancecheck_17_08/"},
+                    {"title": "17.09 Freezer Check", "icon": "ac_unit", "link": "/admin/resources/freezercheck_17_09/"},
+                    {"title": "17.10 Annual Retesting", "icon": "history", "link": "/admin/resources/annualretestingdataform_17_10/"},
+                    {"title": "17.11 Ultrasonic Bath Check", "icon": "waves", "link": "/admin/resources/ultrasonicbathcheck_17_11/"},
+                    {"title": "17.12 Oven Check", "icon": "local_fire_department", "link": "/admin/resources/ovencheck_17_12/"},
+                    {"title": "17.13 QC Chart", "icon": "show_chart", "link": "/admin/resources/qualitycontrolchart_17_13/"},
+                    {"title": "17.14 Cleaning Inspection", "icon": "cleaning_services", "link": "/admin/resources/labcleaninginspectionsheet_17_14/"},
+                ]
+            },
+            {
                 "title": "Purchasing & Suppliers",
                 "separator": True,
                 "items": [
