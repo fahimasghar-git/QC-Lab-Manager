@@ -76,16 +76,76 @@
         </tr>
     </table>
 
-    <table class="main-table">
-        {% for field in fields %}
-        {% if field.name != 'Status' %}
+    
+    <table style="width: 100%; font-size: 11px; margin-bottom: 20px;">
         <tr>
-            <th style="width: 40%;">{{ field.name }}</th>
-            <td>{{ field.value }}</td>
+            <td style="width: 20%;"><b>Name of Analyst:</b></td>
+            <td style="width: 30%; border-bottom: 1px solid black;">{{ obj.analyst.get_full_name|default:obj.analyst.username }}</td>
+            <td style="width: 15%;"><b>Assessment Year:</b></td>
+            <td style="width: 35%; border-bottom: 1px solid black;">{{ obj.assessment_year|default:"-" }}</td>
         </tr>
-        {% endif %}
-        {% endfor %}
+        <tr>
+            <td><b>Amendment No (If Any):</b></td>
+            <td colspan="3" style="border-bottom: 1px solid black;">{{ obj.amendment_no|default:"-" }}</td>
+        </tr>
     </table>
+
+    <table class="main-table" style="font-size: 11px; text-align: center;">
+        <thead>
+            <tr>
+                <th style="width: 10%; text-align: center;">S.No</th>
+                <th style="width: 70%; text-align: center;">Criteria</th>
+                <th style="width: 20%; text-align: center;">Score (out of 100)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td style="text-align: left;">Work Output (Neatness, accuracy, on-time completion)</td>
+                <td>{{ obj.score_work_output|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td style="text-align: left;">Initiative (Corrective/preventive actions, suggestions)</td>
+                <td>{{ obj.score_initiative|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td style="text-align: left;">Validation of Analytical Methods and STM</td>
+                <td>{{ obj.score_validation|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td style="text-align: left;">Equipment Operation</td>
+                <td>{{ obj.score_equipment|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td style="text-align: left;">Internal Audit ISO 17025</td>
+                <td>{{ obj.score_audit|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td style="text-align: left;">Sample Handling</td>
+                <td>{{ obj.score_sample_handling|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td style="text-align: left;">Reporting, Opinion and Interpretation</td>
+                <td>{{ obj.score_reporting|default:"-" }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: right; font-weight: bold;">Total Percentage</td>
+                <td style="font-weight: bold;">{{ obj.total_percentage|default:"-" }}%</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px; font-size: 11px;">
+        <b>Trainings Required:</b>
+        <p style="white-space: pre-wrap;">{{ obj.trainings_required }}</p>
+    </div>
+
     
     <table class="sig-table">
         <tr>

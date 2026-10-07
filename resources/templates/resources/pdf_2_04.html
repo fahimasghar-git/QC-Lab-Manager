@@ -76,16 +76,55 @@
         </tr>
     </table>
 
-    <table class="main-table">
-        {% for field in fields %}
-        {% if field.name != 'Status' %}
+    
+    <table style="width: 100%; font-size: 11px; margin-bottom: 20px;">
         <tr>
-            <th style="width: 40%;">{{ field.name }}</th>
-            <td>{{ field.value }}</td>
+            <td style="width: 20%;"><b>Reference:</b></td>
+            <td style="width: 30%; border-bottom: 1px solid black;">{{ obj.reference|default:"-" }}</td>
+            <td style="width: 15%;"><b>Date:</b></td>
+            <td style="width: 35%; border-bottom: 1px solid black;">{{ obj.date_held|date:"d-M-Y" }}</td>
         </tr>
-        {% endif %}
-        {% endfor %}
+        <tr>
+            <td><b>Time:</b></td>
+            <td style="border-bottom: 1px solid black;">{{ obj.time_held|time:"H:i" }}</td>
+            <td><b>Venue:</b></td>
+            <td style="border-bottom: 1px solid black;">{{ obj.venue|default:"-" }}</td>
+        </tr>
+        <tr>
+            <td><b>Title of Training:</b></td>
+            <td colspan="3" style="border-bottom: 1px solid black;">{{ obj.title|default:"-" }}</td>
+        </tr>
+        <tr>
+            <td><b>Instructor:</b></td>
+            <td colspan="3" style="border-bottom: 1px solid black;">{{ obj.instructor.get_full_name|default:obj.instructor.username }}</td>
+        </tr>
     </table>
+
+    <table class="main-table" style="font-size: 11px; text-align: center;">
+        <thead>
+            <tr>
+                <th style="width: 10%; text-align: center;">S.NO</th>
+                <th style="width: 50%; text-align: center;">Name of Participant</th>
+                <th style="width: 20%; text-align: center;">Designation</th>
+                <th style="width: 20%; text-align: center;">Attendance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in obj.attendees.all %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td style="text-align: left;">{{ item.employee.get_full_name|default:item.employee.username }}</td>
+                <td>{{ item.employee.groups.first.name|default:"-" }}</td>
+                <td>{% if item.attended %}Present{% else %}Absent{% endif %}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No attendees recorded.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
     
     <table class="sig-table">
         <tr>
