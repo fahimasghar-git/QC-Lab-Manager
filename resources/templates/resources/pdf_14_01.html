@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    @page {
+        size: a4 portrait;
+        margin: 1cm;
+        margin-top: 1.5cm;
+    }
+    body {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 11px;
+    }
+    .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+        margin-bottom: 20px;
+    }
+    .header-table td {
+        border: 1px solid black;
+        padding: 5px;
+    }
+    .main-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    .main-table th, .main-table td {
+        border: 1px solid black;
+        padding: 6px;
+    }
+    .main-table th {
+        background-color: #f2f2f2;
+        text-align: left;
+    }
+    .sig-table {
+        width: 100%;
+        border: none;
+        margin-top: 60px;
+        text-align: center;
+        font-size: 12px;
+    }
+    .sig-table td {
+        padding: 10px;
+    }
+</style>
+</head>
+<body>
+    <table class="header-table">
+        <tr>
+            <td rowspan="3" style="width: 15%; text-align: center; border-right: none;">
+                <!-- Logo Space -->
+                <strong>LOGO</strong>
+            </td>
+            <td rowspan="2" style="width: 65%; font-size: 14px; font-weight: bold; text-align: center;">
+                VITAL AGRI NUTRIENTS QC LAB<br/>
+                ANNUAL TRAINING PLAN
+            </td>
+            <td style="width: 20%; text-align: left; font-size: 10px;">
+                <strong>Format No:</strong> QCL-FRM-14.01
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Revision No:</strong> 01
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 11px; font-weight: bold; text-align: center;">
+                ISO/IEC 17025 Accredited
+            </td>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Page:</strong> <pdf:pagenumber> of <pdf:pagecount>
+            </td>
+        </tr>
+    </table>
+
+    
+    <table style="width: 100%; font-size: 11px; margin-bottom: 20px;">
+        <tr>
+            <td style="width: 20%;"><b>Month / Year:</b></td>
+            <td style="width: 30%; border-bottom: 1px solid black;">{{ obj.month_year|default:"-" }}</td>
+            <td style="width: 15%;"><b>Plan No:</b></td>
+            <td style="width: 35%; border-bottom: 1px solid black;">{{ obj.plan_no|default:"-" }}</td>
+        </tr>
+    </table>
+
+    
+    <div style="border: 1px solid black; padding: 10px; font-size: 11px; min-height: 100px; margin-bottom: 15px;">
+        <b>Non-Conformance Description:</b><br><br>
+        {{ obj.description|linebreaksbr }}
+    </div>
+    
+    <div style="font-size: 11px; margin-bottom: 15px;">
+        <b>Non-Conformance Source:</b><br>
+        [ {% if obj.source == 'Audit NC' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Audit NC &nbsp;&nbsp;&nbsp;
+        [ {% if obj.source == 'Laboratory Activities' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Laboratory Activities &nbsp;&nbsp;&nbsp;
+        [ {% if obj.source == 'Suggestion' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Suggestion <br>
+        [ {% if obj.source == 'PT/ILC' %}X{% else %}&nbsp;&nbsp;{% endif %} ] PT/ILC &nbsp;&nbsp;&nbsp;
+        [ {% if obj.source == 'Complaint' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Complaint &nbsp;&nbsp;&nbsp;
+        [ {% if obj.source == 'Customer Feedback' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Customer Feedback <br>
+        [ {% if obj.source == 'Risk Assessment' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Risk Assessment &nbsp;&nbsp;&nbsp;
+        [ {% if obj.source == 'Any Other' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Any Other
+    </div>
+    
+    <table class="header-table" style="font-size: 11px; margin-bottom: 15px;">
+        <tr>
+            <td style="width: 20%;"><b>Initiated By:</b></td>
+            <td style="width: 30%;">{{ obj.initiated_by }}</td>
+            <td style="width: 15%;"><b>Date:</b></td>
+            <td style="width: 15%;">{{ obj.date|date:"d-M-Y" }}</td>
+            <td style="width: 10%;"><b>NC #:</b></td>
+            <td style="width: 10%;">{{ obj.nc_no }}</td>
+        </tr>
+    </table>
+    
+    <div style="font-size: 11px; font-weight: bold; margin-bottom: 5px; background-color: #f0f0f0; padding: 5px;">Non-Conformance Significance Evaluation</div>
+    <div style="font-size: 11px; margin-bottom: 10px;">
+        <b>Impact on Previous Result:</b> 
+        [ {% if obj.impact_on_previous_result %}X{% else %}&nbsp;&nbsp;{% endif %} ] Yes &nbsp;&nbsp;&nbsp;
+        [ {% if not obj.impact_on_previous_result %}X{% else %}&nbsp;&nbsp;{% endif %} ] No
+    </div>
+    <div style="font-size: 11px; margin-bottom: 10px;">
+        <b>Level of Risk:</b> 
+        [ {% if obj.level_of_risk == 'Very Low' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Very Low &nbsp;&nbsp;&nbsp;
+        [ {% if obj.level_of_risk == 'Low' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Low &nbsp;&nbsp;&nbsp;
+        [ {% if obj.level_of_risk == 'Moderate' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Moderate &nbsp;&nbsp;&nbsp;
+        [ {% if obj.level_of_risk == 'High' %}X{% else %}&nbsp;&nbsp;{% endif %} ] High &nbsp;&nbsp;&nbsp;
+        [ {% if obj.level_of_risk == 'Very High' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Very High
+    </div>
+    <div style="font-size: 11px; margin-bottom: 10px;">
+        <b>Non-Conformance Type:</b> 
+        [ {% if obj.nc_type == 'Essential' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Essential &nbsp;&nbsp;&nbsp;
+        [ {% if obj.nc_type == 'Minor Non- Essential' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Minor Non- Essential
+    </div>
+    <div style="font-size: 11px; margin-bottom: 15px;">
+        <b>Acceptance of Non-Conformance:</b> 
+        [ {% if obj.acceptance == 'Accepted' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Accepted &nbsp;&nbsp;&nbsp;
+        [ {% if obj.acceptance == 'Rejected' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Rejected
+    </div>
+
+
+    
+    <table class="sig-table">
+        <tr>
+            <td>
+                {% if obj.prepared_by %}
+                    <strong>{{ obj.prepared_by.get_full_name|default:obj.prepared_by.username }}</strong><br>
+                    {{ obj.prepared_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Prepared By</strong>
+            </td>
+            <td>
+                {% if obj.checked_by %}
+                    <strong>{{ obj.checked_by.get_full_name|default:obj.checked_by.username }}</strong><br>
+                    {{ obj.checked_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Checked By</strong>
+            </td>
+            <td>
+                {% if obj.approved_by %}
+                    <strong>{{ obj.approved_by.get_full_name|default:obj.approved_by.username }}</strong><br>
+                    {{ obj.approved_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Approved By</strong>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

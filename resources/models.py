@@ -1985,3 +1985,278 @@ class MRMFormItem(models.Model):
     target_date = models.DateField(blank=True, null=True)
     follow_up_by = models.CharField(max_length=150)
 
+from django.db import models
+from django.conf import settings
+
+# ==========================================
+# LSP-12 Procedure for review of requests
+# ==========================================
+
+class AnalysisRequest_12_01(ISOApprovalModel):
+    serial_no = models.CharField(max_length=100)
+    lab_id = models.CharField(max_length=100)
+    date = models.DateField()
+    time = models.CharField(max_length=50)
+    
+    customer_name = models.CharField(max_length=150)
+    organization = models.CharField(max_length=150)
+    address = models.TextField()
+    contact = models.CharField(max_length=100)
+    email = models.EmailField()
+    cell_no = models.CharField(max_length=50)
+    
+    sample_id_batch = models.CharField(max_length=150)
+    sample_type_name = models.CharField(max_length=150)
+    total_weight = models.CharField(max_length=100)
+    
+    sample_condition = models.CharField(max_length=50, choices=[('Acceptable', 'Acceptable'), ('Non acceptable', 'Non acceptable')])
+    uncertainty_required = models.BooleanField(default=False)
+    number_of_samples = models.IntegerField(default=1)
+    sample_packing_condition = models.CharField(max_length=150)
+    
+    priority = models.CharField(max_length=50, choices=[('Normal', 'Normal'), ('Urgent', 'Urgent')])
+    test_method = models.CharField(max_length=150, blank=True, null=True)
+    
+    remarks_ok = models.BooleanField(default=False)
+    specified_environmental_conditions = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Analysis Request (12.01)"
+        verbose_name_plural = "Analysis Requests (12.01)"
+
+
+class ReleaseSlip_12_02(ISOApprovalModel):
+    qc_no = models.CharField(max_length=100)
+    sr_no = models.CharField(max_length=100)
+    date = models.DateField()
+    time = models.CharField(max_length=50)
+    product_name = models.CharField(max_length=150)
+    batch_lot_no = models.CharField(max_length=100)
+    mfg_date = models.CharField(max_length=100, blank=True, null=True)
+    exp_date = models.CharField(max_length=100, blank=True, null=True)
+    total_quantity = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Release Slip (12.02)"
+        verbose_name_plural = "Release Slips (12.02)"
+
+class ReleaseSlipActiveIngredient(models.Model):
+    slip = models.ForeignKey(ReleaseSlip_12_02, on_delete=models.CASCADE, related_name="active_ingredients")
+    parameter = models.CharField(max_length=150)
+    standard = models.CharField(max_length=150)
+    actual_result = models.CharField(max_length=150)
+
+class ReleaseSlipPhysicalTest(models.Model):
+    slip = models.ForeignKey(ReleaseSlip_12_02, on_delete=models.CASCADE, related_name="physical_tests")
+    parameter = models.CharField(max_length=150)
+    standard = models.CharField(max_length=150)
+    actual_result = models.CharField(max_length=150)
+
+
+class AnalysisReport_12_03(ISOApprovalModel):
+    REPORT_TYPES = [('Raw Material', 'Raw Material'), ('Batch Analysis', 'Batch Analysis'), ('Outside Sample', 'Outside Sample')]
+    report_type = models.CharField(max_length=50, choices=REPORT_TYPES)
+    
+    issue_date = models.DateField(blank=True, null=True)
+    issue_status = models.CharField(max_length=100, blank=True, null=True)
+    
+    item_name = models.CharField(max_length=150)
+    standard_reference = models.CharField(max_length=150, blank=True, null=True)
+    source = models.CharField(max_length=150, default="Vital Agri Nutrients (Pvt) Ltd")
+    company = models.CharField(max_length=150, blank=True, null=True)
+    
+    batch_no = models.CharField(max_length=100)
+    quantity = models.CharField(max_length=100)
+    mfg_date = models.CharField(max_length=100, blank=True, null=True)
+    exp_date = models.CharField(max_length=100, blank=True, null=True)
+    
+    qc_no = models.CharField(max_length=100)
+    receiving_date = models.DateField(blank=True, null=True)
+    sampled_received_by = models.CharField(max_length=150)
+    sample_quantity = models.CharField(max_length=100)
+    
+    analysis_time = models.CharField(max_length=100, blank=True, null=True)
+    date_of_test = models.DateField(blank=True, null=True)
+    temperature = models.CharField(max_length=50, blank=True, null=True)
+    humidity = models.CharField(max_length=50, blank=True, null=True)
+    
+    physical_status = models.CharField(max_length=150, blank=True, null=True)
+    color = models.CharField(max_length=150, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Analysis Report (12.03)"
+        verbose_name_plural = "Analysis Reports (12.03)"
+
+class AnalysisReportTest(models.Model):
+    report = models.ForeignKey(AnalysisReport_12_03, on_delete=models.CASCADE, related_name="tests")
+    test_name = models.CharField(max_length=150)
+    specs = models.CharField(max_length=150)
+    results = models.CharField(max_length=150)
+    methods = models.CharField(max_length=150)
+    mu = models.CharField(max_length=50, blank=True, null=True)
+    remarks = models.CharField(max_length=150, blank=True, null=True)
+
+
+class LabContract_12_05(ISOApprovalModel):
+    effective_date = models.DateField()
+    validity = models.CharField(max_length=100, default="two years")
+
+    class Meta:
+        verbose_name = "LAB Contract (12.05)"
+        verbose_name_plural = "LAB Contracts (12.05)"
+
+
+# ==========================================
+# LSP-13 Uncertainty
+# ==========================================
+
+class EstimationOfUncertainty_13_01(ISOApprovalModel):
+    parameter = models.CharField(max_length=150)
+    equipment_used = models.CharField(max_length=150)
+    calculated_mu = models.CharField(max_length=100)
+    evaluation_date = models.DateField()
+
+    class Meta:
+        verbose_name = "Estimation of Uncertainty (13.01)"
+        verbose_name_plural = "Estimations of Uncertainty (13.01)"
+
+
+class DecisionRule_13_02(ISOApprovalModel):
+    active_range = models.CharField(max_length=150, default="Upto 2.5 | 2.5-10 | 10-25 | 25-50 | >50")
+    fad_tolerances = models.CharField(max_length=150, default="0.15 | 0.1 | 0.06 | 0.05 | 0.03")
+
+    class Meta:
+        verbose_name = "Decision Rule (13.02)"
+        verbose_name_plural = "Decision Rules (13.02)"
+
+class DecisionRuleItem(models.Model):
+    rule = models.ForeignKey(DecisionRule_13_02, on_delete=models.CASCADE, related_name="items")
+    test_parameter = models.CharField(max_length=150)
+    active_ingredient = models.CharField(max_length=150)
+    fad_lower_limit = models.CharField(max_length=100)
+    fad_upper_limit = models.CharField(max_length=100)
+    qc_lab_mu = models.CharField(max_length=100)
+    qc_lower_limit = models.CharField(max_length=100)
+    qc_upper_limit = models.CharField(max_length=100)
+
+
+# ==========================================
+# LSP-14 Procedure for Non Conformence
+# ==========================================
+
+class NonConformanceForm_14_01(ISOApprovalModel):
+    description = models.TextField()
+    SOURCE_CHOICES = [
+        ('Audit NC', 'Audit NC'), ('Laboratory Activities', 'Laboratory Activities'),
+        ('Suggestion', 'Suggestion'), ('PT/ILC', 'PT/ILC'), ('Complaint', 'Complaint'),
+        ('Customer Feedback', 'Customer Feedback'), ('Risk Assessment', 'Risk Assessment'),
+        ('Any Other', 'Any Other')
+    ]
+    source = models.CharField(max_length=150, choices=SOURCE_CHOICES)
+    initiated_by = models.CharField(max_length=150)
+    date = models.DateField()
+    nc_no = models.CharField(max_length=100)
+    
+    impact_on_previous_result = models.BooleanField(default=False)
+    
+    RISK_LEVELS = [('Very Low', 'Very Low'), ('Low', 'Low'), ('Moderate', 'Moderate'), ('High', 'High'), ('Very High', 'Very High')]
+    level_of_risk = models.CharField(max_length=50, choices=RISK_LEVELS)
+    
+    NC_TYPES = [('Essential', 'Essential'), ('Minor Non- Essential', 'Minor Non- Essential')]
+    nc_type = models.CharField(max_length=50, choices=NC_TYPES)
+    
+    acceptance = models.CharField(max_length=50, choices=[('Accepted', 'Accepted'), ('Rejected', 'Rejected')])
+
+    class Meta:
+        verbose_name = "Non-Conformance Form (14.01)"
+        verbose_name_plural = "Non-Conformance Forms (14.01)"
+
+
+class NonConformanceLog_14_02(ISOApprovalModel):
+    log_name = models.CharField(max_length=150, default="Non Conformance Log")
+
+    class Meta:
+        verbose_name = "Non Conformance Log (14.02)"
+        verbose_name_plural = "Non Conformance Logs (14.02)"
+
+class NonConformanceLogItem(models.Model):
+    log = models.ForeignKey(NonConformanceLog_14_02, on_delete=models.CASCADE, related_name="items")
+    nc_no = models.CharField(max_length=100)
+    date = models.DateField()
+    non_conformance_description = models.TextField()
+    source = models.CharField(max_length=150)
+    initiated_by = models.CharField(max_length=150)
+
+
+# ==========================================
+# LSP-15 Complaints Handling
+# ==========================================
+
+class ComplaintRegistration_15_01(ISOApprovalModel):
+    customer_name = models.CharField(max_length=150)
+    designation = models.CharField(max_length=150)
+    contact_no = models.CharField(max_length=100)
+    company_name = models.CharField(max_length=150)
+    date_of_registration = models.DateField()
+    id_of_complaint = models.CharField(max_length=100)
+    email = models.EmailField()
+    city = models.CharField(max_length=100)
+    
+    complaint_received_by = models.CharField(max_length=150)
+    received_by_designation = models.CharField(max_length=150)
+    date_of_complaint_receive = models.DateField()
+    
+    complaint_nature = models.CharField(max_length=50, choices=[('Acceptable', 'Acceptable'), ('Rejected', 'Rejected')])
+    complaint_details = models.TextField()
+    corrective_action_person = models.CharField(max_length=150)
+    complaint_close_expected_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Complaint Registration (15.01)"
+        verbose_name_plural = "Complaint Registrations (15.01)"
+
+
+class CustomerComplaintLogSheet_15_02(ISOApprovalModel):
+    month_year = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Customer Complaint Log Sheet (15.02)"
+        verbose_name_plural = "Customer Complaint Log Sheets (15.02)"
+
+class ComplaintLogItem(models.Model):
+    log_sheet = models.ForeignKey(CustomerComplaintLogSheet_15_02, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    customer_name = models.CharField(max_length=150)
+    customer_phone = models.CharField(max_length=100)
+    nature_of_complaint = models.CharField(max_length=255)
+    employee_receiving = models.CharField(max_length=150)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+
+
+class CustomerAgreement_15_03(ISOApprovalModel):
+    dear_name = models.CharField(max_length=150)
+
+    class Meta:
+        verbose_name = "Customer Agreement (15.03)"
+        verbose_name_plural = "Customer Agreements (15.03)"
+
+class CustomerAgreementItem(models.Model):
+    agreement = models.ForeignKey(CustomerAgreement_15_03, on_delete=models.CASCADE, related_name="items")
+    equipment_name = models.CharField(max_length=150)
+    qty = models.CharField(max_length=50)
+    company_origin = models.CharField(max_length=150)
+    test_performed = models.CharField(max_length=150)
+    approx_rep_time = models.CharField(max_length=100)
+    ac_na = models.CharField(max_length=50)
+
+
+class ComplaintOutcomeLetter_15_04(ISOApprovalModel):
+    customer_name = models.CharField(max_length=150)
+    customer_address = models.TextField()
+    dear_name = models.CharField(max_length=150)
+    
+    letter_body = models.TextField(default="At Vital Agri Nutrients Quality Control Lab we value all of customers and strive to resolve all customer complaints to the satisfaction of our customers.\nWe admit that there was a mistake. We apologize for that. Please contact us because we have made a mistake.")
+
+    class Meta:
+        verbose_name = "Complaint Outcome Letter (15.04)"
+        verbose_name_plural = "Complaint Outcome Letters (15.04)"

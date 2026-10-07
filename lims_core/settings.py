@@ -293,6 +293,42 @@ UNFOLD = {
                 ]
             },
             {
+                "title": "LSP-12: Review of Requests",
+                "separator": True,
+                "items": [
+                    {"title": "12.01 Analysis Request", "icon": "request_quote", "link": "/admin/resources/analysisrequest_12_01/"},
+                    {"title": "12.02 Release Slip", "icon": "receipt", "link": "/admin/resources/releaseslip_12_02/"},
+                    {"title": "12.03 Analysis Report", "icon": "assessment", "link": "/admin/resources/analysisreport_12_03/"},
+                    {"title": "12.05 Lab Contract", "icon": "history_edu", "link": "/admin/resources/labcontract_12_05/"},
+                ]
+            },
+            {
+                "title": "LSP-13: Uncertainty",
+                "separator": True,
+                "items": [
+                    {"title": "13.01 MU Estimation", "icon": "calculate", "link": "/admin/resources/estimationofuncertainty_13_01/"},
+                    {"title": "13.02 Decision Rule", "icon": "rule", "link": "/admin/resources/decisionrule_13_02/"},
+                ]
+            },
+            {
+                "title": "LSP-14: Non-Conformance",
+                "separator": True,
+                "items": [
+                    {"title": "14.01 NC Form", "icon": "gpp_bad", "link": "/admin/resources/nonconformanceform_14_01/"},
+                    {"title": "14.02 NC Log", "icon": "list_alt", "link": "/admin/resources/nonconformancelog_14_02/"},
+                ]
+            },
+            {
+                "title": "LSP-15: Complaints",
+                "separator": True,
+                "items": [
+                    {"title": "15.01 Complaint Reg.", "icon": "sentiment_dissatisfied", "link": "/admin/resources/complaintregistration_15_01/"},
+                    {"title": "15.02 Complaint Log", "icon": "view_list", "link": "/admin/resources/customercomplaintlogsheet_15_02/"},
+                    {"title": "15.03 Customer Agreement", "icon": "handshake", "link": "/admin/resources/customeragreement_15_03/"},
+                    {"title": "15.04 Outcome Letter", "icon": "mail", "link": "/admin/resources/complaintoutcomeletter_15_04/"},
+                ]
+            },
+            {
                 "title": "Purchasing & Suppliers",
                 "separator": True,
                 "items": [

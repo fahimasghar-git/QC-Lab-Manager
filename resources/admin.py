@@ -50,6 +50,16 @@ from .models import (
     MRMAgenda_11_03, MRMAgendaItem, MRMForm_11_04, MRMFormItem
 )
 
+
+from .models import (
+    AnalysisRequest_12_01, ReleaseSlip_12_02, ReleaseSlipActiveIngredient, ReleaseSlipPhysicalTest,
+    AnalysisReport_12_03, AnalysisReportTest, LabContract_12_05,
+    EstimationOfUncertainty_13_01, DecisionRule_13_02, DecisionRuleItem,
+    NonConformanceForm_14_01, NonConformanceLog_14_02, NonConformanceLogItem,
+    ComplaintRegistration_15_01, CustomerComplaintLogSheet_15_02, ComplaintLogItem,
+    CustomerAgreement_15_03, CustomerAgreementItem, ComplaintOutcomeLetter_15_04
+)
+
 from .models import AuthorizedPersonnelList_2_06, NewInductionOrientation_2_11, InductionOrientationItem, Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
 from django.utils import timezone
 
@@ -998,4 +1008,102 @@ class MRMFormItemInline(StackedInline):
 class MRMFormAdmin(ModelAdmin):
     list_display = ('mrm_no', 'held_on', 'status')
     inlines = [MRMFormItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+# ==========================================
+# LSP-12 to LSP-15 Admin
+# ==========================================
+
+@admin.register(AnalysisRequest_12_01)
+class AnalysisRequestAdmin(ModelAdmin):
+    list_display = ('serial_no', 'customer_name', 'date', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class ReleaseSlipActiveIngredientInline(StackedInline):
+    model = ReleaseSlipActiveIngredient
+    extra = 1
+
+class ReleaseSlipPhysicalTestInline(StackedInline):
+    model = ReleaseSlipPhysicalTest
+    extra = 1
+
+@admin.register(ReleaseSlip_12_02)
+class ReleaseSlipAdmin(ModelAdmin):
+    list_display = ('qc_no', 'product_name', 'date', 'status')
+    inlines = [ReleaseSlipActiveIngredientInline, ReleaseSlipPhysicalTestInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class AnalysisReportTestInline(StackedInline):
+    model = AnalysisReportTest
+    extra = 1
+
+@admin.register(AnalysisReport_12_03)
+class AnalysisReportAdmin(ModelAdmin):
+    list_display = ('qc_no', 'item_name', 'issue_date', 'status')
+    inlines = [AnalysisReportTestInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(LabContract_12_05)
+class LabContractAdmin(ModelAdmin):
+    list_display = ('effective_date', 'validity', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(EstimationOfUncertainty_13_01)
+class EstimationOfUncertaintyAdmin(ModelAdmin):
+    list_display = ('parameter', 'equipment_used', 'evaluation_date', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class DecisionRuleItemInline(StackedInline):
+    model = DecisionRuleItem
+    extra = 1
+
+@admin.register(DecisionRule_13_02)
+class DecisionRuleAdmin(ModelAdmin):
+    list_display = ('active_range', 'status')
+    inlines = [DecisionRuleItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(NonConformanceForm_14_01)
+class NonConformanceFormAdmin(ModelAdmin):
+    list_display = ('nc_no', 'source', 'date', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class NonConformanceLogItemInline(StackedInline):
+    model = NonConformanceLogItem
+    extra = 1
+
+@admin.register(NonConformanceLog_14_02)
+class NonConformanceLogAdmin(ModelAdmin):
+    list_display = ('log_name', 'status')
+    inlines = [NonConformanceLogItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(ComplaintRegistration_15_01)
+class ComplaintRegistrationAdmin(ModelAdmin):
+    list_display = ('id_of_complaint', 'customer_name', 'date_of_registration', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class ComplaintLogItemInline(StackedInline):
+    model = ComplaintLogItem
+    extra = 1
+
+@admin.register(CustomerComplaintLogSheet_15_02)
+class CustomerComplaintLogSheetAdmin(ModelAdmin):
+    list_display = ('month_year', 'status')
+    inlines = [ComplaintLogItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class CustomerAgreementItemInline(StackedInline):
+    model = CustomerAgreementItem
+    extra = 1
+
+@admin.register(CustomerAgreement_15_03)
+class CustomerAgreementAdmin(ModelAdmin):
+    list_display = ('dear_name', 'status')
+    inlines = [CustomerAgreementItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(ComplaintOutcomeLetter_15_04)
+class ComplaintOutcomeLetterAdmin(ModelAdmin):
+    list_display = ('customer_name', 'dear_name', 'status')
     actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
