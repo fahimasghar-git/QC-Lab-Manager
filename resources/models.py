@@ -876,50 +876,122 @@ class TrainingEvaluation(models.Model):
     training = models.ForeignKey(TrainingAttendanceSheet, on_delete=models.CASCADE)
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     evaluator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='+')
-    evaluation_date = models.DateField()
-    score = models.IntegerField(help_text="Score or grade")
-    remarks = models.TextField(blank=True)
+    
+    evaluation_date = models.DateField(null=True, blank=True)
+    training_description = models.CharField(max_length=255, null=True, blank=True)
+    trainer_institute = models.CharField(max_length=255, null=True, blank=True)
+    
+    mode_oral = models.BooleanField(default=False)
+    mode_written = models.BooleanField(default=False)
+    mode_practical = models.BooleanField(default=False)
+    
+    weightage_oral = models.IntegerField(null=True, blank=True)
+    total_marks_oral = models.IntegerField(null=True, blank=True)
+    obtained_marks_oral = models.IntegerField(null=True, blank=True)
+    percentage_oral = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    
+    weightage_written = models.IntegerField(null=True, blank=True)
+    total_marks_written = models.IntegerField(null=True, blank=True)
+    obtained_marks_written = models.IntegerField(null=True, blank=True)
+    percentage_written = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    
+    weightage_practical = models.IntegerField(null=True, blank=True)
+    total_marks_practical = models.IntegerField(null=True, blank=True)
+    obtained_marks_practical = models.IntegerField(null=True, blank=True)
+    percentage_practical = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    
+    total_obtained_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    
+    final_remarks = models.CharField(max_length=50, choices=[
+        ('OUTSTANDING', 'Out Standing'),
+        ('SATISFACTORY', 'Satisfactory'),
+        ('CONDITIONAL', 'Conditional'),
+        ('UNSATISFACTORY', 'Unsatisfactory')
+    ], null=True, blank=True)
     
     class Meta:
         verbose_name = "Training Evaluation (2.05)"
         verbose_name_plural = "Training Evaluations (2.05)"
 
+
 # QCL-FRM-2.07 Training Feedback Form
 class TrainingFeedback(models.Model):
     training = models.ForeignKey(TrainingAttendanceSheet, on_delete=models.CASCADE)
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    content_rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
-    instructor_rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
-    comments = models.TextField(blank=True)
+    
+    location = models.CharField(max_length=255, null=True, blank=True)
+    duration = models.CharField(max_length=100, null=True, blank=True)
+    topic = models.CharField(max_length=255, null=True, blank=True)
+    trainer_institute = models.CharField(max_length=255, null=True, blank=True)
+    
+    # Course
+    expectations_met = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    speed_rate = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    practical_application = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    job_effect = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    focus_structure = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    
+    # Process
+    adequate_for_position = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    methods_effective = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    materials_clear = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    enough_resources = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    timely_manner = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    
+    # Structure
+    information_usefulness = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    structure_usefulness = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    pace_usefulness = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    schedule_convenience = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    materials_usefulness = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    appropriate_for_experience = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    
+    # About Trainer/Mentor
+    trainer_knowledgeable = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    concepts_clear = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    handling_questions = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    overall_facilitation = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    
+    # Overall
+    overall_rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
     
     class Meta:
         verbose_name = "Training Feedback (2.07)"
         verbose_name_plural = "Training Feedbacks (2.07)"
+
 
 # QCL-FRM-2.08 Individual Training Record
 class IndividualTrainingRecord(models.Model):
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     training_title = models.CharField(max_length=255)
     date_completed = models.DateField()
-    result = models.CharField(max_length=100)
+    internal_external = models.CharField(max_length=50, choices=[('INTERNAL', 'Internal'), ('EXTERNAL', 'External')], null=True, blank=True)
+    remarks = models.TextField(blank=True, null=True)
     verified_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='+')
     
     class Meta:
         verbose_name = "Individual Training Record (2.08)"
         verbose_name_plural = "Individual Training Records (2.08)"
 
+
 # QCL-FRM-2.09 Orientation Plan
 class OrientationPlan(models.Model):
     analyst = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    department = models.CharField(max_length=100)
-    topics_covered = models.TextField()
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    department = models.CharField(max_length=100, null=True, blank=True)
     mentor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='+')
     
     class Meta:
         verbose_name = "Orientation Plan (2.09)"
         verbose_name_plural = "Orientation Plans (2.09)"
+
+class OrientationPlanTopic(models.Model):
+    plan = models.ForeignKey(OrientationPlan, on_delete=models.CASCADE, related_name='topics')
+    detail = models.CharField(max_length=255)
+    responsibility = models.CharField(max_length=100)
+    checked = models.BooleanField(default=False)
+
 
 # QCL-FRM-2.10 Competence Reassessment form
 class CompetenceReassessment(models.Model):
@@ -936,13 +1008,40 @@ class CompetenceReassessment(models.Model):
 # QCL-FRM-2.12 Trainer Evaluation Form
 class TrainerEvaluation(models.Model):
     trainer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='evaluated_as_trainer')
+    topic = models.CharField(max_length=255, null=True, blank=True)
     date = models.DateField()
-    knowledge_rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
-    communication_rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
-    overall_rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
     evaluator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='+')
+    
+    # 17 Criteria
+    objectives_clear = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    knowledge_iso17025 = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    clarity_concepts = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    delivery_skills = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    address_questions = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    engagement = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    materials_tools = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    relevance_content = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    topics_relevant = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    organized = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    materials_helpful = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    useful_in_work = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    well_prepared = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    knowledgeable_topics = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    objectives_met = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    time_sufficient = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    overall_effectiveness = models.IntegerField(choices=[(i, i) for i in range(1, 6)], null=True, blank=True)
+    
+    # Feedback
+    strengths_content_delivery = models.TextField(null=True, blank=True)
+    engagement_interaction = models.TextField(null=True, blank=True)
+    practical_applications = models.TextField(null=True, blank=True)
+    
+    key_strengths = models.TextField(null=True, blank=True)
+    areas_for_improvement = models.TextField(null=True, blank=True)
+    suggestions_for_development = models.TextField(null=True, blank=True)
     
     class Meta:
         verbose_name = "Trainer Evaluation (2.12)"
         verbose_name_plural = "Trainer Evaluations (2.12)"
+
 

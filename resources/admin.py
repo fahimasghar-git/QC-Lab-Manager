@@ -509,6 +509,7 @@ from .models import (
     TrainingFeedback,
     IndividualTrainingRecord,
     OrientationPlan,
+    OrientationPlanTopic,
     CompetenceReassessment,
     TrainerEvaluation
 )
@@ -541,7 +542,7 @@ class TrainingAttendanceSheetAdmin(ModelAdmin):
 @admin.register(TrainingEvaluation)
 class TrainingEvaluationAdmin(ModelAdmin):
     actions = [generate_iso_pdf]
-    list_display = ['analyst', 'training', 'evaluation_date', 'score']
+    list_display = ['analyst', 'training', 'evaluation_date', 'total_obtained_percentage', 'final_remarks']
 
 @admin.register(TrainingFeedback)
 class TrainingFeedbackAdmin(ModelAdmin):
@@ -556,10 +557,15 @@ class IndividualTrainingRecordAdmin(ModelAdmin):
     actions = [generate_iso_pdf]
     list_display = ['analyst', 'training_title', 'date_completed', 'verified_by']
 
+class OrientationPlanTopicInline(admin.TabularInline):
+    model = OrientationPlanTopic
+    extra = 1
+
 @admin.register(OrientationPlan)
 class OrientationPlanAdmin(ModelAdmin):
     actions = [generate_iso_pdf]
     list_display = ['analyst', 'department', 'start_date', 'mentor']
+    inlines = [OrientationPlanTopicInline]
 
 @admin.register(CompetenceReassessment)
 class CompetenceReassessmentAdmin(ModelAdmin):
@@ -569,5 +575,5 @@ class CompetenceReassessmentAdmin(ModelAdmin):
 @admin.register(TrainerEvaluation)
 class TrainerEvaluationAdmin(ModelAdmin):
     actions = [generate_iso_pdf]
-    list_display = ['trainer', 'date', 'overall_rating', 'evaluator']
+    list_display = ['trainer', 'date', 'overall_effectiveness', 'evaluator']
 
