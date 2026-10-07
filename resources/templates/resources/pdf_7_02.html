@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    @page {
+        size: a4 portrait;
+        margin: 1cm;
+        margin-top: 1.5cm;
+    }
+    body {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 11px;
+    }
+    .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+        margin-bottom: 20px;
+    }
+    .header-table td {
+        border: 1px solid black;
+        padding: 5px;
+    }
+    .main-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    .main-table th, .main-table td {
+        border: 1px solid black;
+        padding: 6px;
+    }
+    .main-table th {
+        background-color: #f2f2f2;
+        text-align: left;
+    }
+    .sig-table {
+        width: 100%;
+        border: none;
+        margin-top: 60px;
+        text-align: center;
+        font-size: 12px;
+    }
+    .sig-table td {
+        padding: 10px;
+    }
+</style>
+</head>
+<body>
+    <table class="header-table">
+        <tr>
+            <td rowspan="3" style="width: 15%; text-align: center; border-right: none;">
+                <!-- Logo Space -->
+                <strong>LOGO</strong>
+            </td>
+            <td rowspan="2" style="width: 65%; font-size: 14px; font-weight: bold; text-align: center;">
+                VITAL AGRI NUTRIENTS QC LAB<br/>
+                ANNUAL TRAINING PLAN
+            </td>
+            <td style="width: 20%; text-align: left; font-size: 10px;">
+                <strong>Format No:</strong> QCL-FRM-7.02
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Revision No:</strong> 01
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 11px; font-weight: bold; text-align: center;">
+                ISO/IEC 17025 Accredited
+            </td>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Page:</strong> <pdf:pagenumber> of <pdf:pagecount>
+            </td>
+        </tr>
+    </table>
+
+    
+    <table style="width: 100%; font-size: 11px; margin-bottom: 20px;">
+        <tr>
+            <td style="width: 20%;"><b>Month / Year:</b></td>
+            <td style="width: 30%; border-bottom: 1px solid black;">{{ obj.month_year|default:"-" }}</td>
+            <td style="width: 15%;"><b>Plan No:</b></td>
+            <td style="width: 35%; border-bottom: 1px solid black;">{{ obj.plan_no|default:"-" }}</td>
+        </tr>
+    </table>
+
+    
+    <div style="font-size: 11px; margin-bottom: 10px; font-weight: bold; background-color: #f0f0f0; padding: 5px;">Section A</div>
+    <table class="header-table" style="font-size: 11px; margin-bottom: 15px;">
+        <tr>
+            <td style="width: 25%;"><b>DCR No.</b></td>
+            <td style="width: 25%;">{{ obj.dcr_no }}</td>
+            <td style="width: 25%;"><b>Date</b></td>
+            <td style="width: 25%;">{{ obj.dcr_date|date:"d-M-Y" }}</td>
+        </tr>
+        <tr>
+            <td><b>Request Raised By</b></td>
+            <td>{{ obj.request_raised_by }}</td>
+            <td><b>Section</b></td>
+            <td>{{ obj.section }}</td>
+        </tr>
+        <tr>
+            <td><b>Document Title</b></td>
+            <td colspan="3">{{ obj.document_title }}</td>
+        </tr>
+        <tr>
+            <td><b>Document Status</b></td>
+            <td colspan="3">
+                [ {% if obj.document_status == 'NEW' %}X{% else %}&nbsp;&nbsp;{% endif %} ] NEW &nbsp;&nbsp;&nbsp;&nbsp;
+                [ {% if obj.document_status == 'EXISTING' %}X{% else %}&nbsp;&nbsp;{% endif %} ] EXISTING
+            </td>
+        </tr>
+        <tr>
+            <td><b>Reason(s)</b></td>
+            <td colspan="3">
+                [ {% if obj.reason == 'New Process Documentation' %}X{% else %}&nbsp;&nbsp;{% endif %} ] New Process Documentation &nbsp;&nbsp;&nbsp;
+                [ {% if obj.reason == 'New Form Documentation' %}X{% else %}&nbsp;&nbsp;{% endif %} ] New Form Documentation <br>
+                [ {% if obj.reason == 'Addition in Document' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Addition in Document &nbsp;&nbsp;&nbsp;
+                [ {% if obj.reason == 'Correction in Document' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Correction in Document <br>
+                [ {% if obj.reason == 'Deletion within Document' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Deletion within Document &nbsp;&nbsp;&nbsp;
+                [ {% if obj.reason == 'Modification in Document' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Modification in Document
+            </td>
+        </tr>
+    </table>
+
+    <div style="font-size: 11px; margin-bottom: 10px; font-weight: bold; background-color: #f0f0f0; padding: 5px;">Section B</div>
+    <div style="border: 1px solid black; padding: 10px; font-size: 11px; min-height: 80px; margin-bottom: 15px;">
+        <b>Description of Requirement:</b><br><br>
+        {{ obj.description_of_requirement|default:"-"|linebreaksbr }}
+    </div>
+    <div style="border: 1px solid black; padding: 10px; font-size: 11px; min-height: 80px; margin-bottom: 15px;">
+        <b>Effected Sections (Not Applicable on New Documents):</b><br><br>
+        {{ obj.effected_sections|default:"-"|linebreaksbr }}
+    </div>
+
+    <div style="font-size: 11px; margin-bottom: 10px; font-weight: bold; background-color: #f0f0f0; padding: 5px;">Section C</div>
+    <table class="header-table" style="font-size: 11px; margin-bottom: 15px;">
+        <tr>
+            <td style="width: 25%;"><b>Review by</b></td>
+            <td style="width: 25%;">{{ obj.review_by|default:"-" }}</td>
+            <td style="width: 25%;"><b>Designation</b></td>
+            <td style="width: 25%;">{{ obj.designation|default:"-" }}</td>
+        </tr>
+        <tr>
+            <td><b>Review Status</b></td>
+            <td colspan="3">
+                [ {% if obj.review_status == 'Draft Reviewed' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Draft Reviewed &nbsp;&nbsp;&nbsp;
+                [ {% if obj.review_status == 'Draft Rejected' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Draft Rejected &nbsp;&nbsp;&nbsp;
+                [ {% if obj.review_status == 'Draft Revision Suggested' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Draft Revision Suggested
+            </td>
+        </tr>
+        <tr>
+            <td><b>Reason for Rejection</b></td>
+            <td colspan="3">
+                [ {% if obj.reason_for_rejection == 'Conflict with Policy' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Conflict with Policy &nbsp;&nbsp;&nbsp;
+                [ {% if obj.reason_for_rejection == 'Conflict with Procedure' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Conflict with Procedure <br>
+                [ {% if obj.reason_for_rejection == 'Conflict with Client Requirement' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Conflict with Client Requirement &nbsp;&nbsp;&nbsp;
+                [ {% if obj.reason_for_rejection == 'Conflict with Regulation' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Conflict with Regulation <br>
+                [ {% if obj.reason_for_rejection == 'Incorrect Draft' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Incorrect Draft &nbsp;&nbsp;&nbsp;
+                [ {% if obj.reason_for_rejection == 'Draft Does not reflect "Description of Requirement"' %}X{% else %}&nbsp;&nbsp;{% endif %} ] Draft Does not reflect "Description of Requirement"
+            </td>
+        </tr>
+        <tr>
+            <td><b>Final Remarks</b></td>
+            <td colspan="3">{{ obj.final_remarks|default:"-" }}</td>
+        </tr>
+        <tr>
+            <td><b>Submitted for Final Approval on</b></td>
+            <td>{{ obj.submitted_for_final_approval_on|date:"d-M-Y"|default:"-" }}</td>
+            <td><b>Approved By</b></td>
+            <td>{{ obj.approved_by_name|default:"-" }}<br><i>{{ obj.approved_designation|default:"-" }}</i></td>
+        </tr>
+    </table>
+
+
+    
+    <table class="sig-table">
+        <tr>
+            <td>
+                {% if obj.prepared_by %}
+                    <strong>{{ obj.prepared_by.get_full_name|default:obj.prepared_by.username }}</strong><br>
+                    {{ obj.prepared_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Prepared By</strong>
+            </td>
+            <td>
+                {% if obj.checked_by %}
+                    <strong>{{ obj.checked_by.get_full_name|default:obj.checked_by.username }}</strong><br>
+                    {{ obj.checked_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Checked By</strong>
+            </td>
+            <td>
+                {% if obj.approved_by %}
+                    <strong>{{ obj.approved_by.get_full_name|default:obj.approved_by.username }}</strong><br>
+                    {{ obj.approved_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Approved By</strong>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -242,6 +242,14 @@ UNFOLD = {
                 ]
             },
             {
+                "title": "LSP-07: Control of Documents",
+                "separator": True,
+                "items": [
+                    {"title": "7.01 Master List of Documents", "icon": "list_alt", "link": "/admin/resources/masterlistdocument_7_01/"},
+                    {"title": "7.02 Document Change Request", "icon": "edit_document", "link": "/admin/resources/documentchangerequest_7_02/"},
+                ]
+            },
+            {
                 "title": "Purchasing & Suppliers",
                 "separator": True,
                 "items": [

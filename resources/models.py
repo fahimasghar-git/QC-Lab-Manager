@@ -1536,3 +1536,87 @@ class ProductsServicesInspectionItem(models.Model):
     requirements = models.CharField(max_length=255)
     remarks = models.CharField(max_length=255, blank=True, null=True)
 
+from django.db import models
+from django.conf import settings
+
+# ==========================================
+# LSP-07 Control of Documents
+# ==========================================
+
+class MasterListDocument_7_01(ISOApprovalModel):
+    # This acts as the container for the master list
+    description = models.CharField(max_length=255, default="Master List of Documents")
+
+    class Meta:
+        verbose_name = "Master List of Document (7.01)"
+        verbose_name_plural = "Master List of Documents (7.01)"
+
+class MasterListDocumentItem(models.Model):
+    master_list = models.ForeignKey(MasterListDocument_7_01, on_delete=models.CASCADE, related_name="items")
+    doc_code = models.CharField(max_length=150)
+    document_title = models.CharField(max_length=255)
+    file_code = models.CharField(max_length=150, blank=True, null=True)
+    file_location = models.CharField(max_length=255, blank=True, null=True)
+    issue_date = models.DateField(blank=True, null=True)
+    rev_no = models.CharField(max_length=50, blank=True, null=True)
+    keeper_1 = models.CharField(max_length=150, blank=True, null=True)
+    keeper_2 = models.CharField(max_length=150, blank=True, null=True)
+    keeper_3 = models.CharField(max_length=150, blank=True, null=True)
+
+
+class DocumentChangeRequest_7_02(ISOApprovalModel):
+    # Section A
+    dcr_no = models.CharField(max_length=100)
+    dcr_date = models.DateField()
+    request_raised_by = models.CharField(max_length=150)
+    section = models.CharField(max_length=150)
+    document_title = models.CharField(max_length=255)
+    
+    DOC_STATUS_CHOICES = [('NEW', 'NEW'), ('EXISTING', 'EXISTING')]
+    document_status = models.CharField(max_length=50, choices=DOC_STATUS_CHOICES)
+    
+    REASON_CHOICES = [
+        ('New Process Documentation', 'New Process Documentation'),
+        ('New Form Documentation', 'New Form Documentation'),
+        ('Addition in Document', 'Addition in Document'),
+        ('Correction in Document', 'Correction in Document'),
+        ('Deletion within Document', 'Deletion within Document'),
+        ('Modification in Document', 'Modification in Document')
+    ]
+    reason = models.CharField(max_length=150, choices=REASON_CHOICES)
+
+    # Section B
+    description_of_requirement = models.TextField(blank=True, null=True)
+    effected_sections = models.TextField(blank=True, null=True, help_text="Not Applicable on New Documents")
+
+    # Section C
+    review_by = models.CharField(max_length=150, blank=True, null=True)
+    designation = models.CharField(max_length=150, blank=True, null=True)
+    
+    REVIEW_STATUS_CHOICES = [
+        ('Draft Reviewed', 'Draft Reviewed'),
+        ('Draft Rejected', 'Draft Rejected'),
+        ('Draft Revision Suggested', 'Draft Revision Suggested')
+    ]
+    review_status = models.CharField(max_length=100, choices=REVIEW_STATUS_CHOICES, blank=True, null=True)
+    
+    REJECTION_REASON_CHOICES = [
+        ('Conflict with Policy', 'Conflict with Policy'),
+        ('Conflict with Procedure', 'Conflict with Procedure'),
+        ('Conflict with Client Requirement', 'Conflict with Client Requirement'),
+        ('Conflict with Regulation', 'Conflict with Regulation'),
+        ('Incorrect Draft', 'Incorrect Draft'),
+        ('Draft Does not reflect "Description of Requirement"', 'Draft Does not reflect "Description of Requirement"')
+    ]
+    reason_for_rejection = models.CharField(max_length=150, choices=REJECTION_REASON_CHOICES, blank=True, null=True)
+    
+    final_remarks = models.TextField(blank=True, null=True)
+    submitted_for_final_approval_on = models.DateField(blank=True, null=True)
+    
+    # We already have approved_by from ISOApprovalModel, but adding text fields as requested by form
+    approved_by_name = models.CharField(max_length=150, blank=True, null=True)
+    approved_designation = models.CharField(max_length=150, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Document Change Request (7.02)"
+        verbose_name_plural = "Document Change Requests (7.02)"

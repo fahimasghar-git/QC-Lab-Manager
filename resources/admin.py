@@ -30,6 +30,12 @@ from .models import (
     ProductsServicesInspection_6_08, ProductsServicesInspectionItem
 )
 
+
+from .models import (
+    MasterListDocument_7_01, MasterListDocumentItem,
+    DocumentChangeRequest_7_02
+)
+
 from .models import AuthorizedPersonnelList_2_06, NewInductionOrientation_2_11, InductionOrientationItem, Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
 from django.utils import timezone
 
@@ -804,4 +810,20 @@ class ProductsServicesInspectionItemInline(StackedInline):
 class ProductsServicesInspectionAdmin(ModelAdmin):
     list_display = ('external_provider', 'type_of_purchase', 'date_of_receipt', 'status')
     inlines = [ProductsServicesInspectionItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+# LSP-07 Admin
+class MasterListDocumentItemInline(StackedInline):
+    model = MasterListDocumentItem
+    extra = 1
+
+@admin.register(MasterListDocument_7_01)
+class MasterListDocumentAdmin(ModelAdmin):
+    list_display = ('description', 'status')
+    inlines = [MasterListDocumentItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(DocumentChangeRequest_7_02)
+class DocumentChangeRequestAdmin(ModelAdmin):
+    list_display = ('dcr_no', 'dcr_date', 'document_title', 'status')
     actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
