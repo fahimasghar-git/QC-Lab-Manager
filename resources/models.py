@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.db import models
 from simple_history.models import HistoricalRecords
 
@@ -654,3 +656,53 @@ class SupplierEvaluationPlanItem(models.Model):
     next_evaluation_date = models.DateField()
     responsibility = models.CharField(max_length=100, default="QCM / Lab Incharge")
     records = models.CharField(max_length=100, default="QCL-FRM-6.03")
+
+# ISO 17025 Clause 6.3: Facilities and Environmental Conditions
+class FacilityArea(models.Model):
+    history = HistoricalRecords()
+    name = models.CharField(max_length=150, help_text="e.g. Instrument Room, Microbiology Lab, Wet Lab")
+    description = models.TextField(blank=True, null=True)
+    target_temperature_min = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, help_text="Min Temp (°C)")
+    target_temperature_max = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, help_text="Max Temp (°C)")
+    target_humidity_min = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, help_text="Min Humidity (% RH)")
+    target_humidity_max = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, help_text="Max Humidity (% RH)")
+
+    class Meta:
+        verbose_name = 'Facility Area (6.3)'
+        verbose_name_plural = 'Facility Areas (6.3)'
+
+    def __str__(self):
+        return self.name
+
+class EnvironmentalLog(models.Model):
+    history = HistoricalRecords()
+    area = models.ForeignKey(FacilityArea, on_delete=models.CASCADE, related_name='environmental_logs')
+    date = models.DateField(default=timezone.now)
+    time = models.TimeField(default=timezone.now)
+    
+    temperature = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name="Temperature (°C)")
+    humidity = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, verbose_name="Humidity (% RH)")
+    
+    # Measuring instrument traceability
+    measuring_instrument = models.ForeignKey('Equipment', on_delete=models.SET_NULL, null=True, blank=True, help_text="Equipment used to measure conditions")
+    
+    remarks = models.TextField(blank=True, null=True, help_text="Note any deviations, excursions, or corrective actions taken.")
+    recorded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='recorded_environmental_logs')
+
+    class Meta:
+        verbose_name = 'Environmental Log (6.3)'
+        verbose_name_plural = 'Environmental Logs (6.3)'
+        ordering = ['-date', '-time']
+
+    def __str__(self):
+        return f"{self.area.name} - {self.date} {self.time}"
+
+    @property
+    def is_compliant(self):
+        if self.temperature is not None:
+            if self.area.target_temperature_min is not None and self.temperature < self.area.target_temperature_min: return False
+            if self.area.target_temperature_max is not None and self.temperature > self.area.target_temperature_max: return False
+        if self.humidity is not None:
+            if self.area.target_humidity_min is not None and self.humidity < self.area.target_humidity_min: return False
+            if self.area.target_humidity_max is not None and self.humidity > self.area.target_humidity_max: return False
+        return True
