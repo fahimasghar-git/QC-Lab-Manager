@@ -72,6 +72,11 @@ from .models import (
     LabCleaningInspectionSheet_17_14, LabCleaningInspectionItem
 )
 
+
+from .models import (
+    QualityObjectiveForm_18_01, QualityObjectiveItem, QualityObjectiveProgramStep
+)
+
 from .models import AuthorizedPersonnelList_2_06, NewInductionOrientation_2_11, InductionOrientationItem, Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
 from django.utils import timezone
 
@@ -1282,4 +1287,22 @@ class LabCleaningInspectionItemInline(StackedInline):
 class LabCleaningInspectionSheetAdmin(ModelAdmin):
     list_display = ('section_area', 'month', 'status')
     inlines = [LabCleaningInspectionItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+# ==========================================
+# LSP-18 Admin
+# ==========================================
+
+class QualityObjectiveItemInline(StackedInline):
+    model = QualityObjectiveItem
+    extra = 1
+
+class QualityObjectiveProgramStepInline(StackedInline):
+    model = QualityObjectiveProgramStep
+    extra = 1
+
+@admin.register(QualityObjectiveForm_18_01)
+class QualityObjectiveFormAdmin(ModelAdmin):
+    list_display = ('year', 'status')
+    inlines = [QualityObjectiveItemInline, QualityObjectiveProgramStepInline]
     actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']

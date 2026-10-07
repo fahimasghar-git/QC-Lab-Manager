@@ -2557,3 +2557,30 @@ class LabCleaningInspectionItem(models.Model):
     checked_by = models.CharField(max_length=100, blank=True, null=True)
     verified_by = models.CharField(max_length=100, blank=True, null=True)
 
+from django.db import models
+
+# ==========================================
+# LSP-18 Improvement Through Objectives
+# ==========================================
+
+class QualityObjectiveForm_18_01(ISOApprovalModel):
+    year = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "Quality Objective Form (18.01)"
+        verbose_name_plural = "Quality Objective Forms (18.01)"
+
+class QualityObjectiveItem(models.Model):
+    form = models.ForeignKey(QualityObjectiveForm_18_01, on_delete=models.CASCADE, related_name="objectives")
+    sn = models.IntegerField()
+    quality_objective = models.CharField(max_length=255)
+    target_date = models.CharField(max_length=100)
+
+class QualityObjectiveProgramStep(models.Model):
+    form = models.ForeignKey(QualityObjectiveForm_18_01, on_delete=models.CASCADE, related_name="program_steps")
+    objective_sn = models.IntegerField(help_text="SN of the Objective this step belongs to")
+    step_no = models.IntegerField()
+    particulars = models.CharField(max_length=255)
+    responsibility = models.CharField(max_length=150)
+    target_date = models.CharField(max_length=100)
+    status = models.CharField(max_length=100)

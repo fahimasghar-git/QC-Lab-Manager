@@ -358,6 +358,13 @@ UNFOLD = {
                 ]
             },
             {
+                "title": "LSP-18: Improvement Objectives",
+                "separator": True,
+                "items": [
+                    {"title": "18.01 Quality Objectives", "icon": "flag", "link": "/admin/resources/qualityobjectiveform_18_01/"},
+                ]
+            },
+            {
                 "title": "Purchasing & Suppliers",
                 "separator": True,
                 "items": [
