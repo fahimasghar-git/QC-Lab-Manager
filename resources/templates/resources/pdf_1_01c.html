@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    @page {
+        size: a4 portrait;
+        margin: 1cm;
+        margin-top: 1.5cm;
+    }
+    body {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 11px;
+    }
+    .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+        margin-bottom: 20px;
+    }
+    .header-table td {
+        border: 1px solid black;
+        padding: 5px;
+    }
+    .main-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    .main-table th, .main-table td {
+        border: 1px solid black;
+        padding: 6px;
+    }
+    .main-table th {
+        background-color: #f2f2f2;
+        text-align: left;
+    }
+    .sig-table {
+        width: 100%;
+        border: none;
+        margin-top: 60px;
+        text-align: center;
+        font-size: 12px;
+    }
+    .sig-table td {
+        padding: 10px;
+    }
+</style>
+</head>
+<body>
+    <table class="header-table">
+        <tr>
+            <td rowspan="3" style="width: 15%; text-align: center; border-right: none;">
+                <!-- Logo Space -->
+                <strong>LOGO</strong>
+            </td>
+            <td rowspan="2" style="width: 65%; font-size: 14px; font-weight: bold; text-align: center;">
+                VITAL AGRI NUTRIENTS QC LAB<br/>
+                COMPETENCY EVALUATION THROUGH QC INTERNAL SAMPLES
+            </td>
+            <td style="width: 20%; text-align: left; font-size: 10px;">
+                <strong>Format No:</strong> QCL-FRM-1.01C
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Revision No:</strong> 01
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 11px; font-weight: bold; text-align: center;">
+                ISO/IEC 17025 Accredited
+            </td>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Page:</strong> <pdf:pagenumber> of <pdf:pagecount>
+            </td>
+        </tr>
+    </table>
+
+    
+    <table style="width: 100%; font-size: 10px; margin-bottom: 10px;">
+        <tr>
+            <td style="width: 25%;"><b>Name of Analyst / Evaluator:</b></td>
+            <td style="width: 25%; border-bottom: 1px solid black;">{{ obj.analyst.get_full_name|default:obj.analyst.username }}</td>
+            <td style="width: 20%;"><b>Date of Evaluation:</b></td>
+            <td style="width: 30%; border-bottom: 1px solid black;">{{ obj.evaluation_date|date:"d-M-Y" }}</td>
+        </tr>
+    </table>
+
+    <table class="main-table" style="font-size: 10px;">
+        <tr>
+            <th style="width: 25%;">Description of Material</th>
+            <td colspan="3">{{ obj.material_description|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>Reference method</th>
+            <td colspan="3">{{ obj.reference_method|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>Batch No / Lot No</th>
+            <td style="width: 25%;">{{ obj.batch_lot_no|default:"-" }}</td>
+            <th style="width: 25%;">Mfg Date</th>
+            <td style="width: 25%;">{{ obj.mfg_date|date:"d-M-Y"|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>Qty of working Standard</th>
+            <td>{{ obj.working_standard_qty|default:"-" }}</td>
+            <th>Exp Date</th>
+            <td>{{ obj.exp_date|date:"d-M-Y"|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>Qty of unknown sample</th>
+            <td>{{ obj.unknown_sample_qty|default:"-" }}</td>
+            <th>Date of Analysis</th>
+            <td>{{ obj.analysis_date|date:"d-M-Y"|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>Temp / RH</th>
+            <td>{{ obj.temp_rh|default:"-" }}</td>
+            <th>Result Submission date</th>
+            <td>{{ obj.result_submission_date|date:"d-M-Y"|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>Source of Material</th>
+            <td colspan="3">{{ obj.source_of_material|default:"-" }}</td>
+        </tr>
+    </table>
+
+    <table class="main-table" style="margin-top: 15px; font-size: 10px; text-align: center;">
+        <thead>
+            <tr>
+                <th style="text-align: center;">Sr.#</th>
+                <th style="text-align: center;">Test Description</th>
+                <th style="text-align: center;">Assigned Value</th>
+                <th style="text-align: center;">Report Value</th>
+                <th style="text-align: center;">Z-Score</th>
+                <th style="text-align: center;">NMT 2.0</th>
+                <th style="text-align: center;">Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for test in obj.tests.all %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td style="text-align: left;">{{ test.test_description }}</td>
+                <td>{{ test.assigned_value|default:"-" }}</td>
+                <td>{{ test.report_value|default:"-" }}</td>
+                <td>{{ test.z_score|default:"-" }}</td>
+                <td>{{ test.nmt_2_0|default:"-" }}</td>
+                <td>{{ test.remarks|default:"-" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No tests recorded.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px; font-size: 10px;">
+        <p><b>Remarks:</b> <span style="text-decoration: underline;">{{ obj.remarks|default:"-" }}</span></p>
+        <p><b>State deviation if any:</b> <span style="text-decoration: underline;">{{ obj.state_deviation|default:"-" }}</span></p>
+        <p><b>Interpretation of Result: Satisfactory / Not Satisfactory</b> <br>{{ obj.interpretation_of_result|default:"-" }}</p>
+    </div>
+
+    
+    <table class="sig-table">
+        <tr>
+            <td>
+                {% if obj.prepared_by %}
+                    <strong>{{ obj.prepared_by.get_full_name|default:obj.prepared_by.username }}</strong><br>
+                    {{ obj.prepared_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Prepared By</strong>
+            </td>
+            <td>
+                {% if obj.checked_by %}
+                    <strong>{{ obj.checked_by.get_full_name|default:obj.checked_by.username }}</strong><br>
+                    {{ obj.checked_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Checked By</strong>
+            </td>
+            <td>
+                {% if obj.approved_by %}
+                    <strong>{{ obj.approved_by.get_full_name|default:obj.approved_by.username }}</strong><br>
+                    {{ obj.approved_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Approved By</strong>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    @page {
+        size: a4 portrait;
+        margin: 1cm;
+        margin-top: 1.5cm;
+    }
+    body {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 11px;
+    }
+    .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+        margin-bottom: 20px;
+    }
+    .header-table td {
+        border: 1px solid black;
+        padding: 5px;
+    }
+    .main-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    .main-table th, .main-table td {
+        border: 1px solid black;
+        padding: 6px;
+    }
+    .main-table th {
+        background-color: #f2f2f2;
+        text-align: left;
+    }
+    .sig-table {
+        width: 100%;
+        border: none;
+        margin-top: 60px;
+        text-align: center;
+        font-size: 12px;
+    }
+    .sig-table td {
+        padding: 10px;
+    }
+</style>
+</head>
+<body>
+    <table class="header-table">
+        <tr>
+            <td rowspan="3" style="width: 15%; text-align: center; border-right: none;">
+                <!-- Logo Space -->
+                <strong>LOGO</strong>
+            </td>
+            <td rowspan="2" style="width: 65%; font-size: 14px; font-weight: bold; text-align: center;">
+                VITAL AGRI NUTRIENTS QC LAB<br/>
+                TRAINER EVALUATION FORM
+            </td>
+            <td style="width: 20%; text-align: left; font-size: 10px;">
+                <strong>Format No:</strong> QCL-FRM-2.12
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Revision No:</strong> 01
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 11px; font-weight: bold; text-align: center;">
+                ISO/IEC 17025 Accredited
+            </td>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Page:</strong> <pdf:pagenumber> of <pdf:pagecount>
+            </td>
+        </tr>
+    </table>
+
+    
+    <table style="width: 100%; font-size: 11px; margin-bottom: 20px;">
+        <tr>
+            <td style="width: 20%;"><b>Trainer Name:</b></td>
+            <td style="width: 30%; border-bottom: 1px solid black;">{{ obj.trainer.get_full_name|default:obj.trainer.username }}</td>
+            <td style="width: 15%;"><b>Date:</b></td>
+            <td style="width: 35%; border-bottom: 1px solid black;">{{ obj.date|date:"d-M-Y" }}</td>
+        </tr>
+        <tr>
+            <td><b>Topic:</b></td>
+            <td colspan="3" style="border-bottom: 1px solid black;">{{ obj.topic|default:"-" }}</td>
+        </tr>
+        <tr>
+            <td><b>Evaluator Name:</b></td>
+            <td colspan="3" style="border-bottom: 1px solid black;">{{ obj.evaluator.get_full_name|default:obj.evaluator.username }}</td>
+        </tr>
+    </table>
+
+    <p style="font-size: 11px;">Please indicate your impression of the items listed below by circling the appropriate number rating. Rating Key: 5 = Excellent, 4 = Good, 3 = Average, 2 = Below Average, 1 = Poor</p>
+
+    <table class="main-table" style="font-size: 10px;">
+        <thead>
+            <tr>
+                <th style="width: 60%;">Criteria</th>
+                <th style="width: 8%; text-align: center;">5</th>
+                <th style="width: 8%; text-align: center;">4</th>
+                <th style="width: 8%; text-align: center;">3</th>
+                <th style="width: 8%; text-align: center;">2</th>
+                <th style="width: 8%; text-align: center;">1</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1. The trainer's objectives were clear.</td><td style="text-align: center;">{% if obj.objectives_clear == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.objectives_clear == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.objectives_clear == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.objectives_clear == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.objectives_clear == 1 %}X{% endif %}</td></tr>
+            <tr><td>2. The trainer demonstrated thorough knowledge of the topic, especially regarding ISO 17025.</td><td style="text-align: center;">{% if obj.knowledge_iso17025 == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.knowledge_iso17025 == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.knowledge_iso17025 == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.knowledge_iso17025 == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.knowledge_iso17025 == 1 %}X{% endif %}</td></tr>
+            <tr><td>3. Concepts were explained clearly.</td><td style="text-align: center;">{% if obj.clarity_concepts == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.clarity_concepts == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.clarity_concepts == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.clarity_concepts == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.clarity_concepts == 1 %}X{% endif %}</td></tr>
+            <tr><td>4. The delivery skills of the trainer were effective.</td><td style="text-align: center;">{% if obj.delivery_skills == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.delivery_skills == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.delivery_skills == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.delivery_skills == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.delivery_skills == 1 %}X{% endif %}</td></tr>
+            <tr><td>5. The trainer adequately addressed questions and concerns.</td><td style="text-align: center;">{% if obj.address_questions == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.address_questions == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.address_questions == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.address_questions == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.address_questions == 1 %}X{% endif %}</td></tr>
+            <tr><td>6. The trainer maintained audience engagement throughout the session.</td><td style="text-align: center;">{% if obj.engagement == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.engagement == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.engagement == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.engagement == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.engagement == 1 %}X{% endif %}</td></tr>
+            <tr><td>7. The use of training materials and tools was effective.</td><td style="text-align: center;">{% if obj.materials_tools == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.materials_tools == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.materials_tools == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.materials_tools == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.materials_tools == 1 %}X{% endif %}</td></tr>
+            <tr><td>8. The training content was relevant.</td><td style="text-align: center;">{% if obj.relevance_content == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.relevance_content == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.relevance_content == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.relevance_content == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.relevance_content == 1 %}X{% endif %}</td></tr>
+            <tr><td>9. The topics covered were relevant to me.</td><td style="text-align: center;">{% if obj.topics_relevant == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.topics_relevant == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.topics_relevant == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.topics_relevant == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.topics_relevant == 1 %}X{% endif %}</td></tr>
+            <tr><td>10. The training content was well-organized.</td><td style="text-align: center;">{% if obj.organized == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.organized == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.organized == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.organized == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.organized == 1 %}X{% endif %}</td></tr>
+            <tr><td>11. Training materials distributed will be helpful.</td><td style="text-align: center;">{% if obj.materials_helpful == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.materials_helpful == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.materials_helpful == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.materials_helpful == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.materials_helpful == 1 %}X{% endif %}</td></tr>
+            <tr><td>12. This training experience will be useful in my work.</td><td style="text-align: center;">{% if obj.useful_in_work == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.useful_in_work == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.useful_in_work == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.useful_in_work == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.useful_in_work == 1 %}X{% endif %}</td></tr>
+            <tr><td>13. The instructor was well prepared.</td><td style="text-align: center;">{% if obj.well_prepared == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.well_prepared == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.well_prepared == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.well_prepared == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.well_prepared == 1 %}X{% endif %}</td></tr>
+            <tr><td>14. The instructor was knowledgeable on the topics.</td><td style="text-align: center;">{% if obj.knowledgeable_topics == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.knowledgeable_topics == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.knowledgeable_topics == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.knowledgeable_topics == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.knowledgeable_topics == 1 %}X{% endif %}</td></tr>
+            <tr><td>15. The training objectives were met.</td><td style="text-align: center;">{% if obj.objectives_met == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.objectives_met == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.objectives_met == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.objectives_met == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.objectives_met == 1 %}X{% endif %}</td></tr>
+            <tr><td>16. The time allotted for the training was sufficient.</td><td style="text-align: center;">{% if obj.time_sufficient == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.time_sufficient == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.time_sufficient == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.time_sufficient == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.time_sufficient == 1 %}X{% endif %}</td></tr>
+            <tr><td>17. Overall effectiveness of the training session.</td><td style="text-align: center;">{% if obj.overall_effectiveness == 5 %}X{% endif %}</td><td style="text-align: center;">{% if obj.overall_effectiveness == 4 %}X{% endif %}</td><td style="text-align: center;">{% if obj.overall_effectiveness == 3 %}X{% endif %}</td><td style="text-align: center;">{% if obj.overall_effectiveness == 2 %}X{% endif %}</td><td style="text-align: center;">{% if obj.overall_effectiveness == 1 %}X{% endif %}</td></tr>
+        </tbody>
+    </table>
+
+    <div style="font-size: 10px; margin-top: 15px;">
+        <p><b>Strengths in content and delivery:</b> {{ obj.strengths_content_delivery|default:"-" }}</p>
+        <p><b>Engagement and interaction:</b> {{ obj.engagement_interaction|default:"-" }}</p>
+        <p><b>Practical applications or relevance:</b> {{ obj.practical_applications|default:"-" }}</p>
+        <p><b>Key strengths observed:</b> {{ obj.key_strengths|default:"-" }}</p>
+        <p><b>Areas identified for improvement:</b> {{ obj.areas_improvement|default:"-" }}</p>
+    </div>
+
+    
+    <table class="sig-table">
+        <tr>
+            <td>
+                {% if obj.prepared_by %}
+                    <strong>{{ obj.prepared_by.get_full_name|default:obj.prepared_by.username }}</strong><br>
+                    {{ obj.prepared_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Prepared By</strong>
+            </td>
+            <td>
+                {% if obj.checked_by %}
+                    <strong>{{ obj.checked_by.get_full_name|default:obj.checked_by.username }}</strong><br>
+                    {{ obj.checked_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Checked By</strong>
+            </td>
+            <td>
+                {% if obj.approved_by %}
+                    <strong>{{ obj.approved_by.get_full_name|default:obj.approved_by.username }}</strong><br>
+                    {{ obj.approved_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Approved By</strong>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

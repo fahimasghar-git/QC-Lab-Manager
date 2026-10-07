@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    @page {
+        size: a4 portrait;
+        margin: 1cm;
+        margin-top: 1.5cm;
+    }
+    body {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 11px;
+    }
+    .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+        margin-bottom: 20px;
+    }
+    .header-table td {
+        border: 1px solid black;
+        padding: 5px;
+    }
+    .main-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    .main-table th, .main-table td {
+        border: 1px solid black;
+        padding: 6px;
+    }
+    .main-table th {
+        background-color: #f2f2f2;
+        text-align: left;
+    }
+    .sig-table {
+        width: 100%;
+        border: none;
+        margin-top: 60px;
+        text-align: center;
+        font-size: 12px;
+    }
+    .sig-table td {
+        padding: 10px;
+    }
+</style>
+</head>
+<body>
+    <table class="header-table">
+        <tr>
+            <td rowspan="3" style="width: 15%; text-align: center; border-right: none;">
+                <!-- Logo Space -->
+                <strong>LOGO</strong>
+            </td>
+            <td rowspan="2" style="width: 65%; font-size: 14px; font-weight: bold; text-align: center;">
+                VITAL AGRI NUTRIENTS QC LAB<br/>
+                TRAINING FEEDBACK FORM
+            </td>
+            <td style="width: 20%; text-align: left; font-size: 10px;">
+                <strong>Format No:</strong> QCL-FRM-2.07
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Revision No:</strong> 01
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 11px; font-weight: bold; text-align: center;">
+                ISO/IEC 17025 Accredited
+            </td>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Page:</strong> <pdf:pagenumber> of <pdf:pagecount>
+            </td>
+        </tr>
+    </table>
+
+    
+    <table style="width: 100%; font-size: 11px; margin-bottom: 20px;">
+        <tr>
+            <td style="width: 20%;"><b>Name of Trainee:</b></td>
+            <td style="width: 30%; border-bottom: 1px solid black;">{{ obj.analyst.get_full_name|default:obj.analyst.username }}</td>
+            <td style="width: 15%;"><b>Date:</b></td>
+            <td style="width: 35%; border-bottom: 1px solid black;">{{ obj.created_at|date:"d-M-Y" }}</td>
+        </tr>
+        <tr>
+            <td><b>Location:</b></td>
+            <td style="border-bottom: 1px solid black;">{{ obj.location|default:"-" }}</td>
+            <td><b>Duration:</b></td>
+            <td style="border-bottom: 1px solid black;">{{ obj.duration|default:"-" }}</td>
+        </tr>
+        <tr>
+            <td><b>Topic:</b></td>
+            <td colspan="3" style="border-bottom: 1px solid black;">{{ obj.topic|default:"-" }}</td>
+        </tr>
+        <tr>
+            <td><b>Trainer/Institute:</b></td>
+            <td colspan="3" style="border-bottom: 1px solid black;">{{ obj.trainer_institute|default:"-" }}</td>
+        </tr>
+    </table>
+
+    <p style="font-size: 11px;">Please indicate your impression of the items listed below by circling the appropriate number rating. Rating Key: 5 = Excellent, 4 = Good, 3 = Average, 2 = Below Average, 1 = Poor</p>
+
+    <table class="main-table" style="font-size: 10px;">
+        <thead>
+            <tr>
+                <th style="width: 60%;">Description</th>
+                <th style="width: 8%; text-align: center;">5</th>
+                <th style="width: 8%; text-align: center;">4</th>
+                <th style="width: 8%; text-align: center;">3</th>
+                <th style="width: 8%; text-align: center;">2</th>
+                <th style="width: 8%; text-align: center;">1</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="6" style="background-color: #eee; font-weight: bold;">I. Course</td></tr>
+            <tr><td>How much did the training meet your expectations?</td>
+                <td style="text-align: center;">{% if obj.expectations_met == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.expectations_met == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.expectations_met == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.expectations_met == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.expectations_met == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>How do you rate the speed at which training was delivered?</td>
+                <td style="text-align: center;">{% if obj.speed_rate == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.speed_rate == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.speed_rate == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.speed_rate == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.speed_rate == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>How do you rate the practical application of the training?</td>
+                <td style="text-align: center;">{% if obj.practical_application == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.practical_application == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.practical_application == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.practical_application == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.practical_application == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>How much effect did this training have on your ability to do your job?</td>
+                <td style="text-align: center;">{% if obj.job_effect == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.job_effect == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.job_effect == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.job_effect == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.job_effect == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>How well focused and structured was the training?</td>
+                <td style="text-align: center;">{% if obj.focus_structure == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.focus_structure == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.focus_structure == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.focus_structure == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.focus_structure == 1 %}X{% endif %}</td>
+            </tr>
+
+            <tr><td colspan="6" style="background-color: #eee; font-weight: bold;">II. Process</td></tr>
+            <tr><td>Adequate training was provided for my position?</td>
+                <td style="text-align: center;">{% if obj.adequate_for_position == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.adequate_for_position == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.adequate_for_position == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.adequate_for_position == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.adequate_for_position == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>The methods used to train me were effective?</td>
+                <td style="text-align: center;">{% if obj.methods_effective == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.methods_effective == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.methods_effective == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.methods_effective == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.methods_effective == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>The materials utilized in training were clear?</td>
+                <td style="text-align: center;">{% if obj.materials_clear == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.materials_clear == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.materials_clear == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.materials_clear == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.materials_clear == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>There were enough resources available for the training process?</td>
+                <td style="text-align: center;">{% if obj.enough_resources == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.enough_resources == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.enough_resources == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.enough_resources == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.enough_resources == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>My training was completed in a timely manner?</td>
+                <td style="text-align: center;">{% if obj.timely_manner == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.timely_manner == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.timely_manner == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.timely_manner == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.timely_manner == 1 %}X{% endif %}</td>
+            </tr>
+
+            <tr><td colspan="6" style="background-color: #eee; font-weight: bold;">III. Structure</td></tr>
+            <tr><td>The usefulness of the information received in training.</td>
+                <td style="text-align: center;">{% if obj.information_usefulness == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.information_usefulness == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.information_usefulness == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.information_usefulness == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.information_usefulness == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>The usefulness of the structure of the training program.</td>
+                <td style="text-align: center;">{% if obj.structure_usefulness == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.structure_usefulness == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.structure_usefulness == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.structure_usefulness == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.structure_usefulness == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>The usefulness of the pace of the training program.</td>
+                <td style="text-align: center;">{% if obj.pace_usefulness == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.pace_usefulness == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.pace_usefulness == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.pace_usefulness == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.pace_usefulness == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>The convenience of the training schedule.</td>
+                <td style="text-align: center;">{% if obj.schedule_convenience == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.schedule_convenience == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.schedule_convenience == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.schedule_convenience == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.schedule_convenience == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>The usefulness of the training materials.</td>
+                <td style="text-align: center;">{% if obj.materials_usefulness == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.materials_usefulness == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.materials_usefulness == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.materials_usefulness == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.materials_usefulness == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>Was this training appropriate for your level of experience?</td>
+                <td style="text-align: center;">{% if obj.appropriate_for_experience == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.appropriate_for_experience == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.appropriate_for_experience == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.appropriate_for_experience == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.appropriate_for_experience == 1 %}X{% endif %}</td>
+            </tr>
+
+            <tr><td colspan="6" style="background-color: #eee; font-weight: bold;">IV. About Trainer/Mentor</td></tr>
+            <tr><td>Was the Trainer knowledgeable about the training topics?</td>
+                <td style="text-align: center;">{% if obj.trainer_knowledgeable == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.trainer_knowledgeable == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.trainer_knowledgeable == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.trainer_knowledgeable == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.trainer_knowledgeable == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>Did the Trainer make concepts clear?</td>
+                <td style="text-align: center;">{% if obj.concepts_clear == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.concepts_clear == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.concepts_clear == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.concepts_clear == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.concepts_clear == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>How do you rate the Trainer's handling of questions/needs?</td>
+                <td style="text-align: center;">{% if obj.handling_questions == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.handling_questions == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.handling_questions == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.handling_questions == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.handling_questions == 1 %}X{% endif %}</td>
+            </tr>
+            <tr><td>How do you rate the Trainer's overall facilitation of the training?</td>
+                <td style="text-align: center;">{% if obj.overall_facilitation == 5 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.overall_facilitation == 4 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.overall_facilitation == 3 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.overall_facilitation == 2 %}X{% endif %}</td>
+                <td style="text-align: center;">{% if obj.overall_facilitation == 1 %}X{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+    <table class="sig-table">
+        <tr>
+            <td>
+                {% if obj.prepared_by %}
+                    <strong>{{ obj.prepared_by.get_full_name|default:obj.prepared_by.username }}</strong><br>
+                    {{ obj.prepared_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Prepared By</strong>
+            </td>
+            <td>
+                {% if obj.checked_by %}
+                    <strong>{{ obj.checked_by.get_full_name|default:obj.checked_by.username }}</strong><br>
+                    {{ obj.checked_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Checked By</strong>
+            </td>
+            <td>
+                {% if obj.approved_by %}
+                    <strong>{{ obj.approved_by.get_full_name|default:obj.approved_by.username }}</strong><br>
+                    {{ obj.approved_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Approved By</strong>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

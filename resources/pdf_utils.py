@@ -57,7 +57,41 @@ def generate_iso_pdf(model_admin, request, queryset):
     
     template_name = 'resources/universal_iso_pdf.html'
     if model_meta.model_name == 'personnelauthorizationpermit':
-        template_name = 'resources/pdf_1_01_authorization_permit.html'
+        template_name = 'resources/pdf_1_01.html'
+    if model_meta.model_name == 'competencyevalinternalsample':
+        template_name = 'resources/pdf_1_01c.html'
+    if model_meta.model_name == 'competencyevalptsample':
+        template_name = 'resources/pdf_1_01d.html'
+    if model_meta.model_name == 'gradingmatrixequipment':
+        template_name = 'resources/pdf_1_01e.html'
+    if model_meta.model_name == 'gradingmatrixproduct':
+        template_name = 'resources/pdf_1_01f.html'
+    if model_meta.model_name == 'gradingmatrixdocument':
+        template_name = 'resources/pdf_1_01g.html'
+    if model_meta.model_name == 'authorizedanalystlist':
+        template_name = 'resources/pdf_1_02.html'
+    if model_meta.model_name == 'technicalpersonnellist':
+        template_name = 'resources/pdf_1_03.html'
+    if model_meta.model_name == 'competencymonitoring':
+        template_name = 'resources/pdf_1_04.html'
+    if model_meta.model_name == 'trainingneedassessment':
+        template_name = 'resources/pdf_2_02.html'
+    if model_meta.model_name == 'annualtrainingplan':
+        template_name = 'resources/pdf_2_03.html'
+    if model_meta.model_name == 'trainingattendancesheet':
+        template_name = 'resources/pdf_2_04.html'
+    if model_meta.model_name == 'trainingevaluation':
+        template_name = 'resources/pdf_2_05.html'
+    if model_meta.model_name == 'trainingfeedback':
+        template_name = 'resources/pdf_2_07.html'
+    if model_meta.model_name == 'individualtrainingrecord':
+        template_name = 'resources/pdf_2_08.html'
+    if model_meta.model_name == 'orientationplan':
+        template_name = 'resources/pdf_2_09.html'
+    if model_meta.model_name == 'competencereassessment':
+        template_name = 'resources/pdf_2_10.html'
+    if model_meta.model_name == 'trainerevaluation':
+        template_name = 'resources/pdf_2_12.html'
     
     pdf = render_to_pdf(template_name, context)
 
