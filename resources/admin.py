@@ -6,7 +6,7 @@ from .pdf_utils import generate_iso_pdf
 from .approval_utils import action_mark_prepared, action_mark_checked, action_mark_approved
 from unfold.admin import TabularInline, StackedInline
 from simple_history.admin import SimpleHistoryAdmin
-from .models import Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
+from .models import AuthorizedPersonnelList_2_06, NewInductionOrientation_2_11, InductionOrientationItem, Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
 from django.utils import timezone
 
 
@@ -608,3 +608,17 @@ class TrainerEvaluationAdmin(ModelAdmin):
 class CompetencyMonitoringAdmin(ModelAdmin):
     actions = [generate_iso_pdf, action_mark_prepared, action_mark_checked, action_mark_approved]
     list_display = ['analyst', 'main_functions', 'overall_score', 'status']
+
+
+@admin.register(AuthorizedPersonnelList_2_06)
+class AuthorizedPersonnelList206Admin(ModelAdmin):
+    list_display = ('revision_number', 'date_issued')
+
+class InductionOrientationItemInline(StackedInline):
+    model = InductionOrientationItem
+    extra = 1
+
+@admin.register(NewInductionOrientation_2_11)
+class NewInductionOrientationAdmin(ModelAdmin):
+    list_display = ('candidate_name', 'joining_date', 'probation_period')
+    inlines = [InductionOrientationItemInline]

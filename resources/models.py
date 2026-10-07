@@ -1178,3 +1178,34 @@ class CompetencyMonitoring(ISOApprovalModel):
     class Meta:
         verbose_name = "Competency Monitoring (1.04)"
         verbose_name_plural = "Competency Monitoring (1.04)"
+
+# QCL-FRM-2.06 Authorized Personnel List
+class AuthorizedPersonnelList_2_06(ISOApprovalModel):
+    date_issued = models.DateField()
+    revision_number = models.CharField(max_length=50)
+    file_attachment = models.FileField(upload_to='master_lists/2_06/', null=True, blank=True)
+    
+    class Meta:
+        verbose_name = "Authorized Personnel List (2.06)"
+        verbose_name_plural = "Authorized Personnel Lists (2.06)"
+
+# QCL-FRM-2.11 Orientation Training Plan for Newly Inducted Staff
+class NewInductionOrientation_2_11(ISOApprovalModel):
+    candidate_name = models.CharField(max_length=255)
+    joining_date = models.DateField(null=True, blank=True)
+    orientation_started_from = models.DateField(null=True, blank=True)
+    probation_period = models.CharField(max_length=100, null=True, blank=True)
+    
+    prepared_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='+')
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='+')
+    approval_date = models.DateField(null=True, blank=True)
+    
+    class Meta:
+        verbose_name = "New Induction Orientation (2.11)"
+        verbose_name_plural = "New Induction Orientations (2.11)"
+
+class InductionOrientationItem(models.Model):
+    orientation = models.ForeignKey(NewInductionOrientation_2_11, on_delete=models.CASCADE, related_name='items')
+    responsibility = models.CharField(max_length=255)
+    trainer = models.CharField(max_length=255)
+    training_duration = models.CharField(max_length=100)
