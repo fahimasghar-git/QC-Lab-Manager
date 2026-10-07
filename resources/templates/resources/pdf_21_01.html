@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    @page {
+        size: a4 portrait;
+        margin: 1cm;
+        margin-top: 1.5cm;
+    }
+    body {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 11px;
+    }
+    .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+        margin-bottom: 20px;
+    }
+    .header-table td {
+        border: 1px solid black;
+        padding: 5px;
+    }
+    .main-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    .main-table th, .main-table td {
+        border: 1px solid black;
+        padding: 6px;
+    }
+    .main-table th {
+        background-color: #f2f2f2;
+        text-align: left;
+    }
+    .sig-table {
+        width: 100%;
+        border: none;
+        margin-top: 60px;
+        text-align: center;
+        font-size: 12px;
+    }
+    .sig-table td {
+        padding: 10px;
+    }
+</style>
+</head>
+<body>
+    <table class="header-table">
+        <tr>
+            <td rowspan="3" style="width: 15%; text-align: center; border-right: none;">
+                <!-- Logo Space -->
+                <strong>LOGO</strong>
+            </td>
+            <td rowspan="2" style="width: 65%; font-size: 14px; font-weight: bold; text-align: center;">
+                VITAL AGRI NUTRIENTS QC LAB<br/>
+                ANNUAL TRAINING PLAN
+            </td>
+            <td style="width: 20%; text-align: left; font-size: 10px;">
+                <strong>Format No:</strong> QCL-FRM-21.01
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Revision No:</strong> 01
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 11px; font-weight: bold; text-align: center;">
+                ISO/IEC 17025 Accredited
+            </td>
+            <td style="text-align: left; font-size: 10px;">
+                <strong>Page:</strong> <pdf:pagenumber> of <pdf:pagecount>
+            </td>
+        </tr>
+    </table>
+
+    
+    <table style="width: 100%; font-size: 11px; margin-bottom: 20px;">
+        <tr>
+            <td style="width: 20%;"><b>Month / Year:</b></td>
+            <td style="width: 30%; border-bottom: 1px solid black;">{{ obj.month_year|default:"-" }}</td>
+            <td style="width: 15%;"><b>Plan No:</b></td>
+            <td style="width: 35%; border-bottom: 1px solid black;">{{ obj.plan_no|default:"-" }}</td>
+        </tr>
+    </table>
+
+    
+    <div style="font-size: 11px; margin-bottom: 5px; font-weight: bold; background-color: #f0f0f0; padding: 5px;">Section A: (To be filled by Customer)</div>
+    <table class="main-table" style="font-size: 11px; text-align: left; margin-bottom: 15px;">
+        <tr>
+            <th style="width: 25%;">Customer Name / Company:</th><td colspan="3">{{ obj.customer_name }}</td>
+        </tr>
+        <tr>
+            <th>Department:</th><td>{{ obj.department|default:"-" }}</td>
+            <th style="width: 25%;">Designation:</th><td>{{ obj.designation|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>Contact # (Tel / Fax):</th><td>{{ obj.contact_no|default:"-" }}</td>
+            <th>e-mail:</th><td>{{ obj.email|default:"-" }}</td>
+        </tr>
+    </table>
+    
+    <div style="font-size: 11px; margin-bottom: 5px; font-style: italic;">
+        For each item below, kindly circle the number to the right that best fits your judgment of its quality.<br>
+        <b>Scale:</b> 4 = Excellent (A+), 3 = V. Good (A), 2 = Good (B), 1 = Poor (C)
+    </div>
+    
+    <table class="main-table" style="font-size: 11px; text-align: center; margin-bottom: 15px;">
+        <thead>
+            <tr>
+                <th style="width: 10%;">Sr.#</th>
+                <th style="width: 70%; text-align: left;">Description</th>
+                <th style="width: 20%;">Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td style="text-align: left;">How do you estimate time of delivery of our laboratory reports?</td><td>{{ obj.q1_time_of_delivery }}</td></tr>
+            <tr><td>2</td><td style="text-align: left;">How do you estimate politeness of our laboratory staff?</td><td>{{ obj.q2_politeness }}</td></tr>
+            <tr><td>3</td><td style="text-align: left;">How do you estimate accuracy of contents of our Laboratory reports?</td><td>{{ obj.q3_accuracy }}</td></tr>
+            <tr><td>4</td><td style="text-align: left;">How do you rate our response to your complaints & feedbacks?</td><td>{{ obj.q4_response }}</td></tr>
+            <tr><td>5</td><td style="text-align: left;">Rating of your overall satisfaction level?</td><td>{{ obj.q5_satisfaction }}</td></tr>
+            <tr><td>6</td><td style="text-align: left;">How do you estimate knowledge of our laboratory analyst?</td><td>{{ obj.q6_knowledge }}</td></tr>
+            <tr>
+                <th colspan="2" style="text-align: right;">Overall Rating (%)</th>
+                <th>
+                    {% widthratio obj.q1_time_of_delivery|add:obj.q2_politeness|add:obj.q3_accuracy|add:obj.q4_response|add:obj.q5_satisfaction|add:obj.q6_knowledge 24 100 %}%
+                </th>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div style="font-size: 11px; margin-bottom: 5px;"><i>Note: Below 50% rating will lead to raise the Corrective action</i></div>
+    
+    <div style="border: 1px solid black; padding: 10px; font-size: 11px; min-height: 80px; margin-bottom: 15px;">
+        <b>Any specific comments / complaint / suggestion or feedback you would like to add:</b><br><br>
+        {{ obj.comments|default:"-"|linebreaksbr }}
+    </div>
+
+    <div style="border: 1px dashed black; padding: 10px; font-size: 11px; min-height: 80px; margin-bottom: 15px; background-color: #f9f9f9;">
+        <b>Office Use: Improvement Areas.</b><br><br>
+        {{ obj.improvement_areas|default:"-"|linebreaksbr }}
+    </div>
+
+
+    
+    <table class="sig-table">
+        <tr>
+            <td>
+                {% if obj.prepared_by %}
+                    <strong>{{ obj.prepared_by.get_full_name|default:obj.prepared_by.username }}</strong><br>
+                    {{ obj.prepared_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Prepared By</strong>
+            </td>
+            <td>
+                {% if obj.checked_by %}
+                    <strong>{{ obj.checked_by.get_full_name|default:obj.checked_by.username }}</strong><br>
+                    {{ obj.checked_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Checked By</strong>
+            </td>
+            <td>
+                {% if obj.approved_by %}
+                    <strong>{{ obj.approved_by.get_full_name|default:obj.approved_by.username }}</strong><br>
+                    {{ obj.approved_at|date:"d-M-Y" }}
+                {% else %}
+                    _______________________
+                {% endif %}<br>
+                <strong>Approved By</strong>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

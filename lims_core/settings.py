@@ -365,6 +365,40 @@ UNFOLD = {
                 ]
             },
             {
+                "title": "LSP-19: Reporting of Results",
+                "separator": True,
+                "items": [
+                    {"title": "19.01 Assignment & Review", "icon": "assignment", "link": "/admin/resources/assignmentsummaryandreviewform_19_01/"},
+                ]
+            },
+            {
+                "title": "LSP-20: Control of Records",
+                "separator": True,
+                "items": [
+                    {"title": "20.01 Master List of Records", "icon": "folder_special", "link": "/admin/resources/masterlistofrecords_20_01/"},
+                    {"title": "20.02 Master List of Files", "icon": "folder", "link": "/admin/resources/masterlistoffiles_20_02/"},
+                ]
+            },
+            {
+                "title": "LSP-21: Customer Feedback",
+                "separator": True,
+                "items": [
+                    {"title": "21.01 Customer Feedback", "icon": "feedback", "link": "/admin/resources/customerfeedback_21_01/"},
+                    {"title": "21.02 Feedback Log", "icon": "receipt_long", "link": "/admin/resources/customerfeedbacklog_21_02/"},
+                ]
+            },
+            {
+                "title": "LSP-22: Handling of Test Items",
+                "separator": True,
+                "items": [
+                    {"title": "22.01 Sample Return", "icon": "keyboard_return", "link": "/admin/resources/samplereturnform_22_01/"},
+                    {"title": "22.02 Sample Disposal", "icon": "delete", "link": "/admin/resources/sampledisposalrecord_22_02/"},
+                    {"title": "22.03 Sample Receiving", "icon": "call_received", "link": "/admin/resources/samplereceivingform_22_03/"},
+                    {"title": "22.04 Sample Storage", "icon": "inventory_2", "link": "/admin/resources/samplestorageform_22_04/"},
+                    {"title": "22.05 Sample Handling", "icon": "science", "link": "/admin/resources/samplehandlingform_22_05/"},
+                ]
+            },
+            {
                 "title": "Purchasing & Suppliers",
                 "separator": True,
                 "items": [

@@ -2584,3 +2584,232 @@ class QualityObjectiveProgramStep(models.Model):
     responsibility = models.CharField(max_length=150)
     target_date = models.CharField(max_length=100)
     status = models.CharField(max_length=100)
+from django.db import models
+
+# ==========================================
+# LSP-19 Reporting of Results
+# ==========================================
+
+class AssignmentSummaryAndReviewForm_19_01(ISOApprovalModel):
+    product_name = models.CharField(max_length=150)
+    batch_lot_no = models.CharField(max_length=100)
+    qc_no = models.CharField(max_length=100)
+    assigned_date = models.DateField()
+    due_date = models.DateField()
+    container_type = models.CharField(max_length=100)
+    assigned_time = models.CharField(max_length=100)
+    due_time = models.CharField(max_length=100)
+    nature_of_sample = models.CharField(max_length=150, blank=True, null=True)
+    assigned_by = models.CharField(max_length=150, blank=True, null=True)
+    reviewed_by = models.CharField(max_length=150, blank=True, null=True)
+    verified_by = models.CharField(max_length=150, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Assignment, Summary & Review Form (19.01)"
+        verbose_name_plural = "Assignment, Summary & Review Forms (19.01)"
+
+class AssignmentSummaryItem(models.Model):
+    form = models.ForeignKey(AssignmentSummaryAndReviewForm_19_01, on_delete=models.CASCADE, related_name="items")
+    sr_no = models.IntegerField()
+    assigned_to = models.CharField(max_length=100)
+    parameter = models.CharField(max_length=150)
+    initials_date = models.CharField(max_length=100)
+    results_units = models.CharField(max_length=100)
+    results_date = models.CharField(max_length=100)
+    remarks = models.CharField(max_length=150, blank=True, null=True)
+
+
+# ==========================================
+# LSP-20 Control of Technical Records
+# ==========================================
+
+class MasterListOfRecords_20_01(ISOApprovalModel):
+    title = models.CharField(max_length=150, default="Master List of Records")
+
+    class Meta:
+        verbose_name = "Master List of Records (20.01)"
+        verbose_name_plural = "Master Lists of Records (20.01)"
+
+class MasterListRecordItem(models.Model):
+    master_list = models.ForeignKey(MasterListOfRecords_20_01, on_delete=models.CASCADE, related_name="items")
+    sr_no = models.IntegerField()
+    record_title = models.CharField(max_length=150)
+    record_code = models.CharField(max_length=100)
+    revision_no = models.CharField(max_length=50)
+    file_code = models.CharField(max_length=100)
+    file_location = models.CharField(max_length=150)
+    retention_period = models.CharField(max_length=100)
+    remarks = models.CharField(max_length=150, blank=True, null=True)
+
+
+class MasterListOfFiles_20_02(ISOApprovalModel):
+    title = models.CharField(max_length=150, default="Master List of Files and Folders")
+
+    class Meta:
+        verbose_name = "Master List of Files (20.02)"
+        verbose_name_plural = "Master Lists of Files (20.02)"
+
+class MasterListFileItem(models.Model):
+    master_list = models.ForeignKey(MasterListOfFiles_20_02, on_delete=models.CASCADE, related_name="items")
+    s_no = models.IntegerField()
+    file_code = models.CharField(max_length=100)
+    title_of_file = models.CharField(max_length=150)
+    volume = models.CharField(max_length=100)
+    keeper = models.CharField(max_length=100)
+    location = models.CharField(max_length=150)
+    status = models.CharField(max_length=100)
+
+
+# ==========================================
+# LSP-21 Customer Feedback
+# ==========================================
+
+class CustomerFeedback_21_01(ISOApprovalModel):
+    customer_name = models.CharField(max_length=150)
+    department = models.CharField(max_length=100, blank=True, null=True)
+    designation = models.CharField(max_length=100, blank=True, null=True)
+    contact_no = models.CharField(max_length=100, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+
+    RATING_CHOICES = [(4, 'Excellent (A+)'), (3, 'V. Good (A)'), (2, 'Good (B)'), (1, 'Poor (C)')]
+    
+    q1_time_of_delivery = models.IntegerField(choices=RATING_CHOICES, default=4)
+    q2_politeness = models.IntegerField(choices=RATING_CHOICES, default=4)
+    q3_accuracy = models.IntegerField(choices=RATING_CHOICES, default=4)
+    q4_response = models.IntegerField(choices=RATING_CHOICES, default=4)
+    q5_satisfaction = models.IntegerField(choices=RATING_CHOICES, default=4)
+    q6_knowledge = models.IntegerField(choices=RATING_CHOICES, default=4)
+    
+    comments = models.TextField(blank=True, null=True)
+    improvement_areas = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Customer Feedback Form (21.01)"
+        verbose_name_plural = "Customer Feedback Forms (21.01)"
+
+
+class CustomerFeedbackLog_21_02(ISOApprovalModel):
+    month = models.CharField(max_length=100)
+    year = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = "Customer Feedback Log (21.02)"
+        verbose_name_plural = "Customer Feedback Logs (21.02)"
+
+class CustomerFeedbackLogItem(models.Model):
+    log = models.ForeignKey(CustomerFeedbackLog_21_02, on_delete=models.CASCADE, related_name="items")
+    s_no = models.IntegerField()
+    date = models.DateField()
+    customer_name = models.CharField(max_length=150)
+    a_score = models.IntegerField(default=0)
+    b_score = models.IntegerField(default=0)
+    c_score = models.IntegerField(default=0)
+    d_score = models.IntegerField(default=0)
+    e_score = models.IntegerField(default=0)
+    f_score = models.IntegerField(default=0)
+    rating_percent = models.FloatField(default=0.0)
+    ranking = models.CharField(max_length=100, blank=True, null=True)
+    car_no = models.CharField(max_length=100, blank=True, null=True)
+    assigned_to = models.CharField(max_length=100, blank=True, null=True)
+    signed_by_aqcm = models.CharField(max_length=100, blank=True, null=True)
+    remarks = models.CharField(max_length=150, blank=True, null=True)
+
+
+# ==========================================
+# LSP-22 Handling of Test and Calibration
+# ==========================================
+
+class SampleReturnForm_22_01(ISOApprovalModel):
+    date = models.DateField()
+    sample_id = models.CharField(max_length=100)
+    sample_return_date = models.DateField()
+    reason_for_return = models.TextField()
+    approved_by_ceo = models.CharField(max_length=150, blank=True, null=True)
+    signature_client = models.CharField(max_length=150, blank=True, null=True)
+    signature_qcm = models.CharField(max_length=150, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Sample Return Form (22.01)"
+        verbose_name_plural = "Sample Return Forms (22.01)"
+
+
+class SampleDisposalRecord_22_02(ISOApprovalModel):
+    month = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Sample Disposal Record (22.02)"
+        verbose_name_plural = "Sample Disposal Records (22.02)"
+
+class SampleDisposalItem(models.Model):
+    record = models.ForeignKey(SampleDisposalRecord_22_02, on_delete=models.CASCADE, related_name="items")
+    sr_no = models.IntegerField()
+    sample_id = models.CharField(max_length=100)
+    section = models.CharField(max_length=100)
+    retention_period = models.CharField(max_length=100)
+    from_date = models.DateField()
+    to_date = models.DateField()
+    sample_discard_date = models.DateField()
+    sample_discarded_by = models.CharField(max_length=150)
+
+
+class SampleReceivingForm_22_03(ISOApprovalModel):
+    sample_receiving_date = models.DateField()
+    lab_sample_id = models.CharField(max_length=100)
+    sample_storage_conditions = models.CharField(max_length=150)
+    test_parameter = models.CharField(max_length=150)
+    requested_test_method = models.CharField(max_length=150)
+    returnable_sample = models.BooleanField(default=False)
+    
+    package_sealed = models.BooleanField(default=False)
+    package_leakproof = models.BooleanField(default=False)
+    properly_labelled = models.BooleanField(default=False)
+    transported_properly = models.BooleanField(default=False)
+    transported_time = models.BooleanField(default=False)
+    adequate_weight = models.BooleanField(default=False)
+    completeness_of_form = models.BooleanField(default=False)
+    concordance_with_details = models.BooleanField(default=False)
+    
+    signature_qc_lab_receivers = models.CharField(max_length=150, blank=True, null=True)
+    signature_customer = models.CharField(max_length=150, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Sample Receiving Form (22.03)"
+        verbose_name_plural = "Sample Receiving Forms (22.03)"
+
+
+class SampleStorageForm_22_04(ISOApprovalModel):
+    month = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Sample Storage Form (22.04)"
+        verbose_name_plural = "Sample Storage Forms (22.04)"
+
+class SampleStorageItem(models.Model):
+    form = models.ForeignKey(SampleStorageForm_22_04, on_delete=models.CASCADE, related_name="items")
+    sr_no = models.IntegerField()
+    sample_id = models.CharField(max_length=100)
+    nature_of_sample = models.CharField(max_length=150)
+    storage_location = models.CharField(max_length=150)
+    storage_date = models.DateField()
+    disposal_date = models.DateField(blank=True, null=True)
+    stored_by = models.CharField(max_length=100)
+
+
+class SampleHandlingForm_22_05(ISOApprovalModel):
+    month = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Sample Handling Form (22.05)"
+        verbose_name_plural = "Sample Handling Forms (22.05)"
+
+class SampleHandlingItem(models.Model):
+    form = models.ForeignKey(SampleHandlingForm_22_05, on_delete=models.CASCADE, related_name="items")
+    sr_no = models.IntegerField()
+    analyst = models.CharField(max_length=100)
+    sample_id = models.CharField(max_length=100)
+    requested_test = models.CharField(max_length=150)
+    sample_receiving_date = models.DateField()
+    analysis_date = models.DateField()
+    result_date = models.DateField()
+    reporting_date = models.DateField()
+    om_sign = models.CharField(max_length=100, blank=True, null=True)

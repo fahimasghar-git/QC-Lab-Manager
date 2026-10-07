@@ -77,6 +77,17 @@ from .models import (
     QualityObjectiveForm_18_01, QualityObjectiveItem, QualityObjectiveProgramStep
 )
 
+
+from .models import (
+    AssignmentSummaryAndReviewForm_19_01, AssignmentSummaryItem,
+    MasterListOfRecords_20_01, MasterListRecordItem,
+    MasterListOfFiles_20_02, MasterListFileItem,
+    CustomerFeedback_21_01, CustomerFeedbackLog_21_02, CustomerFeedbackLogItem,
+    SampleReturnForm_22_01, SampleDisposalRecord_22_02, SampleDisposalItem,
+    SampleReceivingForm_22_03, SampleStorageForm_22_04, SampleStorageItem,
+    SampleHandlingForm_22_05, SampleHandlingItem
+)
+
 from .models import AuthorizedPersonnelList_2_06, NewInductionOrientation_2_11, InductionOrientationItem, Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
 from django.utils import timezone
 
@@ -1305,4 +1316,108 @@ class QualityObjectiveProgramStepInline(StackedInline):
 class QualityObjectiveFormAdmin(ModelAdmin):
     list_display = ('year', 'status')
     inlines = [QualityObjectiveItemInline, QualityObjectiveProgramStepInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+# ==========================================
+# LSP-19 Admin
+# ==========================================
+
+class AssignmentSummaryItemInline(StackedInline):
+    model = AssignmentSummaryItem
+    extra = 1
+
+@admin.register(AssignmentSummaryAndReviewForm_19_01)
+class AssignmentSummaryAndReviewFormAdmin(ModelAdmin):
+    list_display = ('qc_no', 'product_name', 'assigned_date', 'status')
+    inlines = [AssignmentSummaryItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+
+# ==========================================
+# LSP-20 Admin
+# ==========================================
+
+class MasterListRecordItemInline(StackedInline):
+    model = MasterListRecordItem
+    extra = 1
+
+@admin.register(MasterListOfRecords_20_01)
+class MasterListOfRecordsAdmin(ModelAdmin):
+    list_display = ('title', 'status')
+    inlines = [MasterListRecordItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class MasterListFileItemInline(StackedInline):
+    model = MasterListFileItem
+    extra = 1
+
+@admin.register(MasterListOfFiles_20_02)
+class MasterListOfFilesAdmin(ModelAdmin):
+    list_display = ('title', 'status')
+    inlines = [MasterListFileItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+
+# ==========================================
+# LSP-21 Admin
+# ==========================================
+
+@admin.register(CustomerFeedback_21_01)
+class CustomerFeedbackAdmin(ModelAdmin):
+    list_display = ('customer_name', 'department', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class CustomerFeedbackLogItemInline(StackedInline):
+    model = CustomerFeedbackLogItem
+    extra = 1
+
+@admin.register(CustomerFeedbackLog_21_02)
+class CustomerFeedbackLogAdmin(ModelAdmin):
+    list_display = ('month', 'year', 'status')
+    inlines = [CustomerFeedbackLogItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+
+# ==========================================
+# LSP-22 Admin
+# ==========================================
+
+@admin.register(SampleReturnForm_22_01)
+class SampleReturnFormAdmin(ModelAdmin):
+    list_display = ('sample_id', 'date', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class SampleDisposalItemInline(StackedInline):
+    model = SampleDisposalItem
+    extra = 1
+
+@admin.register(SampleDisposalRecord_22_02)
+class SampleDisposalRecordAdmin(ModelAdmin):
+    list_display = ('month', 'status')
+    inlines = [SampleDisposalItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+@admin.register(SampleReceivingForm_22_03)
+class SampleReceivingFormAdmin(ModelAdmin):
+    list_display = ('lab_sample_id', 'sample_receiving_date', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class SampleStorageItemInline(StackedInline):
+    model = SampleStorageItem
+    extra = 1
+
+@admin.register(SampleStorageForm_22_04)
+class SampleStorageFormAdmin(ModelAdmin):
+    list_display = ('month', 'status')
+    inlines = [SampleStorageItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class SampleHandlingItemInline(StackedInline):
+    model = SampleHandlingItem
+    extra = 1
+
+@admin.register(SampleHandlingForm_22_05)
+class SampleHandlingFormAdmin(ModelAdmin):
+    list_display = ('month', 'status')
+    inlines = [SampleHandlingItemInline]
     actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
