@@ -162,6 +162,66 @@ UNFOLD = {
     "SITE_TITLE": "QC Lab Manager",
     "SITE_HEADER": "ISO 17025 LIMS",
     "SITE_URL": "/",
+    
+    
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": True,
+        "navigation": [
+            {
+                "title": "LSP-01: Competence & Auth",
+                "separator": True,
+                "items": [
+                    {"title": "1.01 Authorization Permit", "icon": "verified", "link": "/admin/resources/personnelauthorizationpermit/"},
+                    {"title": "1.01C Internal Samples", "icon": "science", "link": "/admin/resources/competencyevalinternalsample/"},
+                    {"title": "1.01D PT Samples", "icon": "biotech", "link": "/admin/resources/competencyevalptsample/"},
+                    {"title": "1.01E Grading (Equipment)", "icon": "build", "link": "/admin/resources/gradingmatrixequipment/"},
+                    {"title": "1.01F Grading (Product)", "icon": "inventory", "link": "/admin/resources/gradingmatrixproduct/"},
+                    {"title": "1.01G Grading (Document)", "icon": "description", "link": "/admin/resources/gradingmatrixdocument/"},
+                    {"title": "1.02 Authorized Analyst List", "icon": "list_alt", "link": "/admin/resources/authorizedanalystlist/"},
+                    {"title": "1.03 Technical Personnel List", "icon": "groups", "link": "/admin/resources/technicalpersonnellist/"},
+                    {"title": "1.04 Competency Monitoring", "icon": "monitoring", "link": "/admin/resources/competencymonitoring/"},
+                ]
+            },
+            {
+                "title": "LSP-02: Training Management",
+                "separator": True,
+                "items": [
+                    {"title": "2.02 Training Need Assessment", "icon": "assignment", "link": "/admin/resources/trainingneedassessment/"},
+                    {"title": "2.03 Annual Training Plan", "icon": "event_note", "link": "/admin/resources/annualtrainingplan/"},
+                    {"title": "2.04 Attendance Sheet", "icon": "co_present", "link": "/admin/resources/trainingattendancesheet/"},
+                    {"title": "2.05 Training Evaluation", "icon": "grading", "link": "/admin/resources/trainingevaluation/"},
+                    {"title": "2.06 Authorized Personnel List", "icon": "recent_actors", "link": "/admin/resources/authorizedpersonnellist_2_06/"},
+                    {"title": "2.07 Training Feedback", "icon": "feedback", "link": "/admin/resources/trainingfeedback/"},
+                    {"title": "2.08 Individual Training Record", "icon": "person_search", "link": "/admin/resources/individualtrainingrecord/"},
+                    {"title": "2.09 Orientation Plan", "icon": "directions", "link": "/admin/resources/orientationplan/"},
+                    {"title": "2.10 Competence Reassessment", "icon": "refresh", "link": "/admin/resources/competencereassessment/"},
+                    {"title": "2.11 New Induction Orientation", "icon": "emoji_people", "link": "/admin/resources/newinductionorientation_2_11/"},
+                    {"title": "2.12 Trainer Evaluation", "icon": "record_voice_over", "link": "/admin/resources/trainerevaluation/"},
+                ]
+            },
+            {
+                "title": "Equipment & Maintenance",
+                "separator": True,
+                "items": [
+                    {"title": "Equipments", "icon": "precision_manufacturing", "link": "/admin/resources/equipment/"},
+                    {"title": "Calibration Records", "icon": "tune", "link": "/admin/resources/calibrationrecord/"},
+                    {"title": "Maintenance Records", "icon": "handyman", "link": "/admin/resources/equipmentmaintenance/"},
+                ]
+            },
+            {
+                "title": "Purchasing & Suppliers",
+                "separator": True,
+                "items": [
+                    {"title": "Purchase Requests", "icon": "shopping_cart", "link": "/admin/resources/purchaserequest/"},
+                    {"title": "Comparative Statements", "icon": "compare_arrows", "link": "/admin/resources/comparativestatement/"},
+                    {"title": "Suppliers", "icon": "storefront", "link": "/admin/resources/supplier/"},
+                    {"title": "Supplier Evaluation Plans", "icon": "fact_check", "link": "/admin/resources/supplierevaluationplan/"},
+                    {"title": "Product/Service Inspections", "icon": "policy", "link": "/admin/resources/productserviceinspection/"},
+                ]
+            },
+        ]
+    },
     "COLORS": {
         "primary": {
             "50": "239 246 255",
@@ -176,7 +236,12 @@ UNFOLD = {
             "900": "30 58 138",
         },
     },
+    
+    "STYLES": [
+        lambda request: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css",
+    ],
     "SCRIPTS": [
+
         "/static/js/custom_admin.js?v=3",
     ]
 }
