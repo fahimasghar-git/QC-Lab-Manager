@@ -164,6 +164,7 @@ UNFOLD = {
     "SITE_URL": "/",
     
     
+    
     "SIDEBAR": {
         "show_search": True,
         "show_all_applications": True,
@@ -201,12 +202,22 @@ UNFOLD = {
                 ]
             },
             {
-                "title": "Equipment & Maintenance",
+                "title": "LSP-03: Environmental Conditions",
                 "separator": True,
                 "items": [
-                    {"title": "Equipments", "icon": "precision_manufacturing", "link": "/admin/resources/equipment/"},
-                    {"title": "Calibration Records", "icon": "tune", "link": "/admin/resources/calibrationrecord/"},
-                    {"title": "Maintenance Records", "icon": "handyman", "link": "/admin/resources/equipmentmaintenance/"},
+                    {"title": "3.01 Environmental Monitoring", "icon": "thermostat", "link": "/admin/resources/environmentalmonitoring_3_01/"},
+                    {"title": "3.02 Humidity Control Chart", "icon": "water_drop", "link": "/admin/resources/humiditycontrolchart_3_02/"},
+                    {"title": "3.03 Temperature Control Chart", "icon": "ac_unit", "link": "/admin/resources/temperaturecontrolchart_3_03/"},
+                ]
+            },
+            {
+                "title": "LSP-04: Equipment Control",
+                "separator": True,
+                "items": [
+                    {"title": "4.01 Corrective Action Request", "icon": "report_problem", "link": "/admin/resources/correctiveactionrequest_4_01/"},
+                    {"title": "4.02 Master List of Equipment", "icon": "precision_manufacturing", "link": "/admin/resources/masterlistequipment_4_02/"},
+                    {"title": "4.03 Equipment Maintenance", "icon": "handyman", "link": "/admin/resources/equipmentmaintenancerecord_4_03/"},
+                    {"title": "4.04 Calibration Program", "icon": "speed", "link": "/admin/resources/calibrationprogram_4_04/"},
                 ]
             },
             {

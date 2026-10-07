@@ -6,6 +6,17 @@ from .pdf_utils import generate_iso_pdf
 from .approval_utils import action_mark_prepared, action_mark_checked, action_mark_approved
 from unfold.admin import TabularInline, StackedInline
 from simple_history.admin import SimpleHistoryAdmin
+
+from .models import (
+    EnvironmentalMonitoring_3_01, EnvironmentalMonitoringItem,
+    HumidityControlChart_3_02, HumidityControlItem,
+    TemperatureControlChart_3_03, TemperatureControlItem,
+    CorrectiveActionRequest_4_01,
+    MasterListEquipment_4_02, MasterListEquipmentItem,
+    EquipmentMaintenanceRecord_4_03, MaintenanceRecordItem,
+    CalibrationProgram_4_04, CalibrationProgramItem
+)
+
 from .models import AuthorizedPersonnelList_2_06, NewInductionOrientation_2_11, InductionOrientationItem, Equipment, CalibrationRecord, EquipmentMaintenance, CompetencyRecord, CompetencyEvaluation, ReagentStandard, Supplier, PurchaseRequest, ProductServiceInspection, PersonnelAuthorization, ComparativeStatement, ComparativeStatementSupplier, SupplierEvaluationPlan, SupplierEvaluationPlanItem
 from django.utils import timezone
 
@@ -622,3 +633,70 @@ class InductionOrientationItemInline(StackedInline):
 class NewInductionOrientationAdmin(ModelAdmin):
     list_display = ('candidate_name', 'joining_date', 'probation_period')
     inlines = [InductionOrientationItemInline]
+
+# LSP-03 Admin
+class EnvironmentalMonitoringItemInline(StackedInline):
+    model = EnvironmentalMonitoringItem
+    extra = 1
+
+@admin.register(EnvironmentalMonitoring_3_01)
+class EnvironmentalMonitoringAdmin(ModelAdmin):
+    list_display = ('month', 'year', 'location', 'status')
+    inlines = [EnvironmentalMonitoringItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class HumidityControlItemInline(StackedInline):
+    model = HumidityControlItem
+    extra = 1
+
+@admin.register(HumidityControlChart_3_02)
+class HumidityControlChartAdmin(ModelAdmin):
+    list_display = ('month', 'year', 'location', 'status')
+    inlines = [HumidityControlItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class TemperatureControlItemInline(StackedInline):
+    model = TemperatureControlItem
+    extra = 1
+
+@admin.register(TemperatureControlChart_3_03)
+class TemperatureControlChartAdmin(ModelAdmin):
+    list_display = ('month', 'year', 'location', 'status')
+    inlines = [TemperatureControlItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+# LSP-04 Admin
+@admin.register(CorrectiveActionRequest_4_01)
+class CorrectiveActionRequestAdmin(ModelAdmin):
+    list_display = ('car_no', 'department', 'initiated_on', 'initiated_by', 'status')
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class MasterListEquipmentItemInline(StackedInline):
+    model = MasterListEquipmentItem
+    extra = 1
+
+@admin.register(MasterListEquipment_4_02)
+class MasterListEquipmentAdmin(ModelAdmin):
+    list_display = ('lab_name', 'status')
+    inlines = [MasterListEquipmentItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class MaintenanceRecordItemInline(StackedInline):
+    model = MaintenanceRecordItem
+    extra = 1
+
+@admin.register(EquipmentMaintenanceRecord_4_03)
+class EquipmentMaintenanceRecordAdmin(ModelAdmin):
+    list_display = ('for_the_year', 'status')
+    inlines = [MaintenanceRecordItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']
+
+class CalibrationProgramItemInline(StackedInline):
+    model = CalibrationProgramItem
+    extra = 1
+
+@admin.register(CalibrationProgram_4_04)
+class CalibrationProgramAdmin(ModelAdmin):
+    list_display = ('year', 'status')
+    inlines = [CalibrationProgramItemInline]
+    actions = [action_mark_prepared, action_mark_checked, action_mark_approved, 'generate_pdf']

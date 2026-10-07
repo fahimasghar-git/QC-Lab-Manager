@@ -1209,3 +1209,152 @@ class InductionOrientationItem(models.Model):
     responsibility = models.CharField(max_length=255)
     trainer = models.CharField(max_length=255)
     training_duration = models.CharField(max_length=100)
+from django.db import models
+from django.conf import settings
+# Use existing ISOApprovalModel from the same file
+
+# ==========================================
+# LSP-03 Environmental Conditions
+# ==========================================
+
+class EnvironmentalMonitoring_3_01(ISOApprovalModel):
+    month = models.CharField(max_length=50)
+    year = models.IntegerField()
+    location = models.CharField(max_length=255, verbose_name="Location / Warehouse")
+    temperature_range = models.CharField(max_length=100, default="25 ±10 °C")
+    humidity_range = models.CharField(max_length=100, default="50% RH ±20 RH")
+
+    class Meta:
+        verbose_name = "Environmental Monitoring (3.01)"
+        verbose_name_plural = "Environmental Monitoring (3.01)"
+
+class EnvironmentalMonitoringItem(models.Model):
+    monitoring = models.ForeignKey(EnvironmentalMonitoring_3_01, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    parameter = models.CharField(max_length=100, default="Temperature / Humidity")
+    day_shift_11am = models.CharField(max_length=50, blank=True, null=True)
+    day_shift_3pm = models.CharField(max_length=50, blank=True, null=True)
+    day_recorded_by = models.CharField(max_length=100, blank=True, null=True)
+    night_shift_11pm = models.CharField(max_length=50, blank=True, null=True)
+    daily_average = models.CharField(max_length=50, blank=True, null=True)
+    night_recorded_by = models.CharField(max_length=100, blank=True, null=True)
+    checked_by = models.CharField(max_length=100, blank=True, null=True)
+
+class HumidityControlChart_3_02(ISOApprovalModel):
+    month = models.CharField(max_length=50)
+    year = models.IntegerField()
+    location = models.CharField(max_length=255)
+    
+    class Meta:
+        verbose_name = "Humidity Control Chart (3.02)"
+        verbose_name_plural = "Humidity Control Charts (3.02)"
+
+class HumidityControlItem(models.Model):
+    chart = models.ForeignKey(HumidityControlChart_3_02, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    reading = models.FloatField(null=True, blank=True)
+    variance = models.FloatField(null=True, blank=True)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+
+class TemperatureControlChart_3_03(ISOApprovalModel):
+    month = models.CharField(max_length=50)
+    year = models.IntegerField()
+    location = models.CharField(max_length=255)
+    
+    class Meta:
+        verbose_name = "Temperature Control Chart (3.03)"
+        verbose_name_plural = "Temperature Control Charts (3.03)"
+
+class TemperatureControlItem(models.Model):
+    chart = models.ForeignKey(TemperatureControlChart_3_03, on_delete=models.CASCADE, related_name="items")
+    date = models.DateField()
+    reading = models.FloatField(null=True, blank=True)
+    variance = models.FloatField(null=True, blank=True)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+
+# ==========================================
+# LSP-04 Equipment Control
+# ==========================================
+
+class CorrectiveActionRequest_4_01(ISOApprovalModel):
+    month = models.CharField(max_length=50)
+    department = models.CharField(max_length=150, default="QC Lab")
+    car_no = models.CharField(max_length=100)
+    initiated_on = models.DateField()
+    initiated_by = models.CharField(max_length=150)
+    
+    DUE_TO_CHOICES = [
+        ('NC', 'NC'),
+        ('Complaint', 'Complaint'),
+        ('Accident/Incident', 'Accident/Incident'),
+        ('Audit NC', 'Audit NC'),
+        ('Suggestion/Improvement', 'Suggestion/Improvement'),
+        ('Technical Fault', 'Technical Fault'),
+        ('Others', 'Others'),
+    ]
+    initiated_due_to = models.CharField(max_length=50, choices=DUE_TO_CHOICES)
+    description = models.TextField()
+    
+    accepted = models.BooleanField(default=False)
+    rejected = models.BooleanField(default=False)
+    marked_to = models.CharField(max_length=150, blank=True, null=True)
+    date_marked = models.DateField(blank=True, null=True)
+    
+    root_cause_analysis = models.TextField(blank=True, null=True)
+    proposed_action = models.TextField(blank=True, null=True)
+    target_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Corrective Action Request (4.01)"
+        verbose_name_plural = "Corrective Action Requests (4.01)"
+
+class MasterListEquipment_4_02(ISOApprovalModel):
+    lab_name = models.CharField(max_length=255, default="Quality Control Laboratory")
+    
+    class Meta:
+        verbose_name = "Master List of Equipments (4.02)"
+        verbose_name_plural = "Master List of Equipments (4.02)"
+
+class MasterListEquipmentItem(models.Model):
+    master_list = models.ForeignKey(MasterListEquipment_4_02, on_delete=models.CASCADE, related_name="items")
+    name = models.CharField(max_length=255)
+    identification_no = models.CharField(max_length=100)
+    operating_range = models.CharField(max_length=100)
+    location = models.CharField(max_length=150)
+    calibration_certificate_no = models.CharField(max_length=150, blank=True, null=True)
+    calibration_certificate_date = models.DateField(blank=True, null=True)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+
+class EquipmentMaintenanceRecord_4_03(ISOApprovalModel):
+    for_the_year = models.CharField(max_length=50, help_text="e.g., 2024-2025")
+    
+    class Meta:
+        verbose_name = "Equipment Maintenance Record (4.03)"
+        verbose_name_plural = "Equipment Maintenance Records (4.03)"
+
+class MaintenanceRecordItem(models.Model):
+    record = models.ForeignKey(EquipmentMaintenanceRecord_4_03, on_delete=models.CASCADE, related_name="items")
+    name = models.CharField(max_length=255)
+    identification_no = models.CharField(max_length=100)
+    make_model_serial = models.CharField(max_length=255)
+    location_and_manual = models.CharField(max_length=255)
+    frequency = models.CharField(max_length=100)
+    maintenance_date = models.DateField()
+    parts_repaired_replaced = models.CharField(max_length=255, blank=True, null=True)
+    maintenance_by = models.CharField(max_length=150)
+
+class CalibrationProgram_4_04(ISOApprovalModel):
+    year = models.CharField(max_length=50, help_text="e.g., 2024")
+    
+    class Meta:
+        verbose_name = "Calibration Program (4.04)"
+        verbose_name_plural = "Calibration Programs (4.04)"
+
+class CalibrationProgramItem(models.Model):
+    program = models.ForeignKey(CalibrationProgram_4_04, on_delete=models.CASCADE, related_name="items")
+    name = models.CharField(max_length=255)
+    identification_no = models.CharField(max_length=100)
+    location = models.CharField(max_length=150)
+    frequency = models.CharField(max_length=100)
+    schedule_month = models.CharField(max_length=100)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
