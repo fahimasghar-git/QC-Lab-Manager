@@ -12,9 +12,9 @@
 </div>
 
 <!-- Stat Cards -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
     <!-- Card 1 -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden">
         <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-vial text-6xl text-primary"></i></div>
         <div>
             <p class="text-sm font-medium text-slate-500 uppercase tracking-wide">Total Samples</p>
@@ -24,7 +24,7 @@
     </div>
     
     <!-- Card 2 -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden">
         <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-hourglass-half text-6xl text-amber-500"></i></div>
         <div>
             <p class="text-sm font-medium text-slate-500 uppercase tracking-wide">Pending Samples</p>
@@ -34,7 +34,7 @@
     </div>
     
     <!-- Card 3 -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden">
         <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-check-circle text-6xl text-emerald-500"></i></div>
         <div>
             <p class="text-sm font-medium text-slate-500 uppercase tracking-wide">Approved</p>
@@ -44,7 +44,7 @@
     </div>
     
     <!-- Card 4 -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden">
         <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-wrench text-6xl text-rose-500"></i></div>
         <div>
             <p class="text-sm font-medium text-slate-500 uppercase tracking-wide">Eq. Out of Service</p>
@@ -62,13 +62,13 @@
         <!-- Analyst Queue -->
         {% if can_see_analyst_queue and testing_queue %}
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="bg-primary/5 px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+            <div class="bg-primary/5 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 flex items-center justify-between">
                 <h3 class="font-bold text-primary flex items-center"><i class="fas fa-flask mr-2"></i> Action Required: Assigned Tests</h3>
                 <span class="bg-primary text-white text-xs px-2.5 py-1 rounded-full font-semibold">{{ testing_queue|length }}</span>
             </div>
             <ul class="divide-y divide-slate-100">
                 {% for item in testing_queue %}
-                <li class="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                <li class="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                     <div>
                         <p class="text-sm font-medium text-slate-800">{{ item.id }}</p>
                         <p class="text-xs text-slate-500 mt-1">Status: <span class="font-medium text-amber-600">{{ item.status }}</span></p>
@@ -85,13 +85,13 @@
         <!-- AQCM Queue -->
         {% if can_see_aqcm_queue and verification_queue %}
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="bg-amber-50 px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+            <div class="bg-amber-50 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 flex items-center justify-between">
                 <h3 class="font-bold text-amber-600 flex items-center"><i class="fas fa-check-double mr-2"></i> Action Required: Verifications (AQCM)</h3>
                 <span class="bg-amber-500 text-white text-xs px-2.5 py-1 rounded-full font-semibold">{{ verification_queue|length }}</span>
             </div>
             <ul class="divide-y divide-slate-100">
                 {% for item in verification_queue %}
-                <li class="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                <li class="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                     <div>
                         <p class="text-sm font-medium text-slate-800">{{ item.id }}</p>
                         <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800 mt-1">Sample Verification</span>
@@ -108,13 +108,13 @@
         <!-- QCM Queue -->
         {% if can_see_qcm_queue and approval_queue %}
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="bg-rose-50 px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+            <div class="bg-rose-50 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 flex items-center justify-between">
                 <h3 class="font-bold text-rose-600 flex items-center"><i class="fas fa-signature mr-2"></i> Action Required: Final Approvals (QCM)</h3>
                 <span class="bg-rose-500 text-white text-xs px-2.5 py-1 rounded-full font-semibold">{{ approval_queue|length }}</span>
             </div>
             <ul class="divide-y divide-slate-100">
                 {% for item in approval_queue %}
-                <li class="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                <li class="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                     <div>
                         <p class="text-sm font-medium text-slate-800">{{ item.id }}</p>
                         <div class="flex space-x-2 mt-1">
@@ -133,7 +133,7 @@
 
         <!-- Recent Samples -->
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-200">
+            <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200">
                 <h3 class="font-bold text-slate-800 flex items-center"><i class="fas fa-clock mr-2 text-slate-400"></i> Recently Received Samples</h3>
             </div>
             <div class="overflow-x-auto">
@@ -149,9 +149,9 @@
                     <tbody class="bg-white divide-y divide-slate-200">
                         {% for sample in recent_samples %}
                         <tr class="hover:bg-slate-50">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary"><a href="/admin/samples/sample/{{ sample.id }}/change/">{{ sample.sample_id }}</a></td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{{ sample.product_name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium text-primary"><a href="/admin/samples/sample/{{ sample.id }}/change/">{{ sample.sample_id }}</a></td>
+                            <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm text-slate-600">{{ sample.product_name }}</td>
+                            <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                 {% if sample.status == 'APPROVED' %}
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-emerald-100 text-emerald-800">Approved</span>
                                 {% elif sample.status == 'PENDING_APPROVAL' %}
@@ -160,7 +160,7 @@
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800">{{ sample.get_status_display }}</span>
                                 {% endif %}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{ sample.received_date|date:"M d, Y" }}</td>
+                            <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm text-slate-500">{{ sample.received_date|date:"M d, Y" }}</td>
                         </tr>
                         {% empty %}
                         <tr>
@@ -178,7 +178,7 @@
     <div class="space-y-6">
         
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+            <div class="bg-slate-50 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200">
                 <h3 class="font-bold text-slate-800 flex items-center"><i class="fas fa-bolt mr-2 text-amber-500"></i> Quick Actions</h3>
             </div>
             <div class="p-6 space-y-3">
@@ -196,7 +196,7 @@
         </div>
 
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="bg-slate-50 px-6 py-4 border-b border-slate-200">
+            <div class="bg-slate-50 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200">
                 <h3 class="font-bold text-slate-800 flex items-center"><i class="fas fa-shield-alt mr-2 text-emerald-500"></i> ISO 17025 Compliance</h3>
             </div>
             <div class="p-6 space-y-4">
