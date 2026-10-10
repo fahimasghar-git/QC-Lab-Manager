@@ -82,346 +82,441 @@
 
 
 
-            <div class="pt-4 pb-1"><p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Clause 6: Resources</p></div>
-            <!-- Clause 6.2 (Personnel) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+            <div class="pt-4 pb-1"><p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">ISO 17025 System</p></div>
+            <!-- Clause 4: General -->
+            <div x-data="{ mainOpen: false }" class="space-y-1 mt-2">
+                <button @click="mainOpen = !mainOpen" class="w-full flex items-center justify-between px-3 py-3 text-white bg-slate-800/50 hover:bg-slate-800 rounded-lg font-semibold transition-colors border border-slate-700/50">
                     <div class="flex items-center">
-                        <i class="fas fa-users w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 6.2 (Personnel)</span>
+                        <i class="fas fa-gavel w-5 text-center text-primary"></i>
+                        <span class="ml-3 tracking-wide text-sm">Clause 4: General</span>
                     </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="mainOpen ? 'rotate-180' : ''"></i>
                 </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/personnelauthorizationpermit/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">1.01 Authorization Permit</a>
-                    <a href="/admin/resources/competencyevalinternalsample/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">1.01C Internal Samples</a>
-                    <a href="/admin/resources/competencyevalptsample/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">1.01D PT Samples</a>
-                    <a href="/admin/resources/gradingmatrixequipment/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">1.01E Grading (Equipment)</a>
-                    <a href="/admin/resources/gradingmatrixproduct/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">1.01F Grading (Product)</a>
-                    <a href="/admin/resources/gradingmatrixdocument/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">1.01G Grading (Document)</a>
-                    <a href="/admin/resources/authorizedanalystlist/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">1.02 Authorized Analyst List</a>
-                    <a href="/admin/resources/technicalpersonnellist/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">1.03 Technical Personnel List</a>
-                    <a href="/admin/resources/competencymonitoring/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">1.04 Competency Monitoring</a>
+                <div x-show="mainOpen" x-collapse x-cloak class="pl-2 pr-1 space-y-1 pb-2 pt-1 border-l-2 border-slate-800 ml-4">
+                <!-- Clause 4.1 (Impartiality) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-balance-scale w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 4.1 (Impartiality)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <span class="block py-1.5 text-xs text-slate-500 italic">No forms digitized yet.</span>
+                    </div>
+                </div>
+                <!-- Clause 4.2 (Confidentiality) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-user-secret w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 4.2 (Confidentiality)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <span class="block py-1.5 text-xs text-slate-500 italic">No forms digitized yet.</span>
+                    </div>
+                </div>
                 </div>
             </div>
-            <!-- Clause 6.2 (Training) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+            <!-- Clause 5: Structural -->
+            <div x-data="{ mainOpen: false }" class="space-y-1 mt-2">
+                <button @click="mainOpen = !mainOpen" class="w-full flex items-center justify-between px-3 py-3 text-white bg-slate-800/50 hover:bg-slate-800 rounded-lg font-semibold transition-colors border border-slate-700/50">
                     <div class="flex items-center">
-                        <i class="fas fa-graduation-cap w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 6.2 (Training)</span>
+                        <i class="fas fa-building w-5 text-center text-primary"></i>
+                        <span class="ml-3 tracking-wide text-sm">Clause 5: Structural</span>
                     </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="mainOpen ? 'rotate-180' : ''"></i>
                 </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/trainingneedassessment/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">2.02 Training Need Assessment</a>
-                    <a href="/admin/resources/annualtrainingplan/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">2.03 Annual Training Plan</a>
-                    <a href="/admin/resources/trainingattendancesheet/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">2.04 Attendance Sheet</a>
-                    <a href="/admin/resources/trainingevaluation/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">2.05 Training Evaluation</a>
-                    <a href="/admin/resources/authorizedpersonnellist_2_06/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">2.06 Authorized Personnel List</a>
-                    <a href="/admin/resources/trainingfeedback/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">2.07 Training Feedback</a>
-                    <a href="/admin/resources/individualtrainingrecord/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">2.08 Individual Training Record</a>
-                    <a href="/admin/resources/orientationplan/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">2.09 Orientation Plan</a>
-                    <a href="/admin/resources/competencereassessment/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">2.10 Competence Reassessment</a>
-                    <a href="/admin/resources/newinductionorientation_2_11/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">2.11 New Induction Orientation</a>
-                    <a href="/admin/resources/trainerevaluation/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">2.12 Trainer Evaluation</a>
+                <div x-show="mainOpen" x-collapse x-cloak class="pl-2 pr-1 space-y-1 pb-2 pt-1 border-l-2 border-slate-800 ml-4">
+                <!-- Clause 5 (Structure) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-sitemap w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 5 (Structure)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <span class="block py-1.5 text-xs text-slate-500 italic">No forms digitized yet.</span>
+                    </div>
+                </div>
                 </div>
             </div>
-            <!-- Clause 6.3 (Environment) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+            <!-- Clause 6: Resources -->
+            <div x-data="{ mainOpen: false }" class="space-y-1 mt-2">
+                <button @click="mainOpen = !mainOpen" class="w-full flex items-center justify-between px-3 py-3 text-white bg-slate-800/50 hover:bg-slate-800 rounded-lg font-semibold transition-colors border border-slate-700/50">
                     <div class="flex items-center">
-                        <i class="fas fa-thermometer-half w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 6.3 (Environment)</span>
+                        <i class="fas fa-cubes w-5 text-center text-primary"></i>
+                        <span class="ml-3 tracking-wide text-sm">Clause 6: Resources</span>
                     </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="mainOpen ? 'rotate-180' : ''"></i>
                 </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/environmentalmonitoring_3_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">3.01 Environmental Monitoring</a>
-                    <a href="/admin/resources/humiditycontrolchart_3_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">3.02 Humidity Control Chart</a>
-                    <a href="/admin/resources/temperaturecontrolchart_3_03/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">3.03 Temperature Control Chart</a>
+                <div x-show="mainOpen" x-collapse x-cloak class="pl-2 pr-1 space-y-1 pb-2 pt-1 border-l-2 border-slate-800 ml-4">
+                <!-- Clause 6.2 (Personnel) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-users w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 6.2 (Personnel)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/personnelauthorizationpermit/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">1.01 Authorization Permit</a>
+                        <a href="/admin/resources/competencyevalinternalsample/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">1.01C Internal Samples</a>
+                        <a href="/admin/resources/competencyevalptsample/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">1.01D PT Samples</a>
+                        <a href="/admin/resources/gradingmatrixequipment/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">1.01E Grading (Equipment)</a>
+                        <a href="/admin/resources/gradingmatrixproduct/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">1.01F Grading (Product)</a>
+                        <a href="/admin/resources/gradingmatrixdocument/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">1.01G Grading (Document)</a>
+                        <a href="/admin/resources/authorizedanalystlist/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">1.02 Authorized Analyst List</a>
+                        <a href="/admin/resources/technicalpersonnellist/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">1.03 Technical Personnel List</a>
+                        <a href="/admin/resources/competencymonitoring/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">1.04 Competency Monitoring</a>
+                    </div>
+                </div>
+                <!-- Clause 6.2 (Training) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-graduation-cap w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 6.2 (Training)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/trainingneedassessment/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">2.02 Training Need Assessment</a>
+                        <a href="/admin/resources/annualtrainingplan/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">2.03 Annual Training Plan</a>
+                        <a href="/admin/resources/trainingattendancesheet/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">2.04 Attendance Sheet</a>
+                        <a href="/admin/resources/trainingevaluation/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">2.05 Training Evaluation</a>
+                        <a href="/admin/resources/authorizedpersonnellist_2_06/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">2.06 Authorized Personnel List</a>
+                        <a href="/admin/resources/trainingfeedback/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">2.07 Training Feedback</a>
+                        <a href="/admin/resources/individualtrainingrecord/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">2.08 Individual Training Record</a>
+                        <a href="/admin/resources/orientationplan/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">2.09 Orientation Plan</a>
+                        <a href="/admin/resources/competencereassessment/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">2.10 Competence Reassessment</a>
+                        <a href="/admin/resources/newinductionorientation_2_11/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">2.11 New Induction Orientation</a>
+                        <a href="/admin/resources/trainerevaluation/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">2.12 Trainer Evaluation</a>
+                    </div>
+                </div>
+                <!-- Clause 6.3 (Environment) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-thermometer-half w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 6.3 (Environment)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/environmentalmonitoring_3_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">3.01 Environmental Monitoring</a>
+                        <a href="/admin/resources/humiditycontrolchart_3_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">3.02 Humidity Control Chart</a>
+                        <a href="/admin/resources/temperaturecontrolchart_3_03/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">3.03 Temperature Control Chart</a>
+                    </div>
+                </div>
+                <!-- Clause 6.4 (Equipment) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-microscope w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 6.4 (Equipment)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/correctiveactionrequest_4_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">4.01 Corrective Action Request</a>
+                        <a href="/admin/resources/masterlistequipment_4_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">4.02 Master List of Equipment</a>
+                        <a href="/admin/resources/equipmentmaintenancerecord_4_03/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">4.03 Equipment Maintenance</a>
+                        <a href="/admin/resources/calibrationprogram_4_04/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">4.04 Calibration Program</a>
+                    </div>
+                </div>
+                <!-- Clause 6.5 (Traceability) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-route w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 6.5 (Traceability)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/crmlist_5_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">5.01 CRM List</a>
+                    </div>
+                </div>
+                <!-- Clause 6.6 (Ext. Services) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-truck w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 6.6 (Ext. Services)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/supplierselection_6_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">6.01 Supplier Selection Form</a>
+                        <a href="/admin/resources/approvedsupplierserviceprovider_6_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">6.02 Approved Supplier Service</a>
+                        <a href="/admin/resources/externalproviderevaluation_6_03/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">6.03 External Provider Eval</a>
+                        <a href="/admin/resources/supplierperformancemonitoring_6_04/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">6.04 Supplier Perf Monitoring</a>
+                        <a href="/admin/resources/comparativestatement_6_05/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">6.05 Comparative Statement</a>
+                        <a href="/admin/resources/supplierevaluationplan_6_06/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">6.06 Supplier Eval Plan</a>
+                        <a href="/admin/resources/storepurchasedemand_6_07/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">6.07 Store Purchase Demand</a>
+                        <a href="/admin/resources/productsservicesinspection_6_08/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">6.08 Products/Services Insp.</a>
+                    </div>
+                </div>
                 </div>
             </div>
-            <!-- Clause 6.4 (Equipment) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+            <!-- Clause 7: Processes -->
+            <div x-data="{ mainOpen: false }" class="space-y-1 mt-2">
+                <button @click="mainOpen = !mainOpen" class="w-full flex items-center justify-between px-3 py-3 text-white bg-slate-800/50 hover:bg-slate-800 rounded-lg font-semibold transition-colors border border-slate-700/50">
                     <div class="flex items-center">
-                        <i class="fas fa-microscope w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 6.4 (Equipment)</span>
+                        <i class="fas fa-cogs w-5 text-center text-primary"></i>
+                        <span class="ml-3 tracking-wide text-sm">Clause 7: Processes</span>
                     </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="mainOpen ? 'rotate-180' : ''"></i>
                 </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/correctiveactionrequest_4_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">4.01 Corrective Action Request</a>
-                    <a href="/admin/resources/masterlistequipment_4_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">4.02 Master List of Equipment</a>
-                    <a href="/admin/resources/equipmentmaintenancerecord_4_03/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">4.03 Equipment Maintenance</a>
-                    <a href="/admin/resources/calibrationprogram_4_04/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">4.04 Calibration Program</a>
+                <div x-show="mainOpen" x-collapse x-cloak class="pl-2 pr-1 space-y-1 pb-2 pt-1 border-l-2 border-slate-800 ml-4">
+                <!-- Clause 7.1 (Requests) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-signature w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 7.1 (Requests)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/analysisrequest_12_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">12.01 Analysis Request</a>
+                        <a href="/admin/resources/releaseslip_12_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">12.02 Release Slip</a>
+                        <a href="/admin/resources/analysisreport_12_03/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">12.03 Analysis Report</a>
+                        <a href="/admin/resources/labcontract_12_05/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">12.05 Lab Contract</a>
+                    </div>
+                </div>
+                <!-- Clause 7.4 (Test Items) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-box-open w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 7.4 (Test Items)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/samplereturnform_22_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">22.01 Sample Return</a>
+                        <a href="/admin/resources/sampledisposalrecord_22_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">22.02 Sample Disposal</a>
+                        <a href="/admin/resources/samplereceivingform_22_03/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">22.03 Sample Receiving</a>
+                        <a href="/admin/resources/samplestorageform_22_04/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">22.04 Sample Storage</a>
+                        <a href="/admin/resources/samplehandlingform_22_05/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">22.05 Sample Handling</a>
+                    </div>
+                </div>
+                <!-- Clause 7.6 (Uncertainty) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-chart-bar w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 7.6 (Uncertainty)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/estimationofuncertainty_13_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">13.01 MU Estimation</a>
+                        <a href="/admin/resources/decisionrule_13_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">13.02 Decision Rule</a>
+                    </div>
+                </div>
+                <!-- Clause 7.7 (Validity/QA) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-shield-check w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 7.7 (Validity/QA)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/qaprogram_16_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">16.01 QA Program</a>
+                        <a href="/admin/resources/randrreport_16_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">16.02 R&R Report</a>
+                        <a href="/admin/resources/listofptproviders_16_03/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">16.03 PT Providers</a>
+                        <a href="/admin/resources/correctivepreventiveaction_17_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.01 Corrective Preventive</a>
+                        <a href="/admin/resources/conductivitymetercheck_17_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.02 Conductivity Meter</a>
+                        <a href="/admin/resources/phmetercheck_17_03/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.03 pH Meter</a>
+                        <a href="/admin/resources/ilcregistrationform_17_04/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.04 ILC Registration</a>
+                        <a href="/admin/resources/ilcresultsheet_17_05/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.05 ILC Result Sheet</a>
+                        <a href="/admin/resources/ilcsummary_17_06/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.06 ILC Summary</a>
+                        <a href="/admin/resources/annualqaprogram_17_07/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.07 Annual QA Program</a>
+                        <a href="/admin/resources/analyticalbalancecheck_17_08/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.08 Balance Check</a>
+                        <a href="/admin/resources/freezercheck_17_09/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.09 Freezer Check</a>
+                        <a href="/admin/resources/annualretestingdataform_17_10/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.10 Annual Retesting</a>
+                        <a href="/admin/resources/ultrasonicbathcheck_17_11/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.11 Ultrasonic Bath Check</a>
+                        <a href="/admin/resources/ovencheck_17_12/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.12 Oven Check</a>
+                        <a href="/admin/resources/qualitycontrolchart_17_13/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.13 QC Chart</a>
+                        <a href="/admin/resources/labcleaninginspectionsheet_17_14/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">17.14 Cleaning Inspection</a>
+                    </div>
+                </div>
+                <!-- Clause 7.8 (Reporting) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-invoice w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 7.8 (Reporting)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/assignmentsummaryandreviewform_19_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">19.01 Assignment & Review</a>
+                    </div>
+                </div>
+                <!-- Clause 7.9 (Complaints) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-thumbs-down w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 7.9 (Complaints)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/complaintregistration_15_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">15.01 Complaint Reg.</a>
+                        <a href="/admin/resources/customercomplaintlogsheet_15_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">15.02 Complaint Log</a>
+                        <a href="/admin/resources/customeragreement_15_03/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">15.03 Customer Agreement</a>
+                        <a href="/admin/resources/complaintoutcomeletter_15_04/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">15.04 Outcome Letter</a>
+                    </div>
+                </div>
+                <!-- Clause 7.10 (Non-Conformance) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-exclamation-triangle w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 7.10 (Non-Conformance)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/nonconformanceform_14_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">14.01 NC Form</a>
+                        <a href="/admin/resources/nonconformancelog_14_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">14.02 NC Log</a>
+                    </div>
+                </div>
                 </div>
             </div>
-            <!-- Clause 6.5 (Traceability) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+            <!-- Clause 8: Management -->
+            <div x-data="{ mainOpen: false }" class="space-y-1 mt-2">
+                <button @click="mainOpen = !mainOpen" class="w-full flex items-center justify-between px-3 py-3 text-white bg-slate-800/50 hover:bg-slate-800 rounded-lg font-semibold transition-colors border border-slate-700/50">
                     <div class="flex items-center">
-                        <i class="fas fa-route w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 6.5 (Traceability)</span>
+                        <i class="fas fa-briefcase w-5 text-center text-primary"></i>
+                        <span class="ml-3 tracking-wide text-sm">Clause 8: Management</span>
                     </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="mainOpen ? 'rotate-180' : ''"></i>
                 </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/crmlist_5_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">5.01 CRM List</a>
+                <div x-show="mainOpen" x-collapse x-cloak class="pl-2 pr-1 space-y-1 pb-2 pt-1 border-l-2 border-slate-800 ml-4">
+                <!-- Clause 8.3 (Documents) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-file-alt w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 8.3 (Documents)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/masterlistdocument_7_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">7.01 Master List of Documents</a>
+                        <a href="/admin/resources/documentchangerequest_7_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">7.02 Document Change Request</a>
+                    </div>
                 </div>
-            </div>
-            <!-- Clause 6.6 (Ext. Services) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-truck w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 6.6 (Ext. Services)</span>
+                <!-- Clause 8.4 (Records) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-archive w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 8.4 (Records)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/masterlistofrecords_20_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">20.01 Master List of Records</a>
+                        <a href="/admin/resources/masterlistoffiles_20_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">20.02 Master List of Files</a>
                     </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/supplierselection_6_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">6.01 Supplier Selection Form</a>
-                    <a href="/admin/resources/approvedsupplierserviceprovider_6_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">6.02 Approved Supplier Service</a>
-                    <a href="/admin/resources/externalproviderevaluation_6_03/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">6.03 External Provider Eval</a>
-                    <a href="/admin/resources/supplierperformancemonitoring_6_04/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">6.04 Supplier Perf Monitoring</a>
-                    <a href="/admin/resources/comparativestatement_6_05/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">6.05 Comparative Statement</a>
-                    <a href="/admin/resources/supplierevaluationplan_6_06/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">6.06 Supplier Eval Plan</a>
-                    <a href="/admin/resources/storepurchasedemand_6_07/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">6.07 Store Purchase Demand</a>
-                    <a href="/admin/resources/productsservicesinspection_6_08/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">6.08 Products/Services Insp.</a>
                 </div>
-            </div>
-
-            <div class="pt-4 pb-1"><p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Clause 7: Processes</p></div>
-            <!-- Clause 7.1 (Requests) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-file-signature w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 7.1 (Requests)</span>
+                <!-- Clause 8.5 (Risk) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-project-diagram w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 8.5 (Risk)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/riskmanagementsheet_8_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">8.01 Risk Management Sheet</a>
+                        <a href="/admin/resources/opportunityassessment_8_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">8.02 Opportunity Assessment</a>
                     </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/analysisrequest_12_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">12.01 Analysis Request</a>
-                    <a href="/admin/resources/releaseslip_12_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">12.02 Release Slip</a>
-                    <a href="/admin/resources/analysisreport_12_03/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">12.03 Analysis Report</a>
-                    <a href="/admin/resources/labcontract_12_05/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">12.05 Lab Contract</a>
                 </div>
-            </div>
-            <!-- Clause 7.4 (Test Items) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-box-open w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 7.4 (Test Items)</span>
+                <!-- Clause 8.6 (Improvement) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-chart-line w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 8.6 (Improvement)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/qualityobjectiveform_18_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">18.01 Quality Objectives</a>
+                        <a href="/admin/resources/customerfeedback_21_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">21.01 Customer Feedback</a>
+                        <a href="/admin/resources/customerfeedbacklog_21_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">21.02 Feedback Log</a>
                     </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/samplereturnform_22_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">22.01 Sample Return</a>
-                    <a href="/admin/resources/sampledisposalrecord_22_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">22.02 Sample Disposal</a>
-                    <a href="/admin/resources/samplereceivingform_22_03/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">22.03 Sample Receiving</a>
-                    <a href="/admin/resources/samplestorageform_22_04/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">22.04 Sample Storage</a>
-                    <a href="/admin/resources/samplehandlingform_22_05/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">22.05 Sample Handling</a>
                 </div>
-            </div>
-            <!-- Clause 7.6 (Uncertainty) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-chart-bar w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 7.6 (Uncertainty)</span>
+                <!-- Clause 8.7 (Corrective Action) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-tools w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 8.7 (Corrective Action)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/correctiveactionrequest_9_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">9.01 CAR</a>
+                        <a href="/admin/resources/correctiveactionsrequestlog_9_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">9.02 CAR Log</a>
+                        <a href="/admin/resources/rootcauseanalysisform_9_04/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">9.04 Root Cause Analysis</a>
                     </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/estimationofuncertainty_13_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">13.01 MU Estimation</a>
-                    <a href="/admin/resources/decisionrule_13_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">13.02 Decision Rule</a>
                 </div>
-            </div>
-            <!-- Clause 7.7 (Validity/QA) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-shield-check w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 7.7 (Validity/QA)</span>
+                <!-- Clause 8.8 (Internal Audit) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-search w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 8.8 (Internal Audit)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/auditnotification_10_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">10.01 Audit Notification</a>
+                        <a href="/admin/resources/auditschedule_10_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">10.02 Audit Schedule</a>
+                        <a href="/admin/resources/mrmschedule_10_03/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">10.03 MRM Schedule</a>
+                        <a href="/admin/resources/trainedauditorslist_10_04/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">10.04 Trained Auditors List</a>
+                        <a href="/admin/resources/auditorcompetence_10_05/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">10.05 Auditor Competence</a>
+                        <a href="/admin/resources/confidentialagreementauditors_10_06/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">10.06 Confidential Agreement</a>
+                        <a href="/admin/resources/impartialityform_10_07/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">10.07 Impartiality Form</a>
+                        <a href="/admin/resources/internalauditform_10_08/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">10.08 Internal Audit Form</a>
+                        <a href="/admin/resources/internalauditchecklist_10_09/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">10.09 Audit Check List</a>
+                        <a href="/admin/resources/auditreport_10_10/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">10.10 Audit Report</a>
                     </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/qaprogram_16_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">16.01 QA Program</a>
-                    <a href="/admin/resources/randrreport_16_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">16.02 R&R Report</a>
-                    <a href="/admin/resources/listofptproviders_16_03/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">16.03 PT Providers</a>
-                    <a href="/admin/resources/correctivepreventiveaction_17_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.01 Corrective Preventive</a>
-                    <a href="/admin/resources/conductivitymetercheck_17_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.02 Conductivity Meter</a>
-                    <a href="/admin/resources/phmetercheck_17_03/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.03 pH Meter</a>
-                    <a href="/admin/resources/ilcregistrationform_17_04/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.04 ILC Registration</a>
-                    <a href="/admin/resources/ilcresultsheet_17_05/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.05 ILC Result Sheet</a>
-                    <a href="/admin/resources/ilcsummary_17_06/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.06 ILC Summary</a>
-                    <a href="/admin/resources/annualqaprogram_17_07/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.07 Annual QA Program</a>
-                    <a href="/admin/resources/analyticalbalancecheck_17_08/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.08 Balance Check</a>
-                    <a href="/admin/resources/freezercheck_17_09/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.09 Freezer Check</a>
-                    <a href="/admin/resources/annualretestingdataform_17_10/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.10 Annual Retesting</a>
-                    <a href="/admin/resources/ultrasonicbathcheck_17_11/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.11 Ultrasonic Bath Check</a>
-                    <a href="/admin/resources/ovencheck_17_12/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.12 Oven Check</a>
-                    <a href="/admin/resources/qualitycontrolchart_17_13/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.13 QC Chart</a>
-                    <a href="/admin/resources/labcleaninginspectionsheet_17_14/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">17.14 Cleaning Inspection</a>
                 </div>
-            </div>
-            <!-- Clause 7.8 (Reporting) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-file-invoice w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 7.8 (Reporting)</span>
+                <!-- Clause 8.9 (Mgmt Review) -->
+                <div x-data="{ open: false }" class="space-y-1">
+                    <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
+                        <div class="flex items-center">
+                            <i class="fas fa-users-cog w-5 text-center text-slate-400 text-sm"></i>
+                            <span class="ml-2 font-medium text-sm">Clause 8.9 (Mgmt Review)</span>
+                        </div>
+                        <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="open" x-collapse x-cloak class="pl-10 pr-2 space-y-1 pb-1">
+                        <a href="/admin/resources/mrmschedule_11_01/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">11.01 MRM Schedule</a>
+                        <a href="/admin/resources/mrmnotice_11_02/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">11.02 MRM Notice</a>
+                        <a href="/admin/resources/mrmagenda_11_03/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">11.03 MRM Agenda</a>
+                        <a href="/admin/resources/mrmform_11_04/" class="block py-1.5 text-xs text-slate-400 hover:text-white transition-colors">11.04 MRM Form</a>
                     </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/assignmentsummaryandreviewform_19_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">19.01 Assignment & Review</a>
                 </div>
-            </div>
-            <!-- Clause 7.9 (Complaints) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-thumbs-down w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 7.9 (Complaints)</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/complaintregistration_15_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">15.01 Complaint Reg.</a>
-                    <a href="/admin/resources/customercomplaintlogsheet_15_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">15.02 Complaint Log</a>
-                    <a href="/admin/resources/customeragreement_15_03/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">15.03 Customer Agreement</a>
-                    <a href="/admin/resources/complaintoutcomeletter_15_04/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">15.04 Outcome Letter</a>
-                </div>
-            </div>
-            <!-- Clause 7.10 (Non-Conformance) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-exclamation-triangle w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 7.10 (Non-Conformance)</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/nonconformanceform_14_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">14.01 NC Form</a>
-                    <a href="/admin/resources/nonconformancelog_14_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">14.02 NC Log</a>
-                </div>
-            </div>
-
-            <div class="pt-4 pb-1"><p class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Clause 8: Management</p></div>
-            <!-- Clause 8.3 (Documents) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-file-alt w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 8.3 (Documents)</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/masterlistdocument_7_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">7.01 Master List of Documents</a>
-                    <a href="/admin/resources/documentchangerequest_7_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">7.02 Document Change Request</a>
-                </div>
-            </div>
-            <!-- Clause 8.4 (Records) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-archive w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 8.4 (Records)</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/masterlistofrecords_20_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">20.01 Master List of Records</a>
-                    <a href="/admin/resources/masterlistoffiles_20_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">20.02 Master List of Files</a>
-                </div>
-            </div>
-            <!-- Clause 8.5 (Risk) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-project-diagram w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 8.5 (Risk)</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/riskmanagementsheet_8_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">8.01 Risk Management Sheet</a>
-                    <a href="/admin/resources/opportunityassessment_8_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">8.02 Opportunity Assessment</a>
-                </div>
-            </div>
-            <!-- Clause 8.6 (Improvement) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-chart-line w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 8.6 (Improvement)</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/qualityobjectiveform_18_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">18.01 Quality Objectives</a>
-                    <a href="/admin/resources/customerfeedback_21_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">21.01 Customer Feedback</a>
-                    <a href="/admin/resources/customerfeedbacklog_21_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">21.02 Feedback Log</a>
-                </div>
-            </div>
-            <!-- Clause 8.7 (Corrective Action) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-tools w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 8.7 (Corrective Action)</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/correctiveactionrequest_9_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">9.01 CAR</a>
-                    <a href="/admin/resources/correctiveactionsrequestlog_9_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">9.02 CAR Log</a>
-                    <a href="/admin/resources/rootcauseanalysisform_9_04/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">9.04 Root Cause Analysis</a>
-                </div>
-            </div>
-            <!-- Clause 8.8 (Internal Audit) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-search w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 8.8 (Internal Audit)</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/auditnotification_10_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">10.01 Audit Notification</a>
-                    <a href="/admin/resources/auditschedule_10_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">10.02 Audit Schedule</a>
-                    <a href="/admin/resources/mrmschedule_10_03/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">10.03 MRM Schedule</a>
-                    <a href="/admin/resources/trainedauditorslist_10_04/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">10.04 Trained Auditors List</a>
-                    <a href="/admin/resources/auditorcompetence_10_05/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">10.05 Auditor Competence</a>
-                    <a href="/admin/resources/confidentialagreementauditors_10_06/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">10.06 Confidential Agreement</a>
-                    <a href="/admin/resources/impartialityform_10_07/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">10.07 Impartiality Form</a>
-                    <a href="/admin/resources/internalauditform_10_08/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">10.08 Internal Audit Form</a>
-                    <a href="/admin/resources/internalauditchecklist_10_09/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">10.09 Audit Check List</a>
-                    <a href="/admin/resources/auditreport_10_10/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">10.10 Audit Report</a>
-                </div>
-            </div>
-            <!-- Clause 8.9 (Mgmt Review) -->
-            <div x-data="{ open: false }" class="space-y-1">
-                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-300 hover:bg-slate-800 hover:text-white rounded-lg transition-colors">
-                    <div class="flex items-center">
-                        <i class="fas fa-users-cog w-6 text-center text-slate-400"></i>
-                        <span class="ml-2 font-medium">Clause 8.9 (Mgmt Review)</span>
-                    </div>
-                    <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
-                </button>
-                <div x-show="open" x-collapse x-cloak class="pl-11 pr-3 space-y-1 pb-1">
-                    <a href="/admin/resources/mrmschedule_11_01/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">11.01 MRM Schedule</a>
-                    <a href="/admin/resources/mrmnotice_11_02/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">11.02 MRM Notice</a>
-                    <a href="/admin/resources/mrmagenda_11_03/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">11.03 MRM Agenda</a>
-                    <a href="/admin/resources/mrmform_11_04/" class="block py-2 text-sm text-slate-400 hover:text-white transition-colors">11.04 MRM Form</a>
                 </div>
             </div>
             <!-- Reports Group -->
