@@ -8,7 +8,7 @@
     <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center">
         <i class="fas fa-chart-pie text-primary mr-3"></i> Laboratory Overview
     </h2>
-    <p class="text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">Real-time metrics for ISO 17025 workflows</p>
+    <p class="text-slate-500 dark:text-slate-400 mt-1">Real-time metrics for ISO 17025 workflows</p>
 </div>
 
 <!-- Stat Cards -->
@@ -17,7 +17,7 @@
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-4 sm:p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden">
         <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-vial text-6xl text-primary"></i></div>
         <div>
-            <p class="text-sm font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wide">Total Samples</p>
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">Total Samples</p>
             <h3 class="text-3xl font-bold text-slate-800 dark:text-slate-100 mt-2">{{ total_samples }}</h3>
         </div>
         <p class="text-xs text-slate-400 dark:text-slate-500 mt-4">Logged in system</p>
@@ -27,7 +27,7 @@
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-4 sm:p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden">
         <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-hourglass-half text-6xl text-amber-500"></i></div>
         <div>
-            <p class="text-sm font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wide">Pending Samples</p>
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">Pending Samples</p>
             <h3 class="text-3xl font-bold text-amber-500 mt-2">{{ pending_samples }}</h3>
         </div>
         <p class="text-xs text-slate-400 dark:text-slate-500 mt-4">Awaiting testing/approval</p>
@@ -37,7 +37,7 @@
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-4 sm:p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden">
         <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-check-circle text-6xl text-emerald-500"></i></div>
         <div>
-            <p class="text-sm font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wide">Approved</p>
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">Approved</p>
             <h3 class="text-3xl font-bold text-emerald-600 mt-2">{{ completed_samples }}</h3>
         </div>
         <p class="text-xs text-slate-400 dark:text-slate-500 mt-4">Ready for CoA</p>
@@ -47,7 +47,7 @@
     <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-4 sm:p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden">
         <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-wrench text-6xl text-rose-500"></i></div>
         <div>
-            <p class="text-sm font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wide">Eq. Out of Service</p>
+            <p class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">Eq. Out of Service</p>
             <h3 class="text-3xl font-bold text-rose-600 mt-2">{{ out_of_service_eq }}</h3>
         </div>
         <p class="text-xs text-slate-400 dark:text-slate-500 mt-4">Check Resources module</p>
@@ -71,7 +71,7 @@
                 <li class="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                     <div>
                         <p class="text-sm font-medium text-slate-800 dark:text-slate-100">{{ item.id }}</p>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">Status: <span class="font-medium text-amber-600">{{ item.status }}</span></p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Status: <span class="font-medium text-amber-600">{{ item.status }}</span></p>
                     </div>
                     <a href="{{ item.url }}" class="inline-flex items-center px-3 py-1.5 border border-primary text-primary text-xs font-medium rounded-md hover:bg-primary hover:text-white transition-colors">
                         Perform Test
@@ -85,7 +85,7 @@
         <!-- AQCM Queue -->
         {% if can_see_aqcm_queue and verification_queue %}
         <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-            <div class="bg-amber-50 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+            <div class="bg-amber-50 dark:bg-amber-900/20 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
                 <h3 class="font-bold text-amber-600 flex items-center"><i class="fas fa-check-double mr-2"></i> Action Required: Verifications (AQCM)</h3>
                 <span class="bg-amber-500 text-white text-xs px-2.5 py-1 rounded-full font-semibold">{{ verification_queue|length }}</span>
             </div>
@@ -108,7 +108,7 @@
         <!-- QCM Queue -->
         {% if can_see_qcm_queue and approval_queue %}
         <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-            <div class="bg-rose-50 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+            <div class="bg-rose-50 dark:bg-rose-900/20 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
                 <h3 class="font-bold text-rose-600 flex items-center"><i class="fas fa-signature mr-2"></i> Action Required: Final Approvals (QCM)</h3>
                 <span class="bg-rose-500 text-white text-xs px-2.5 py-1 rounded-full font-semibold">{{ approval_queue|length }}</span>
             </div>
@@ -138,12 +138,12 @@
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
-                    <thead class="bg-slate-50">
+                    <thead class="bg-slate-50 dark:bg-slate-900/50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider">Sample ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider">Product</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sample ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Product</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Date</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
@@ -160,11 +160,11 @@
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300">{{ sample.get_status_display }}</span>
                                 {% endif %}
                             </td>
-                            <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500">{{ sample.received_date|date:"M d, Y" }}</td>
+                            <td class="px-4 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">{{ sample.received_date|date:"M d, Y" }}</td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="px-6 py-8 text-center text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500">No samples found.</td>
+                            <td colspan="4" class="px-6 py-8 text-center text-sm text-slate-500 dark:text-slate-400">No samples found.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -178,7 +178,7 @@
     <div class="space-y-6">
         
         <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-            <div class="bg-slate-50 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 dark:border-slate-700">
+            <div class="bg-slate-50 dark:bg-slate-900/50 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 dark:border-slate-700">
                 <h3 class="font-bold text-slate-800 dark:text-slate-100 flex items-center"><i class="fas fa-bolt mr-2 text-amber-500"></i> Quick Actions</h3>
             </div>
             <div class="p-6 space-y-3">
@@ -196,7 +196,7 @@
         </div>
 
         <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-            <div class="bg-slate-50 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 dark:border-slate-700">
+            <div class="bg-slate-50 dark:bg-slate-900/50 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200 dark:border-slate-700">
                 <h3 class="font-bold text-slate-800 dark:text-slate-100 flex items-center"><i class="fas fa-shield-alt mr-2 text-emerald-500"></i> ISO 17025 Compliance</h3>
             </div>
             <div class="p-6 space-y-4">
@@ -206,7 +206,7 @@
                     </div>
                     <div class="ml-3">
                         <p class="text-sm font-medium text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">Open CAPAs</p>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">{{ open_ncs }} Non-Conformances require attention</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ open_ncs }} Non-Conformances require attention</p>
                     </div>
                 </a>
                 
@@ -216,7 +216,7 @@
                     </div>
                     <div class="ml-3">
                         <p class="text-sm font-medium text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">SOPs Due For Review</p>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">{{ docs_review_due }} documents require scheduled review</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ docs_review_due }} documents require scheduled review</p>
                     </div>
                 </a>
 
