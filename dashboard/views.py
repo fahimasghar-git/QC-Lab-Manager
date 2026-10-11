@@ -148,3 +148,40 @@ def home(request):
         'can_see_qcm_queue': can_see_qcm_queue,
     }
     return render(request, 'dashboard/home.html', context)
+
+import subprocess
+from django.conf import settings
+from django.http import HttpResponse, JsonResponse
+
+def get_pwa_version():
+    custom_ver = getattr(settings, 'PWA_APP_VERSION', None)
+    if custom_ver:
+        return str(custom_ver)
+    try:
+        commit = subprocess.check_output(
+            ['git', 'rev-parse', '--short', 'HEAD'], 
+            cwd=settings.BASE_DIR, 
+            stderr=subprocess.DEVNULL
+        ).decode('utf-8').strip()
+        return f"git-{commit}"
+    except Exception:
+        return "v1.0.0"
+
+def service_worker(request):
+    sw_path = settings.BASE_DIR / 'static_assets' / 'sw.js'
+    try:
+        with open(sw_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except Exception:
+        content = ""
+    
+    version = get_pwa_version()
+    content = content.replace("{{APP_VERSION}}", version)
+
+    response = HttpResponse(content, content_type='application/javascript')
+    response['Service-Worker-Allowed'] = '/'
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    return response
+
+def pwa_version(request):
+    return JsonResponse({'version': get_pwa_version()})
