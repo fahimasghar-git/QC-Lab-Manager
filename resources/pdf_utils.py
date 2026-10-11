@@ -50,8 +50,14 @@ def generate_iso_pdf(model_admin, request, queryset):
         if m:
             doc_code = f"QCL-FRM-{m.group(1)}.{m.group(2)}"
         
+    raw_title = str(model_meta.verbose_name)
+    if "(" in raw_title:
+        clean_title = raw_title.split("(")[0].strip().upper()
+    else:
+        clean_title = raw_title.upper()
+
     context = {
-        'doc_title': model_meta.verbose_name.upper(),
+        'doc_title': clean_title,
         'doc_code': doc_code,
         'date_generated': datetime.now().strftime("%Y-%m-%d %H:%M"),
         'fields': fields,
