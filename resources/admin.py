@@ -2,7 +2,10 @@ from lims_core.admin_mixins import DigitalSignatureMixin
 from django.contrib import admin
 from django.shortcuts import render
 from unfold.admin import ModelAdmin
-from .pdf_utils import generate_iso_pdf
+from .pdf_utils import generate_iso_pdf, generate_pdf
+
+# Ensure ModelAdmin resolves 'generate_pdf' action string
+ModelAdmin.generate_pdf = generate_iso_pdf
 from .approval_utils import action_mark_prepared, action_mark_checked, action_mark_approved
 from unfold.admin import TabularInline, StackedInline
 from simple_history.admin import SimpleHistoryAdmin
